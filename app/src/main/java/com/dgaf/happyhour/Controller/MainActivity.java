@@ -1,12 +1,11 @@
 package com.dgaf.happyhour.Controller;
 
-import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -15,10 +14,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import com.dgaf.happyhour.R;
-import com.dgaf.happyhour.View.DealListFragment;
 
-import java.util.Locale;
+import com.dgaf.happyhour.R;
+import com.dgaf.happyhour.View.About;
+import com.dgaf.happyhour.View.ViewPagerFragment;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -31,32 +30,29 @@ public class MainActivity extends ActionBarActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private String[] drawerItems = {"About","Favorites","Login","TBD"};
+    private String[] drawerItems = {"List","Favorites","Login","About"};
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
-   // private ActionBarDrawerToggle mDrawerToggle;
 
-    SectionsPagerAdapter mSectionsPagerAdapter;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    ViewPager mViewPager;
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.popBackStack();
+        return true;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        if(getSupportFragmentManager().findFragmentById(R.id.mainfragment) == null){
+            getSupportFragmentManager().beginTransaction().add(R.id.mainfragment, new ViewPagerFragment()).commit();
+        }
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -67,11 +63,6 @@ public class MainActivity extends ActionBarActivity {
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-
-        /*this will give us a button in the action bar*/
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
@@ -81,23 +72,23 @@ public class MainActivity extends ActionBarActivity {
         {
             public void onDrawerClosed(View view)
             {
+                super.onDrawerClosed(view);
                 getSupportActionBar().setTitle("HappyHour");
-                invalidateOptionsMenu();
+               // invalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView)
             {
+                super.onDrawerOpened(drawerView);
                 getSupportActionBar().setTitle("Options");
-                invalidateOptionsMenu();
+               // invalidateOptionsMenu();
             }
         };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        /*if (savedInstanceState ==  null)
-        {
 
-        }else{
-        }*/
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
     }
 
     /*TODO this needs to be declared in its own file*/
@@ -111,26 +102,41 @@ public class MainActivity extends ActionBarActivity {
     /** Swaps fragments in the main content view */
     private void selectItem(int position) {
 
+        Fragment fragment = null;
         /*we will open all the various fragments from the sliding drawer here*/
         switch(position){
             case 0:
-                Intent about = new Intent(MainActivity.this, About.class);
-                MainActivity.this.startActivity(about);
+                fragment = new ViewPagerFragment();
                 break;
             case 1:
 
                 break;
-                //Intent login = new Intent(MainActivity.this, LoginActivity.class);
-                //MainActivity.this.startActivity(login);
+            case 2:
+
+                break;
+
+            case 3:
+                fragment = new About();
+                break;
 
             default:
                 break;
         }
 
+        if (fragment != null)
+        {
 
-        // Highlight the selected item, update the title, and close the drawer
-        mDrawerList.setItemChecked(position, true);
-        mDrawerLayout.closeDrawer(mDrawerList);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.mainfragment, fragment).addToBackStack(null).commit();
+
+            // update selected item and title, then close the drawer
+            mDrawerList.setItemChecked(position, true);
+            mDrawerList.setSelection(position);
+            //setTitle(mNames[position]);
+            mDrawerLayout.closeDrawer(mDrawerList);
+        }
+
 
     }
 
@@ -149,70 +155,27 @@ public class MainActivity extends ActionBarActivity {
 
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
+
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
-        }
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        }else if (id == R.id.action_settings) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    /*Used with ViewPager basically it is where we tell the viewpager which
-    * page to show*/
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
 
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-
-
-            switch(position) {
-                case 0: {
-                    return DealListFragment.newInstance(position, 0);
-                    //return BarFragment.newInstance(position,23);
-                }
-                case 1: {
-                    return DealListFragment.newInstance(position, 1);
-                    //return FeaturedFragment.newInstance(position);
-                }
-                case 2: {
-                    return DealListFragment.newInstance(position, 2);
-                    //return FoodFragment.newInstance(position);
-                }
-                default:{
-                    return DealListFragment.newInstance(position, 0);
-                }
-            }
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 3;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            Locale l = Locale.getDefault();
-            switch (position) {
-                case 0:
-                    return getString(R.string.bar).toUpperCase(l);
-                case 1:
-                    return getString(R.string.food).toUpperCase(l);
-                case 2:
-                    return getString(R.string.featured).toUpperCase(l);
-            }
-            return null;
-        }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
 }
