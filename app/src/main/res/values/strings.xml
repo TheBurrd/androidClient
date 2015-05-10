@@ -16,7 +16,11 @@
     <string name="closed">closed</string>
     <string name="title_activity_restaurant">restaurant</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="about_us">Hello!\n\nWe are Team DGAF, a group of ten students from UC San Diego making
+    a bold foray into the world of mobile app development.  Happy Hour began as a project for our Software Engineering
+    course.  We sought to create an app that would enable student\'s to find the best value for food and
+    drinks in their local area.  Our team consists of Brenton Ang, Sherman Cheung, Adam Dorwat, Xu(Ken) He,
+    Soham Jatakia, Chloe Lopez, David Liberman, Trent Miller, Anjali Patel, and Andrew Walters.  We are very
+    proud to bring you this app and wish you the best of luck in your gastronomic endeavors.  Happy Happy Hour!</string>
 
 </resources>
