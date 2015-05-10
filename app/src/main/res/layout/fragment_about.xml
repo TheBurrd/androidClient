@@ -5,13 +5,82 @@
     android:layout_margin="5dp"
     tools:context="com.dgaf.happyhour.View.About">
 
-
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/about_us"
-        android:textSize="18dp"
-        android:layout_margin="5dp" />
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/about_us_david"
+                android:textSize="15dp"
+                android:layout_margin="5dp"
+                android:padding="10dp"/>
+
+            <ImageView
+                android:id="@+id/adam_photo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/adam_photo"/>
+
+            <ImageView
+                android:id="@+id/andrew_photo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/andrew_photo"/>
+
+            <ImageView
+                android:id="@+id/anjali_photo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/anjali_photo"/>
+
+            <ImageView
+                android:id="@+id/brenton_photo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/brenton_photo"/>
+
+<!--
+            <ImageView
+                android:id="@+id/ken_photo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ken_photo"/>
+
+            <ImageView
+                android:id="@+id/sherman_photo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/sherman_photo"/>
+
+            <ImageView
+                android:id="@+id/soham_photo"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/soham_photo"/>
+
+            <ImageView
+                android:id="@+id/trent_photo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/trent_photo"/>
+
+            <ImageView
+                android:id="@+id/chloe_photo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/chloe_photo"/>
+ -->
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -23,7 +92,7 @@
             android:id="@+id/llamaButton"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="click" />
+            android:text="@string/hide_pic" />
 
 
         <ImageView
@@ -35,5 +104,6 @@
             android:visibility="invisible"/>
 
     </LinearLayout>
+
 
 </FrameLayout>

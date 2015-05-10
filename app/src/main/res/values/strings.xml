@@ -16,11 +16,26 @@
     <string name="closed">closed</string>
     <string name="title_activity_restaurant">restaurant</string>
 
-    <string name="about_us">Hello!\n\nWe are Team DGAF, a group of ten students from UC San Diego making
-    a bold foray into the world of mobile app development.  Happy Hour began as a project for our Software Engineering
-    course.  We sought to create an app that would enable student\'s to find the best value for food and
-    drinks in their local area.  Our team consists of Brenton Ang, Sherman Cheung, Adam Dorwat, Xu(Ken) He,
-    Soham Jatakia, Chloe Lopez, David Liberman, Trent Miller, Anjali Patel, and Andrew Walters.  We are very
-    proud to bring you this app and wish you the best of luck in your gastronomic endeavors.  Happy Happy Hour!</string>
+    <string name="about_us_sherman"><b>Hello!</b>\n\n
+        \tWe are Burrd, a group of ten students from UC San Diego making
+        a bold foray into the world of mobile app development. Burrd began as a project for our
+        Software Engineering course.  We sought to create an app that would enable students to find
+        the best value for food and drinks in their local area.\n\n
+
+        \tOur team consists of Brenton Ang, Sherman Cheung, Adam Dorwat, Xu(Ken) He, Soham Jatakia,
+        Chloe Lopez, David Liberman, Trent Miller, Anjali Patel, and Andrew Walters.  We are very
+        proud to bring you this app and wish you the best of luck in your gastronomic endeavors.
+        Happy Happy Hour!
+    </string>
+
+    <string name="about_us_david">\tBurrd is a fusion between blurred and bird. Why? Because BIRD
+        is the <b>WORD</b>.\n\n
+        The Burrd is inspired by our beloved software developer’s Cockatiel who also has an
+        affinity for fine beers. We are a group of thrifty college students from UC San Diego who
+        are always on the prowl for the best deals to get us drunk or full for as little money
+        as possible.
+    </string>
+
+    <string name="hide_pic">Hide Pic</string>
 
 </resources>

@@ -66,15 +66,13 @@ public class About extends Fragment implements View.OnClickListener {
                 if (!displayed) {
                     llamaPic.setVisibility(View.VISIBLE);
                     displayed = true;
-                    llamaButton.setAlpha(0.3f);
+                    llamaButton.setAlpha(0.2f);
                     transparent = false;
-
                 }
                 else {
                     llamaPic.setVisibility(View.INVISIBLE);
                     displayed = false;
                 }
-
         }
     }
 }
