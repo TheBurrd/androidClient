@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:id="@+id/main">
+
+
+    <ImageView
+        android:padding="5dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/thumb_nal"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/llama" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="deal"
+        android:id="@+id/deal"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/thumb_nal"
+        android:layout_toEndOf="@+id/thumb_nal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="description"
+        android:id="@+id/description"
+        android:layout_below="@+id/deal"
+        android:layout_toRightOf="@+id/thumb_nal"
+        android:layout_toEndOf="@+id/thumb_nal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="restaurant"
+        android:id="@+id/restaurant"
+        android:layout_below="@+id/description"
+        android:layout_toRightOf="@+id/thumb_nal"
+        android:layout_toEndOf="@+id/thumb_nal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="distance"
+        android:id="@+id/distance"
+        android:layout_below="@+id/restaurant"
+        android:layout_toRightOf="@+id/thumb_nal"
+        android:layout_toEndOf="@+id/thumb_nal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="likes"
+        android:id="@+id/likes"
+        android:layout_alignBaseline="@+id/description"
+        android:layout_alignBottom="@+id/description"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="hours"
+        android:id="@+id/hours"
+        android:layout_alignTop="@+id/restaurant"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+
+</RelativeLayout>

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.dgaf.happyhour.Model.DealListAdapter;
 import com.dgaf.happyhour.R;
 
 import java.util.Locale;
@@ -17,6 +18,11 @@ import java.util.Locale;
  * Created by trentonrobison on 5/9/15.
  */
 public class ViewPagerFragment extends Fragment{
+
+    private DealListAdapter food;
+    private DealListAdapter drink;
+    private DealListAdapter feature;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

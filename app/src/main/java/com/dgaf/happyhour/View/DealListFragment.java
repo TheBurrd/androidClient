@@ -9,9 +9,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.dgaf.happyhour.Model.DealListAdapter;
+import com.dgaf.happyhour.Model.DealModel;
 import com.dgaf.happyhour.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*This is the fragment that our page view loads*/
 public class DealListFragment extends Fragment {
@@ -46,9 +52,33 @@ public class DealListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.feature_food_drink, container, false);
 
         TextView tv = (TextView) rootView.findViewById(R.id.textView);
-
         int querySearch = this.getArguments().getInt(QUERY_DECISION);
+
         tv.setText("I am going to query "+(querySearch));
+
+        ListView listView = (ListView) rootView.findViewById(R.id.listView);
+
+        List<DealModel> list = new ArrayList<DealModel>();
+
+
+
+        list.add(new DealModel("1234",20,10,0,1,2,"R1","wdkmlewdklm","LLAma bistro","edkkde",new String[4]));
+        list.add(new DealModel("1234",20,10,0,1,2,"R1","wdkmlewdklm","LLAma bistro","edkkde",new String[4]));
+        list.add(new DealModel("1234",20,10,0,1,2,"R1","wdkmlewdklm","LLAma bistro","edkkde",new String[4]));
+        list.add(new DealModel("1234",20,10,0,1,2,"R1","wdkmlewdklm","LLAma bistro","edkkde",new String[4]));
+        list.add(new DealModel("1234",20,10,0,1,2,"R1","wdkmlewdklm","LLAma bistro","edkkde",new String[4]));
+        list.add(new DealModel("1234",20,10,0,1,2,"R1","wdkmlewdklm","LLAma bistro","edkkde",new String[4]));
+        list.add(new DealModel("1234",20,10,0,1,2,"R1","wdkmlewdklm","LLAma bistro","edkkde",new String[4]));
+        list.add(new DealModel("1234",20,10,0,1,2,"R1","wdkmlewdklm","LLAma bistro","edkkde",new String[4]));
+        list.add(new DealModel("1234",20,10,0,1,2,"R1","wdkmlewdklm","LLAma bistro","edkkde",new String[4]));
+        list.add(new DealModel("1234",20,10,0,1,2,"R1","wdkmlewdklm","LLAma bistro","edkkde",new String[4]));
+        list.add(new DealModel("1234",20,10,0,1,2,"R1","wdkmlewdklm","LLAma bistro","edkkde",new String[4]));
+        list.add(new DealModel("1234",20,10,0,1,2,"R1","wdkmlewdklm","LLAma bistro","edkkde",new String[4]));
+        list.add(new DealModel("1234",20,10,0,1,2,"R1","wdkmlewdklm","LLAma bistro","edkkde",new String[4]));
+        list.add(new DealModel("1234",20,10,0,1,2,"R1","wdkmlewdklm","LLAma bistro","edkkde",new String[4]));
+
+        listView.setAdapter(new DealListAdapter(getActivity(),list));
+
 
         return rootView;
     }
