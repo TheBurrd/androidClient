@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.dgaf.happyhour.DealListType;
 import com.dgaf.happyhour.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -27,7 +28,7 @@ public class DealListAdapter extends BaseAdapter{
     private List<DealModel> dealItems;
     //ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
-    public DealListAdapter(Activity activity) {
+    public DealListAdapter(Activity activity, DealListType listType) {
         this.activity = activity;
         dealItems = new ArrayList<DealModel>();
 
@@ -35,7 +36,17 @@ public class DealListAdapter extends BaseAdapter{
         double radiusMi = 5.0;
         ParseGeoPoint location = new ParseGeoPoint(32.000,-117.0000);
 
-        loadLocalDeals(location, radiusMi);
+        switch(listType) {
+            case DRINK:
+                loadLocalDeals(location, radiusMi);
+                break;
+            case FOOD:
+                loadLocalDeals(location, radiusMi);
+                break;
+            case FEATURED:
+                loadLocalDeals(location, radiusMi);
+                break;
+        }
     }
 
     public void loadLocalDeals(ParseGeoPoint location, double radiusMi) {

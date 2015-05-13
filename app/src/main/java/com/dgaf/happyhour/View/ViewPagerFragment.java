@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.dgaf.happyhour.DealListType;
 import com.dgaf.happyhour.Model.DealListAdapter;
 import com.dgaf.happyhour.R;
 
@@ -52,19 +53,19 @@ public class ViewPagerFragment extends Fragment{
 
             switch(position) {
                 case 0: {
-                    return DealListFragment.newInstance(position, 0);
+                    return DealListFragment.newInstance(position, DealListType.DRINK);
                     //return BarFragment.newInstance(position,23);
                 }
                 case 1: {
-                    return DealListFragment.newInstance(position, 1);
+                    return DealListFragment.newInstance(position, DealListType.FOOD);
                     //return FeaturedFragment.newInstance(position);
                 }
                 case 2: {
-                    return DealListFragment.newInstance(position, 2);
+                    return DealListFragment.newInstance(position, DealListType.FEATURED);
                     //return FoodFragment.newInstance(position);
                 }
                 default:{
-                    return DealListFragment.newInstance(position, 0);
+                    return DealListFragment.newInstance(position, DealListType.DRINK);
                 }
             }
         }
