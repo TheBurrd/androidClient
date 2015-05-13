@@ -2,6 +2,7 @@ package com.dgaf.happyhour.Model;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,12 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.dgaf.happyhour.R;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,9 +27,38 @@ public class DealListAdapter extends BaseAdapter{
     private List<DealModel> dealItems;
     //ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
-    public DealListAdapter(Activity activity, List<DealModel> dealItems) {
+    public DealListAdapter(Activity activity) {
         this.activity = activity;
-        this.dealItems = dealItems;
+        dealItems = new ArrayList<DealModel>();
+
+        // Get users GPS coords
+        double radiusMi = 5.0;
+        ParseGeoPoint location = new ParseGeoPoint(32.000,-117.0000);
+
+        loadLocalDeals(location, radiusMi);
+    }
+
+    public void loadLocalDeals(ParseGeoPoint location, double radiusMi) {
+        // Setup the database Query
+        ParseQuery<RestaurantModel> localRestaurants = ParseQuery.getQuery(RestaurantModel.class);
+        localRestaurants.whereWithinMiles("location", location, radiusMi);
+        localRestaurants.include("deals");
+
+        final DealListAdapter listAdapter = this;
+        localRestaurants.findInBackground(new FindCallback<RestaurantModel>() {
+            public void done(List<RestaurantModel> restaurants, ParseException e) {
+                if (e == null) {
+                    dealItems = new ArrayList<DealModel>();
+                    for (RestaurantModel res : restaurants) {
+                        List<DealModel> deals = res.getList("deals");
+                        dealItems.addAll(deals);
+                    }
+                    listAdapter.notifyDataSetChanged();
+                } else {
+                    Log.e("Parse error: ", e.getMessage());
+                }
+            }
+        });
     }
 
     @Override
@@ -78,7 +113,7 @@ public class DealListAdapter extends BaseAdapter{
 
         description.setText(dealModel.getDescription());
 
-        restaurant.setText(dealModel.getRestaurantID());
+        //restaurant.setText(dealModel.getRestaurantID());
 
         hours.setText("");
         //do something with theses
