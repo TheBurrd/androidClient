@@ -25,7 +25,7 @@ public class DealListFragment extends Fragment {
     private static final String DEAL_LIST_TYPE = "listType";
     private DealListType listType;
     //section ID acts like ID for the query search as well
-    public static DealListFragment newInstance(int sectionNumber, DealListType listType) {
+    public static DealListFragment newInstance(DealListType listType) {
         DealListFragment fragment = new DealListFragment();
         Bundle args = new Bundle();
         args.putInt(DEAL_LIST_TYPE, listType.ordinal());

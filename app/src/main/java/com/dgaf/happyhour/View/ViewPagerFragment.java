@@ -53,19 +53,16 @@ public class ViewPagerFragment extends Fragment{
 
             switch(position) {
                 case 0: {
-                    return DealListFragment.newInstance(position, DealListType.DRINK);
-                    //return BarFragment.newInstance(position,23);
+                    return DealListFragment.newInstance(DealListType.DRINK);
                 }
                 case 1: {
-                    return DealListFragment.newInstance(position, DealListType.FOOD);
-                    //return FeaturedFragment.newInstance(position);
+                    return DealListFragment.newInstance(DealListType.FOOD);
                 }
                 case 2: {
-                    return DealListFragment.newInstance(position, DealListType.FEATURED);
-                    //return FoodFragment.newInstance(position);
+                    return DealListFragment.newInstance(DealListType.FEATURED);
                 }
                 default:{
-                    return DealListFragment.newInstance(position, DealListType.DRINK);
+                    return DealListFragment.newInstance(DealListType.DRINK);
                 }
             }
         }
@@ -81,7 +78,7 @@ public class ViewPagerFragment extends Fragment{
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    return getString(R.string.bar).toUpperCase(l);
+                    return getString(R.string.drink).toUpperCase(l);
                 case 1:
                     return getString(R.string.food).toUpperCase(l);
                 case 2:
