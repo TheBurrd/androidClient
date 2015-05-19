@@ -16,6 +16,20 @@
     <string name="closed">closed</string>
     <string name="title_activity_restaurant">restaurant</string>
 
+
+    <string-array name = "list">
+        <item>Item: 1</item>
+        <item>Item: 2</item>
+        <item>Item: 3</item>
+        <item>Item: 4</item>
+        <item>Item: 5</item>
+        <item>Item: 6</item>
+        <item>Item: 7</item>
+        <item>Item: 8</item>
+        <item>Item: 9</item>
+        <item>Item: 10</item>
+    </string-array>
+
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

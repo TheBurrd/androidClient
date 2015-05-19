@@ -1,5 +1,6 @@
 package com.dgaf.happyhour.View;
 
+import android.app.ListFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,9 +14,6 @@ import com.dgaf.happyhour.R;
 
 import java.util.Locale;
 
-/**
- * Created by trentonrobison on 5/9/15.
- */
 public class ViewPagerFragment extends Fragment{
 
     @Override

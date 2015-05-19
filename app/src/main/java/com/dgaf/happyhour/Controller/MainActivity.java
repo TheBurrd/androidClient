@@ -158,7 +158,7 @@ public class MainActivity extends ActionBarActivity {
 
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
-        }else if (id == R.id.action_settings) {
+        }else if (id == R.id.action_search) {
             return true;
         }
 
