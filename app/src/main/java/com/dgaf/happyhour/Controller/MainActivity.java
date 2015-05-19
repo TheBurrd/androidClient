@@ -129,17 +129,10 @@ public class MainActivity extends ActionBarActivity {
         {
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if (position != 0)
+            fragmentManager.beginTransaction()
+                    .replace(R.id.mainfragment, fragment).addToBackStack(identifier).commit();
+            if (position == 0)
             {
-                fragmentManager.beginTransaction()
-                        .replace(R.id.mainfragment, fragment).addToBackStack(identifier).commit();
-                getSupportActionBar().setHomeAsUpIndicator(null);
-
-            }
-            else {
-                fragmentManager.beginTransaction()
-                        .replace(R.id.mainfragment, fragment).commit();
-                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
                 while (fragmentManager.getBackStackEntryCount() > 0) {
                     fragmentManager.popBackStackImmediate();
                 }
@@ -170,18 +163,9 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        if (fragmentManager.getBackStackEntryCount() > 0) {
-            while (fragmentManager.getBackStackEntryCount() > 0) {
-                fragmentManager.popBackStackImmediate();
-            }
-            selectItem(0);
-            return true;
-        }
-
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
-        else if (mDrawerToggle.onOptionsItemSelected(item)) {
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         else if (id == R.id.action_settings) {
