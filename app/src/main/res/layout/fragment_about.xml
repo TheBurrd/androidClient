@@ -112,61 +112,6 @@
                 android:layout_margin="5dp"
                 android:padding="10dp"/>
 
-<!--
-            <ImageView
-                android:id="@+id/adam_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/adam_photo"/>
-
-            <ImageView
-                android:id="@+id/andrew_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/andrew_photo"/>
-
-            <ImageView
-                android:id="@+id/anjali_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/anjali_photo"/>
-
-            <ImageView
-                android:id="@+id/brenton_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/brenton_photo"/>
-
-            <ImageView
-                android:id="@+id/chloe_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/chloe_photo"/>
-            <ImageView
-                android:id="@+id/ken_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ken_photo"/>
-
-            <ImageView
-                android:id="@+id/sherman_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/sherman_photo"/>
-
-            <ImageView
-                android:id="@+id/soham_photo"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:src="@drawable/soham_photo"/>
-
-            <ImageView
-                android:id="@+id/trent_photo"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:src="@drawable/trent_photo"/>
-
--->
         </LinearLayout>
 
     </ScrollView>
@@ -179,8 +124,8 @@
 
         <Button
             android:id="@+id/llamaButton"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/hide_pic" />
 
 
@@ -193,6 +138,5 @@
             android:visibility="invisible"/>
 
     </LinearLayout>
-
 
 </FrameLayout>

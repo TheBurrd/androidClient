@@ -5,27 +5,20 @@ package com.dgaf.happyhour.View;
  * Written by Sherman Cheung
  */
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.dgaf.happyhour.R;
 
-import java.io.LineNumberReader;
-import java.net.URL;
 
 /* Fragment displayed when the user clicks About Us in the Navigation Drawer
  */
 public class About extends Fragment implements View.OnClickListener {
-
-
 
     private ImageView llamaPic;
     private boolean displayed = false;
