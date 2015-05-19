@@ -30,7 +30,7 @@ public class MainActivity extends ActionBarActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private String[] drawerItems = {"List","Favorites","Login","About"};
+    private String[] drawerItems = {"Deals","Favorites","Rating", "Proximity", "About Us"};
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -101,21 +101,30 @@ public class MainActivity extends ActionBarActivity {
 
     /** Swaps fragments in the main content view */
     private void selectItem(int position) {
-
         Fragment fragment = null;
         /*we will open all the various fragments from the sliding drawer here*/
         switch(position){
+            // List of deals
             case 0:
                 fragment = new ViewPagerFragment();
                 break;
+            // Favorites
             case 1:
+                displayFavorites();
 
                 break;
+            // Sort by Rating
             case 2:
+                sortByRating();
 
                 break;
-
+            // Sort by Proximity
             case 3:
+                sortByProximity();
+
+                break;
+            // About Us
+            case 4:
                 fragment = new About();
                 break;
 
@@ -176,6 +185,21 @@ public class MainActivity extends ActionBarActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    // Displays the users favorites
+    private void displayFavorites() {
+
+    }
+
+    // Change the sorting mechanism for deals to sort by rating
+    private void sortByRating() {
+
+    }
+
+    // Change the sorting mechanism for deals to sort by proximity
+    private void sortByProximity() {
+
     }
 
 }
