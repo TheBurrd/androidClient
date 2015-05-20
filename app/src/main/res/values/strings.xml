@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">HappyHour</string>
+    <string name="app_name">Burrd</string>
 
 
-    <string name="bar">Bars</string>
+    <string name="drink">Drink</string>
     <string name="food">Food</string>
     <string name="featured">Featured</string>
 
@@ -12,7 +12,6 @@
     <string name="open">open</string>
 
     <string name="closed">closed</string>
-    <string name="title_activity_restaurant">restaurant</string>
 
     <string name="about_us_sherman"><b>Hello!</b>\n\nWe are Burrd, a group of ten students from
         UC San Diego making
