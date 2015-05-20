@@ -2,6 +2,7 @@ package com.dgaf.happyhour.Controller;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -36,14 +37,12 @@ public class MainActivity extends ActionBarActivity {
     private ActionBarDrawerToggle mDrawerToggle;
 
 
-
     @Override
     public boolean onSupportNavigateUp(){
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStack();
         return true;
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,20 +67,18 @@ public class MainActivity extends ActionBarActivity {
                 mDrawerLayout,
                 R.drawable.ic_drawer,
                 R.string.open,
-                R.string.closed)
-        {
-            public void onDrawerClosed(View view)
-            {
+                R.string.closed) {
+
+            public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 getSupportActionBar().setTitle("HappyHour");
-               // invalidateOptionsMenu();
+                // invalidateOptionsMenu();
             }
 
-            public void onDrawerOpened(View drawerView)
-            {
+            public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 getSupportActionBar().setTitle("Options");
-               // invalidateOptionsMenu();
+                // invalidateOptionsMenu();
             }
         };
 
@@ -89,6 +86,7 @@ public class MainActivity extends ActionBarActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
     }
 
     /*TODO this needs to be declared in its own file*/
@@ -99,10 +97,12 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+
     /** Swaps fragments in the main content view */
-    private void selectItem(int position) {
+    public void selectItem(int position) {
 
         Fragment fragment = null;
+        String identifier = null;
         /*we will open all the various fragments from the sliding drawer here*/
         switch(position){
             case 0:
@@ -117,26 +117,32 @@ public class MainActivity extends ActionBarActivity {
 
             case 3:
                 fragment = new About();
+                identifier = "about";
                 break;
 
             default:
                 break;
         }
-
         if (fragment != null)
         {
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.mainfragment, fragment).addToBackStack(null).commit();
+                    .replace(R.id.mainfragment, fragment).addToBackStack(identifier).commit();
+            if (position == 0)
+            {
+                while (fragmentManager.getBackStackEntryCount() > 0) {
+                    fragmentManager.popBackStackImmediate();
+                }
+            }
 
             // update selected item and title, then close the drawer
             mDrawerList.setItemChecked(position, true);
             mDrawerList.setSelection(position);
             //setTitle(mNames[position]);
             mDrawerLayout.closeDrawer(mDrawerList);
-        }
 
+        }
 
     }
 
@@ -155,10 +161,10 @@ public class MainActivity extends ActionBarActivity {
 
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
-
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
-        }else if (id == R.id.action_settings) {
+        }
+        else if (id == R.id.action_settings) {
             return true;
         }
 
