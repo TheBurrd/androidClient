@@ -30,7 +30,8 @@ public class MainActivity extends ActionBarActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private String[] drawerItems = {"Deals","Favorites","Rating", "Proximity", "About Us"};
+    private String[] drawerItems = {"Deals","Favorites","Rating", "Proximity", "Monday",
+            "Tuesday", "Wednesday", "Thursday", "Friday", "About Us"};
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -123,8 +124,29 @@ public class MainActivity extends ActionBarActivity {
                 sortByProximity();
 
                 break;
-            // About Us
+            // Filter Monday
             case 4:
+                break;
+            // Filter Tuesday
+            case 5:
+                break;
+            // Filter Wednesday
+            case 6:
+                break;
+            // Filter Thursday
+            case 7:
+                break;
+            // Filter Friday
+            case 8:
+                break;
+        /*    // Filter Saturday
+            case 9:
+                break;
+            // Filter Sunday
+            case 10:
+                break;
+         */   // About Us
+            case 9:
                 fragment = new About();
                 break;
 
