@@ -2,6 +2,8 @@ package com.dgaf.happyhour.Model;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +13,12 @@ import android.widget.TextView;
 
 import com.dgaf.happyhour.DealListType;
 import com.dgaf.happyhour.R;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseImageView;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
@@ -22,48 +27,72 @@ import java.util.List;
 /**
  * Created by trentonrobison on 4/28/15.
  */
-public class DealListAdapter extends BaseAdapter{
+public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder>{
     private Activity activity;
-    private LayoutInflater inflater;
+    private ImageLoader imageLoader;
     private List<DealModel> dealItems;
-    //ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+    private ParseGeoPoint userLocation;
+
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public TextView deal;
+        public TextView description;
+        public TextView distance;
+        public TextView restaurant;
+        public TextView likes;
+        public TextView hours;
+        public ParseImageView thumbnail;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+            deal = (TextView) itemView.findViewById(R.id.deal);
+            description = (TextView) itemView.findViewById(R.id.description);
+            distance = (TextView) itemView.findViewById(R.id.distance);
+            restaurant = (TextView) itemView.findViewById(R.id.restaurant);
+            likes = (TextView) itemView.findViewById(R.id.likes);
+            hours = (TextView) itemView.findViewById(R.id.hours);
+            thumbnail = (ParseImageView) itemView.findViewById(R.id.thumb_nal);
+            thumbnail.setPlaceholder(ContextCompat.getDrawable(itemView.getContext(), R.drawable.llama));
+        }
+        @Override
+        public void onClick(View v) {
+            // Do clicky stuff
+        }
+    }
 
     public DealListAdapter(Activity activity, DealListType listType) {
         this.activity = activity;
-        dealItems = new ArrayList<DealModel>();
+        this.imageLoader = ImageLoader.getInstance();
+        dealItems = new ArrayList<>();
 
-        // Get users GPS coords
-        double radiusMi = 5.0;
-        ParseGeoPoint location = new ParseGeoPoint(32.000,-117.0000);
+        // TODO: Get users GPS coords
+        double radiusMi = 100.0;
+        // Geisel Library
+        userLocation = new ParseGeoPoint(32.881122,-117.237631);
 
         switch(listType) {
             case DRINK:
-                loadLocalDeals(location, radiusMi);
+                loadLocalDeals(userLocation, radiusMi);
                 break;
             case FOOD:
-                loadLocalDeals(location, radiusMi);
+                loadLocalDeals(userLocation, radiusMi);
                 break;
             case FEATURED:
-                loadLocalDeals(location, radiusMi);
+                loadLocalDeals(userLocation, radiusMi);
                 break;
         }
     }
 
     public void loadLocalDeals(ParseGeoPoint location, double radiusMi) {
         // Setup the database Query
-        ParseQuery<RestaurantModel> localRestaurants = ParseQuery.getQuery(RestaurantModel.class);
-        localRestaurants.whereWithinMiles("location", location, radiusMi);
-        localRestaurants.include("deals");
-
+        ParseQuery<DealModel> localDeals = ParseQuery.getQuery(DealModel.class);
+        localDeals.whereWithinMiles("location", location, radiusMi);
+        localDeals.include("restaurantId");
         final DealListAdapter listAdapter = this;
-        localRestaurants.findInBackground(new FindCallback<RestaurantModel>() {
-            public void done(List<RestaurantModel> restaurants, ParseException e) {
+        localDeals.findInBackground(new FindCallback<DealModel>() {
+            public void done(List<DealModel> deals, ParseException e) {
                 if (e == null) {
-                    dealItems = new ArrayList<DealModel>();
-                    for (RestaurantModel res : restaurants) {
-                        List<DealModel> deals = res.getList("deals");
-                        dealItems.addAll(deals);
-                    }
+                    dealItems = deals;
                     listAdapter.notifyDataSetChanged();
                 } else {
                     Log.e("Parse error: ", e.getMessage());
@@ -73,64 +102,33 @@ public class DealListAdapter extends BaseAdapter{
     }
 
     @Override
-    public int getCount() {
+    public DealListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.deal_list_item, parent, false);
+        //v.setOnClickListener(mOnClickListener);
+        ViewHolder vh = new ViewHolder(v);
+        return vh;
+    }
+
+    @Override
+    public int getItemCount() {
         return dealItems.size();
     }
 
     @Override
-    public Object getItem(int location) {
-        return dealItems.get(location);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-
-        if (inflater == null)
-            inflater = (LayoutInflater) activity
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        if (convertView == null)
-            convertView = inflater.inflate(R.layout.deal_list_item, null);
-
-       /* if (imageLoader == null)
-            imageLoader = AppController.getInstance().getImageLoader();
-        NetworkImageView thumbNail = (NetworkImageView) convertView.findViewById(R.id.thumb_nal);
-*/
-        TextView deal = (TextView) convertView.findViewById(R.id.deal);
-        TextView description = (TextView) convertView.findViewById(R.id.description);
-        TextView distance = (TextView) convertView.findViewById(R.id.distance);
-        TextView restaurant = (TextView) convertView.findViewById(R.id.restaurant);
-        TextView likes = (TextView) convertView.findViewById(R.id.likes);
-        TextView hours = (TextView) convertView.findViewById(R.id.hours);
-
-
-
-        // getting movie data for the row
+    public void onBindViewHolder(ViewHolder holder, int position) {
         DealModel dealModel = dealItems.get(position);
 
-        // thumbnail image
-        //thumbNail.setImageUrl(dealModel.getPictureURL(), imageLoader);
+        ParseFile imageFile = dealModel.getThumbnailFile();
+        if (imageFile != null) {
+            imageLoader.displayImage(imageFile.getUrl(), holder.thumbnail);
+        }
 
-        // Set Deal
-        deal.setText(dealModel.getTitle());
-
-        // Set Likes
-        likes.setText("Rating: " + String.valueOf(dealModel.getUpVotes()));
-
-        description.setText(dealModel.getDescription());
-
-        //restaurant.setText(dealModel.getRestaurantID());
-
-        hours.setText("");
-        //do something with theses
-        //distance.setText(dealModel.getLongitude() + dealModel.getLatitude());
-
-
-        return convertView;
+        holder.deal.setText(dealModel.getTitle());
+        holder.likes.setText("Rating: " + String.valueOf(dealModel.getUpVotes()));
+        holder.description.setText(dealModel.getDescription());
+        holder.restaurant.setText(dealModel.getRestaurant());
+        holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(userLocation)) + " mi");
+        holder.hours.setText("");
     }
 }

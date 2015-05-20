@@ -20,6 +20,9 @@ import com.dgaf.happyhour.Model.RestaurantModel;
 import com.dgaf.happyhour.R;
 import com.dgaf.happyhour.View.About;
 import com.dgaf.happyhour.View.ViewPagerFragment;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
@@ -52,14 +55,6 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Enable Local Datastore.
-        Parse.enableLocalDatastore(this);
-        // Setup Model objects
-        ParseObject.registerSubclass(DealModel.class);
-        ParseObject.registerSubclass(RestaurantModel.class);
-        // Setup Parse db connection
-        Parse.initialize(this, "aOa7pfDy6GLtckl4cYBEMCnkBW9NyDLZ7ta4FVoI", "SRlu6KjPyWSVvge8NPZ5NU78lH5LCT1Ve5qXQHOY");
 
         if(getSupportFragmentManager().findFragmentById(R.id.mainfragment) == null){
             getSupportFragmentManager().beginTransaction().add(R.id.mainfragment, new ViewPagerFragment()).commit();

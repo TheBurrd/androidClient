@@ -4,7 +4,7 @@
     android:id="@+id/main">
 
 
-    <ImageView
+    <com.parse.ParseImageView
         android:padding="5dp"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -22,17 +22,22 @@
         android:id="@+id/deal"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/thumb_nal"
-        android:layout_toEndOf="@+id/thumb_nal" />
+        android:layout_toStartOf="@+id/hours"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="15sp"
         android:text="description"
         android:id="@+id/description"
-        android:layout_below="@+id/deal"
         android:layout_toRightOf="@+id/thumb_nal"
-        android:layout_toEndOf="@+id/thumb_nal" />
+        android:layout_toStartOf="@+id/distance"
+        android:ellipsize="end"
+        android:layout_below="@+id/deal"
+        android:layout_above="@+id/restaurant" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -40,9 +45,11 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="restaurant"
         android:id="@+id/restaurant"
-        android:layout_below="@+id/description"
+        android:layout_alignBottom="@+id/thumb_nal"
         android:layout_toRightOf="@+id/thumb_nal"
-        android:layout_toEndOf="@+id/thumb_nal" />
+        android:ellipsize="end"
+        android:layout_toLeftOf="@+id/distance"
+        android:layout_toStartOf="@+id/distance" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -50,9 +57,12 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="distance"
         android:id="@+id/distance"
-        android:layout_below="@+id/restaurant"
-        android:layout_toRightOf="@+id/thumb_nal"
-        android:layout_toEndOf="@+id/thumb_nal" />
+        android:layout_alignBaseline="@+id/restaurant"
+        android:layout_alignBottom="@+id/restaurant"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignLeft="@+id/likes"
+        android:layout_alignStart="@+id/likes" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -60,8 +70,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="likes"
         android:id="@+id/likes"
-        android:layout_alignBaseline="@+id/description"
-        android:layout_alignBottom="@+id/description"
+        android:layout_below="@+id/deal"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
@@ -71,9 +80,11 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="hours"
         android:id="@+id/hours"
-        android:layout_alignTop="@+id/restaurant"
+        android:layout_below="@+id/likes"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignLeft="@+id/likes"
+        android:layout_alignStart="@+id/likes" />
 
 
 </RelativeLayout>

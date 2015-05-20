@@ -5,12 +5,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.dgaf.happyhour.DealListType;
-import com.dgaf.happyhour.Model.DealListAdapter;
 import com.dgaf.happyhour.R;
 
 import java.util.Locale;
@@ -20,16 +20,19 @@ import java.util.Locale;
  */
 public class ViewPagerFragment extends Fragment{
 
-    private DealListAdapter food;
-    private DealListAdapter drink;
-    private DealListAdapter feature;
+    private DealListFragment mFoodFragment;
+    private DealListFragment mDrinkFragment;
+    private DealListFragment mFeaturedFragment;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //return super.onCreateView(inflater, container, savedInstanceState);
         View result = inflater.inflate(R.layout.view_pager,container,false);
         ViewPager vp = (ViewPager) result.findViewById(R.id.pager);
+
+        mDrinkFragment = DealListFragment.newInstance(DealListType.DRINK);
+        mFoodFragment = DealListFragment.newInstance(DealListType.FOOD);
+        mFeaturedFragment = DealListFragment.newInstance(DealListType.FEATURED);
 
         vp.setAdapter(new SectionsPagerAdapter(getChildFragmentManager()));
 
@@ -50,19 +53,19 @@ public class ViewPagerFragment extends Fragment{
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
 
-
             switch(position) {
                 case 0: {
-                    return DealListFragment.newInstance(DealListType.DRINK);
+                    return mDrinkFragment;
                 }
                 case 1: {
-                    return DealListFragment.newInstance(DealListType.FOOD);
+                    return mFoodFragment;
                 }
                 case 2: {
-                    return DealListFragment.newInstance(DealListType.FEATURED);
+                    return mFeaturedFragment;
                 }
                 default:{
-                    return DealListFragment.newInstance(DealListType.DRINK);
+                    Log.e("Sections Adapter: ", "Bad page position requested");
+                    return null;
                 }
             }
         }
@@ -83,7 +86,6 @@ public class ViewPagerFragment extends Fragment{
                     return getString(R.string.food).toUpperCase(l);
                 case 2:
                     return getString(R.string.featured).toUpperCase(l);
-
             }
             return null;
         }
