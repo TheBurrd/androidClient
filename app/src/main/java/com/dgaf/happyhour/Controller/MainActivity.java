@@ -62,8 +62,6 @@ public class MainActivity extends ActionBarActivity {
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        //System.out.println(Integer.toString(getSupportFragmentManager().getBackStackEntryCount()));
-
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
@@ -146,7 +144,6 @@ public class MainActivity extends ActionBarActivity {
 
         }
 
-
     }
 
     @Override
@@ -161,7 +158,6 @@ public class MainActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-
 
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
