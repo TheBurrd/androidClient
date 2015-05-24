@@ -1,18 +1,21 @@
 package com.dgaf.happyhour.Model;
 
-import android.app.Activity;
-import android.content.Context;
+
+
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.dgaf.happyhour.DealListType;
 import com.dgaf.happyhour.R;
+import com.dgaf.happyhour.View.Restaurant;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -28,7 +31,7 @@ import java.util.List;
  * Created by trentonrobison on 4/28/15.
  */
 public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder>{
-    private Activity activity;
+    private FragmentActivity activity;
     private ImageLoader imageLoader;
     private List<DealModel> dealItems;
     private ParseGeoPoint userLocation;
@@ -41,10 +44,12 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         public TextView likes;
         public TextView hours;
         public ParseImageView thumbnail;
+        public FragmentActivity activity;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView,FragmentActivity activity) {
             super(itemView);
             itemView.setOnClickListener(this);
+            this.activity = activity;
             deal = (TextView) itemView.findViewById(R.id.deal);
             description = (TextView) itemView.findViewById(R.id.description);
             distance = (TextView) itemView.findViewById(R.id.distance);
@@ -56,11 +61,15 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
         @Override
         public void onClick(View v) {
-            // Do clicky stuff
+            Fragment restaurant = new Restaurant();
+            FragmentManager fragmentManager = activity.getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.mainfragment, restaurant).addToBackStack(null).commit();
         }
+
     }
 
-    public DealListAdapter(Activity activity, DealListType listType) {
+    public DealListAdapter(FragmentActivity activity, DealListType listType) {
         this.activity = activity;
         this.imageLoader = ImageLoader.getInstance();
         dealItems = new ArrayList<>();
@@ -106,7 +115,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.deal_list_item, parent, false);
         //v.setOnClickListener(mOnClickListener);
-        ViewHolder vh = new ViewHolder(v);
+        ViewHolder vh = new ViewHolder(v,activity);
         return vh;
     }
 

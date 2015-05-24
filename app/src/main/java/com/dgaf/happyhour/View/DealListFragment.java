@@ -12,18 +12,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.dgaf.happyhour.DealListType;
 import com.dgaf.happyhour.Model.DealListAdapter;
-import com.dgaf.happyhour.Model.DealModel;
 import com.dgaf.happyhour.R;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /*This is the fragment that our page view loads*/
 public class DealListFragment extends Fragment {
@@ -69,6 +61,7 @@ public class DealListFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
+
 
     }
 }
