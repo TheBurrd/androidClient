@@ -69,10 +69,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         this.imageLoader = ImageLoader.getInstance();
         dealItems = new ArrayList<>();
 
-        // TODO: Get users GPS coords
-
-
-        userLocation = new MyLocationListener(getActivity());
+        userLocation = new MyLocationListener(activity);
 
         // Geisel Library
         double latitude = 32.881122;
