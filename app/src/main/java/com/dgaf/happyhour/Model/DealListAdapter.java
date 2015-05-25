@@ -1,4 +1,6 @@
 package com.dgaf.happyhour.Model;
+import com.dgaf.happyhour.Controller.MyLocationListener;
+
 
 import android.app.Activity;
 import android.content.Context;
@@ -31,7 +33,9 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private Activity activity;
     private ImageLoader imageLoader;
     private List<DealModel> dealItems;
-    private ParseGeoPoint userLocation;
+    private ParseGeoPoint parseLocation;
+    private MyLocationListener userLocation;
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView deal;
@@ -65,20 +69,30 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         this.imageLoader = ImageLoader.getInstance();
         dealItems = new ArrayList<>();
 
-        // TODO: Get users GPS coords
-        double radiusMi = 100.0;
+        userLocation = new MyLocationListener(activity);
+
         // Geisel Library
-        userLocation = new ParseGeoPoint(32.881122,-117.237631);
+        double latitude = 32.881122;
+        double longitude = -117.237631;
+        if (userLocation.canGetLocation()) {
+            latitude = userLocation.getLatitude();
+            longitude = userLocation.getLongitude();
+        } else {
+            userLocation.showSettingsAlert();
+        }
+
+        double radiusMi = 100.0;
+        parseLocation = new ParseGeoPoint(latitude,longitude);
 
         switch(listType) {
             case DRINK:
-                loadLocalDeals(userLocation, radiusMi);
+                loadLocalDeals(parseLocation, radiusMi);
                 break;
             case FOOD:
-                loadLocalDeals(userLocation, radiusMi);
+                loadLocalDeals(parseLocation, radiusMi);
                 break;
             case FEATURED:
-                loadLocalDeals(userLocation, radiusMi);
+                loadLocalDeals(parseLocation, radiusMi);
                 break;
         }
     }
@@ -128,7 +142,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         holder.likes.setText("Rating: " + String.valueOf(dealModel.getUpVotes()));
         holder.description.setText(dealModel.getDescription());
         holder.restaurant.setText(dealModel.getRestaurant());
-        holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(userLocation)) + " mi");
+        holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(parseLocation)) + " mi");
         holder.hours.setText("");
     }
 }

@@ -170,6 +170,7 @@ public class MainActivity extends ActionBarActivity {
         // true, then it has handled the app icon touch event
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
+
         }
         else if (id == R.id.action_settings) {
             return true;
