@@ -7,58 +7,47 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.app.ListFragment;
-import android.widget.Toast;
-
-import com.dgaf.happyhour.Controller.MainActivity;
 import com.dgaf.happyhour.Controller.MyLocationListener;
-import com.dgaf.happyhour.Model.DealFetch;
+import com.dgaf.happyhour.DealListType;
 import com.dgaf.happyhour.Model.DealListAdapter;
+import com.dgaf.happyhour.Model.DealModel;
 import com.dgaf.happyhour.R;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /*This is the fragment that our page view loads*/
 public class DealListFragment extends Fragment {
-    /**
-     * The fragment argument representing the section number for this
-     * fragment.
-     */
-    private static final String QUERY_DECISION = "query";
-    private String[] list_items;
-    MyLocationListener gps;
-    Button btnShowLocation; //Dummy Button to get location.
 
+    private static final String DEAL_LIST_TYPE = "listType";
+    private DealListType listType;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private LinearLayoutManager mLayoutManager;
 
-    /**
-     * Returns a new instance of this fragment for the given section
-     * number.
-     */
-    //private int  querySearchNumber;
+        //section ID acts like ID for the query search as well
+    public static DealListFragment newInstance(DealListType listType) {
 
-
-    //section ID acts like ID for the query search as well
-    public static DealListFragment newInstance(int sectionNumber, int query)
-
-    {
         DealListFragment fragment = new DealListFragment();
         Bundle args = new Bundle();
-        args.putInt(QUERY_DECISION, query);
+        args.putInt(DEAL_LIST_TYPE, listType.ordinal());
         fragment.setArguments(args);
 
         return fragment;
-    }
-
-    public DealListFragment() {
     }
 
     @Override
@@ -66,52 +55,27 @@ public class DealListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.feature_food_drink, container, false);
 
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
-        //Test text
-        //TextView tv = (TextView) rootView.findViewById(R.id.textView);
+        return rootView;
+    }
 
-        //int querySearch = this.getArguments().getInt(QUERY_DECISION);
-        //tv.setText("I am going to query " + (querySearch));
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        //The deal List:
-                //Get the list
-        list_items = getResources().getStringArray(R.array.list);
-                //Populate the adapter with the strings(for now)
-        ListAdapter dealAdapter = new DealListAdapter(this.getActivity(), list_items);
-                //Link the list with xml
-        ListView dealList = (ListView) rootView.findViewById(R.id.deals);
-                //Populate list with adapters
-        dealList.setAdapter(dealAdapter);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mLayoutManager.scrollToPosition(0);
 
+        Bundle args = this.getArguments();
+        listType = DealListType.values()[args.getInt(DEAL_LIST_TYPE)];
 
-        //Location Testing:
-                //
-
-        btnShowLocation = (Button) rootView.findViewById(R.id.show_location);
-
-
-        btnShowLocation.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                gps = new MyLocationListener(getActivity());
-
-                if (gps.canGetLocation()) {
-                    double latitude = gps.getLatitude();
-                    double longitude = gps.getLongitude();
-
-                    Toast.makeText(
-                            getActivity(),
-                            "Your Location is -\nLat: " + latitude + "\nLong: "
-                                    + longitude, Toast.LENGTH_LONG).show();
-                } else {
-                    gps.showSettingsAlert();
-                }
-            }
-        });
-
-
-            return rootView;
-        }
+        mAdapter = new DealListAdapter(getActivity(), listType);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setHasFixedSize(true);
 
     }
+}

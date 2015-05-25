@@ -1,12 +1,10 @@
 <resources>
-    <string name="app_name">HappyHour</string>
+    <string name="app_name">Burrd</string>
 
 
-    <string name="bar">Bars</string>
+    <string name="drink">Drink</string>
     <string name="food">Food</string>
     <string name="featured">Featured</string>
-
-    <string name="hello_world">Hello world!</string>
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_about">About</string>
@@ -14,23 +12,54 @@
     <string name="open">open</string>
 
     <string name="closed">closed</string>
-    <string name="title_activity_restaurant">restaurant</string>
 
+    <string name="about_us_sherman"><b>Hello!</b>\n\nWe are Burrd, a group of ten students from
+        UC San Diego making
+        a bold foray into the world of mobile app development. Burrd began as a project for our
+        Software Engineering course.  We sought to create an app that would enable students to find
+        the best value for food and drinks in their local area.\n\nOur team consists of Brenton
+        Ang, Sherman Cheung, Adam Dorwat, Xu(Ken) He, Soham Jatakia,
+        Chloe Lopez, David Liberman, Trent Miller, Anjali Patel, and Andrew Walters.  We are very
+        proud to bring you this app and wish you the best of luck in your gastronomic endeavors.
+        Happy Happy Hour!
+    </string>
 
-    <string-array name = "list">
-        <item>Item: 1</item>
-        <item>Item: 2</item>
-        <item>Item: 3</item>
-        <item>Item: 4</item>
-        <item>Item: 5</item>
-        <item>Item: 6</item>
-        <item>Item: 7</item>
-        <item>Item: 8</item>
-        <item>Item: 9</item>
-        <item>Item: 10</item>
-    </string-array>
+    <string name="about_us_title"><b>About Us</b></string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="about_us_david">Burrd is a fusion between blurred and bird. Why? Because the
+        BIRD is the <b>WORD</b>.\n\nThe Burrd is inspired by our lead software
+        developer’s beloved Cockatiel who has an
+        affinity for fine beers. We are a group of thrifty college students from UC San Diego who
+        are always on the prowl for the best deals to get us drunk or full for as little money
+        as possible.
+    </string>
+
+    <string name="hide_pic">Hide Pic</string>
+
+    <string name="about_andrew"><b>Andrew, Project Manager</b>\nOur fearless leader. When he isn’t
+        drinking beers, he’s roasting ribs, and occasionally,
+        tri-tip.</string>
+    <string name="about_adam"><b>Adam, Software Architect</b>\nFormer Microsoft intern, has the
+        midas touch of turning garbage into industry-grade code.
+    </string>
+    <string name="about_trent"><b>Trent, Lead Developer</b>\nSee him slinging code while shredding
+        gnar on the Pacific Coast. </string>
+    <string name="about_soham"><b>Soham, Lead Developer</b>\nMakes apps for doctors. Also the
+        reigning champion of IBPL, The Indian Beer Pong League.
+    </string>
+    <string name="about_chloe"><b>Chloe, UI Extraordinaire</b>\nBecause of her wondrous portfolio,
+        some confuse her as the creator of the DragonBall
+        series.</string>
+    <string name="about_sherman"><b>Sherman, Algorithms Man</b>\nReigning from San Francisco, he
+        makes sure that the deal finds you and you find the deal.
+    </string>
+    <string name="about_david"><b>David, BizNiz/Systems</b>\nFormer DraftKings intern. David is
+        looking to innovate, ladies. Holla.</string>
+    <string name="about_anjali"><b>Anjali, Quality Assurance</b>\nSpecial power: she can sniff out
+        the bugs in the cleanest of code. </string>
+    <string name="about_ken"><b>Ken, Database Guru</b>\nKnown as the Atomic Bomb, he is the
+        secret weapon.</string>
+    <string name="about_brenton"><b>Brenton, Database Guru</b>\nDallas Mavericks. Dallas Mavericks.
+        Dallas Mavericks. Dallas Mavericks. </string>
 
 </resources>
