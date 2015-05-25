@@ -14,6 +14,13 @@
   limitations under the License.
   -->
 
+<!-- READ ME READ ME READ ME READ ME READ ME READ ME READ ME READ ME
+     READ ME READ ME READ ME READ ME READ ME READ ME READ ME READ ME
+
+     This file is not currently being used
+     drawer_item.xml is used instead
+     go look there -->
+
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/text1"
     android:layout_width="match_parent"
@@ -25,3 +32,4 @@
     android:textColor="#fff"
     android:background="?android:attr/activatedBackgroundIndicator"
     android:minHeight="?android:attr/listPreferredItemHeightSmall"/>
+

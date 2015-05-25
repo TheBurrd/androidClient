@@ -11,6 +11,10 @@ import com.dgaf.happyhour.R;
 /**
  * Created by Sherman on 5/24/15.
  */
+
+/* NOTE:
+ * This is a place holder and is not currently used
+ */
 public class PreferencesFragment extends Fragment {
     public PreferencesFragment() {
 

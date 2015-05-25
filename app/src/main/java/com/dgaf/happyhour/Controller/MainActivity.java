@@ -48,6 +48,7 @@ public class MainActivity extends ActionBarActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
+
  //   private String[] drawerItems = {"Deals","Favorites","Rating", "Proximity", "Monday",
  //           "Tuesday", "Wednesday", "Thursday", "Friday", "About Us"};
     private ListView mDrawerList;
@@ -69,14 +70,19 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(getSupportFragmentManager().findFragmentById(R.id.mainfragment) == null){
-            getSupportFragmentManager().beginTransaction().add(R.id.mainfragment, new ViewPagerFragment()).commit();
+        if(getSupportFragmentManager().findFragmentById(R.id.main_fragment) == null){
+            getSupportFragmentManager().beginTransaction().add(R.id.main_fragment, new ViewPagerFragment()).commit();
         }
 
-
+        mNavItems.add(new NavItem("Deals", R.drawable.ic_drawer));
         mNavItems.add(new NavItem("Rating", R.drawable.ic_drawer));
-        mNavItems.add(new NavItem("Proximity", R.drawable.ic_drawer));
-        mNavItems.add(new NavItem("About", R.drawable.ic_drawer));
+        mNavItems.add(new NavItem("Proximity", R.drawable.ic_proximity));
+        mNavItems.add(new NavItem("Monday", R.drawable.ic_calendar));
+        mNavItems.add(new NavItem("Tuesday", R.drawable.ic_calendar));
+        mNavItems.add(new NavItem("Wednesday", R.drawable.ic_calendar));
+        mNavItems.add(new NavItem("Thursday", R.drawable.ic_calendar));
+        mNavItems.add(new NavItem("Friday", R.drawable.ic_calendar));
+        mNavItems.add(new NavItem("About", R.drawable.llama));
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -89,8 +95,8 @@ public class MainActivity extends ActionBarActivity {
         // Drawer Item click listeners
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItemFromDrawer(position);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectItem(position);
             }
         });
 
@@ -103,7 +109,7 @@ public class MainActivity extends ActionBarActivity {
 
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getSupportActionBar().setTitle("HappyHour");
+                getSupportActionBar().setTitle("Burrd");
                 // invalidateOptionsMenu();
             }
 
@@ -156,19 +162,25 @@ public class MainActivity extends ActionBarActivity {
     }
 
     /* TODO this needs to be declared in its own file*/
+ /*
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
             selectItem(position);
         }
     }
+ */
 
 
+    /* This can be used if we want to open a new fragment such as the
+     * PreferencesFragment for when we click an item in the nav drawer.
+     */
+ /*
     private void selectItemFromDrawer(int position) {
         Fragment fragment = new PreferencesFragment();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.mainfragment, fragment)
+        fragmentManager.beginTransaction().replace(R.id.main_fragment, fragment)
                 .commit();
 
         mDrawerList.setItemChecked(position, true);
@@ -176,6 +188,7 @@ public class MainActivity extends ActionBarActivity {
 
         mDrawerLayout.closeDrawer(mDrawerPane);
     }
+ */
 
 
 
@@ -190,43 +203,45 @@ public class MainActivity extends ActionBarActivity {
             case 0:
                 fragment = new ViewPagerFragment();
                 break;
-            // Favorites
-            case 1:
-                displayFavorites();
 
-                break;
             // Sort by Rating
-            case 2:
+            case 1:
                 sortByRating();
-
                 break;
+
             // Sort by Proximity
-            case 3:
+            case 2:
                 sortByProximity();
-
                 break;
+
             // Filter Monday
             case 4:
                 break;
+
             // Filter Tuesday
             case 5:
                 break;
+
             // Filter Wednesday
             case 6:
                 break;
+
             // Filter Thursday
             case 7:
                 break;
+
             // Filter Friday
             case 8:
                 break;
+
         /*    // Filter Saturday
             case 9:
                 break;
             // Filter Sunday
             case 10:
                 break;
-         */   // About Us
+         */
+            // About Us
             case 9:
                 fragment = new About();
                 identifier = "about";
@@ -240,7 +255,7 @@ public class MainActivity extends ActionBarActivity {
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.mainfragment, fragment).addToBackStack(identifier).commit();
+                    .replace(R.id.main_fragment, fragment).addToBackStack(identifier).commit();
             if (position == 0)
             {
                 while (fragmentManager.getBackStackEntryCount() > 0) {
@@ -313,6 +328,9 @@ public class MainActivity extends ActionBarActivity {
 
 }
 
+/* NavItem class that defines a single row in the Navigation Drawer
+ * It consists of an icon for the element and a string for the element itself
+ */
 class NavItem {
     String mTitle;
     int mIcon;
@@ -323,6 +341,9 @@ class NavItem {
     }
 }
 
+/* An adapter used for the drawer list view.  Contains the actual rows for the
+ * Navigation Drawer in terms of an ArrayList of NavItems
+ */
 class DrawerListAdapter extends BaseAdapter {
 
     Context mContext;
@@ -363,6 +384,7 @@ class DrawerListAdapter extends BaseAdapter {
         TextView titleView = (TextView) view.findViewById(R.id.title);
         ImageView iconView = (ImageView) view.findViewById(R.id.icon);
 
+        // Update the row with the correct title and image corresponding to the item
         titleView.setText( mNavItems.get(position).mTitle );
         iconView.setImageResource(mNavItems.get(position).mIcon);
 
