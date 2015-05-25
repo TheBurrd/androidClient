@@ -2,7 +2,6 @@ package com.dgaf.happyhour.Controller;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,16 +15,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.dgaf.happyhour.Model.DealModel;
-import com.dgaf.happyhour.Model.RestaurantModel;
 import com.dgaf.happyhour.R;
 import com.dgaf.happyhour.View.About;
 import com.dgaf.happyhour.View.ViewPagerFragment;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.parse.Parse;
-import com.parse.ParseObject;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -169,9 +161,6 @@ public class MainActivity extends ActionBarActivity {
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
         if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        else if (id == R.id.action_settings) {
             return true;
         }
 

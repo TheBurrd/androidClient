@@ -14,8 +14,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-//import android.support.v4.app.Fragment;
-
 /**
  * Created by trentonrobison on 4/26/15.
  */
@@ -37,7 +35,6 @@ public class Restaurant extends Fragment {
     public static Restaurant newInstance(int sectionNumber) {
         Restaurant fragment = new Restaurant();
         Bundle args = new Bundle();
-
         return fragment;
     }
 

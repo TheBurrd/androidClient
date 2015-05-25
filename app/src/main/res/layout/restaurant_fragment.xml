@@ -1,10 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/root"
+    android:background="#FFFFFF"
     android:weightSum="1">
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="#FFA000"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/back_button"
+            android:background="#006400"
+            android:text = "Back"
+            android:textColor = "#FFFFFF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:id="@+id/center_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="50dp"
+            android:layout_centerInParent="true"
+            android:text="         Restaurant"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -28,7 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="LLama Bistro"
+                android:text="Rigoberto's Taco Shop"
                 android:padding="5dp"
                 android:id="@+id/restaurantName" />
 
@@ -36,15 +64,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/description"
+                android:textColor="#000000"
                 android:text="Description:"
-                android:id="@+id/description2"
                 android:paddingLeft="8dp"
                 android:layout_gravity="left" />
 
             <TextView
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Address:"
                 android:paddingLeft="8dp"
                 android:id="@+id/address" />
@@ -60,42 +90,29 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="68dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Deal Name"
-                android:padding="5dp"
-                android:id="@+id/dealName" />
+            <ExpandableListView
+                android:id="@+id/lvExp"
+                android:layout_height="65dp"
+                android:text="Deal Name:"
+                android:layout_width="match_parent"
+                android:divider="#000000"
+                android:smoothScrollbar="true" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Price"
-                android:paddingLeft="120dp"
-                android:id="@+id/price" />
 
         </LinearLayout>
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Description:"
-            android:id="@+id/description1"
-            android:paddingLeft="5dp"
-            android:layout_gravity="left" />
+
     </LinearLayout>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="phone"
+        android:shadowColor="#FFE0B2"
         android:ems="10"
         android:id="@+id/phoneNo"
-        android:text="Phone No:" />
+        android:text="Phone No: (858) 271-0170" />
 
     <fragment
         android:id="@+id/map"
@@ -105,13 +122,21 @@
         android:layout_height="131dp"
         android:layout_weight="0.15" />
 
+
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Website"
+        android:text="Website: http://rigobertotacoshop.com/"
+        android:textColor="#000000"
         android:id="@+id/website"
-        android:layout_weight="0.04" />
+        android:layout_weight="0.00" />
+
+    <AutoCompleteTextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Reviews: I like this place. AWESOME FOOD!!"
+        android:id="@+id/autoCompleteTextView" />
 
 
 </LinearLayout>
