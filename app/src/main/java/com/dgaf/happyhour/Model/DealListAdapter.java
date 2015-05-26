@@ -1,9 +1,10 @@
 package com.dgaf.happyhour.Model;
-
-
+import com.dgaf.happyhour.Controller.MyLocationListener;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.app.Activity;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
@@ -34,7 +35,9 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private FragmentActivity activity;
     private ImageLoader imageLoader;
     private List<DealModel> dealItems;
-    private ParseGeoPoint userLocation;
+    private ParseGeoPoint parseLocation;
+    private MyLocationListener userLocation;
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView deal;
@@ -74,34 +77,51 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         this.imageLoader = ImageLoader.getInstance();
         dealItems = new ArrayList<>();
 
-        // TODO: Get users GPS coords
-        double radiusMi = 100.0;
         // Geisel Library
-        userLocation = new ParseGeoPoint(32.881122,-117.237631);
+        double latitude = 32.881122;
+        double longitude = -117.237631;
+        if (!Build.FINGERPRINT.startsWith("generic")) {
+            userLocation = new MyLocationListener(activity);
+            // Is user location available and are we not running in an emulator
+            if (userLocation.canGetLocation()) {
+                latitude = userLocation.getLatitude();
+                longitude = userLocation.getLongitude();
+            } else {
+                userLocation.showSettingsAlert();
+            }
+        }
+
+        double radiusMi = 100.0;
+        parseLocation = new ParseGeoPoint(latitude,longitude);
 
         switch(listType) {
             case DRINK:
-                loadLocalDeals(userLocation, radiusMi);
+                loadLocalDeals(parseLocation, radiusMi);
                 break;
             case FOOD:
-                loadLocalDeals(userLocation, radiusMi);
+                loadLocalDeals(parseLocation, radiusMi);
                 break;
             case FEATURED:
-                loadLocalDeals(userLocation, radiusMi);
+                loadLocalDeals(parseLocation, radiusMi);
                 break;
         }
     }
 
     public void loadLocalDeals(ParseGeoPoint location, double radiusMi) {
         // Setup the database Query
+        ParseQuery<RestaurantModel> localRestaurants = ParseQuery.getQuery(RestaurantModel.class);
+        localRestaurants.whereWithinMiles("location", location, radiusMi);
         ParseQuery<DealModel> localDeals = ParseQuery.getQuery(DealModel.class);
-        localDeals.whereWithinMiles("location", location, radiusMi);
+        localDeals.whereMatchesQuery("restaurantId", localRestaurants);
         localDeals.include("restaurantId");
+        Log.v("Parse info", "Parse query started" );
         final DealListAdapter listAdapter = this;
         localDeals.findInBackground(new FindCallback<DealModel>() {
             public void done(List<DealModel> deals, ParseException e) {
+                Log.v("Parse info","Parse query returned");
                 if (e == null) {
                     dealItems = deals;
+                    //Log.e("Parse info",deals.toString());
                     listAdapter.notifyDataSetChanged();
                 } else {
                     Log.e("Parse error: ", e.getMessage());
@@ -137,7 +157,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         holder.likes.setText("Rating: " + String.valueOf(dealModel.getUpVotes()));
         holder.description.setText(dealModel.getDescription());
         holder.restaurant.setText(dealModel.getRestaurant());
-        holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(userLocation)) + " mi");
+        holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(parseLocation)) + " mi");
         holder.hours.setText("");
     }
 }
