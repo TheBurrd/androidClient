@@ -4,6 +4,7 @@ import com.dgaf.happyhour.Controller.MyLocationListener;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,6 +26,7 @@ import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by trentonrobison on 4/28/15.
@@ -69,16 +71,18 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         this.imageLoader = ImageLoader.getInstance();
         dealItems = new ArrayList<>();
 
-        userLocation = new MyLocationListener(activity);
-
         // Geisel Library
         double latitude = 32.881122;
         double longitude = -117.237631;
-        if (userLocation.canGetLocation()) {
-            latitude = userLocation.getLatitude();
-            longitude = userLocation.getLongitude();
-        } else {
-            userLocation.showSettingsAlert();
+        if (!Build.FINGERPRINT.startsWith("generic")) {
+            userLocation = new MyLocationListener(activity);
+            // Is user location available and are we not running in an emulator
+            if (userLocation.canGetLocation()) {
+                latitude = userLocation.getLatitude();
+                longitude = userLocation.getLongitude();
+            } else {
+                userLocation.showSettingsAlert();
+            }
         }
 
         double radiusMi = 100.0;
@@ -99,14 +103,19 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
 
     public void loadLocalDeals(ParseGeoPoint location, double radiusMi) {
         // Setup the database Query
+        ParseQuery<RestaurantModel> localRestaurants = ParseQuery.getQuery(RestaurantModel.class);
+        localRestaurants.whereWithinMiles("location", location, radiusMi);
         ParseQuery<DealModel> localDeals = ParseQuery.getQuery(DealModel.class);
-        localDeals.whereWithinMiles("location", location, radiusMi);
+        localDeals.whereMatchesQuery("restaurantId", localRestaurants);
         localDeals.include("restaurantId");
+        Log.e("Parse info", "Parse query started" );
         final DealListAdapter listAdapter = this;
         localDeals.findInBackground(new FindCallback<DealModel>() {
             public void done(List<DealModel> deals, ParseException e) {
+                Log.e("Parse info","Parse query returned");
                 if (e == null) {
                     dealItems = deals;
+                    //Log.e("Parse info",deals.toString());
                     listAdapter.notifyDataSetChanged();
                 } else {
                     Log.e("Parse error: ", e.getMessage());
