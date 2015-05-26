@@ -3,7 +3,6 @@ import com.dgaf.happyhour.Controller.MyLocationListener;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.dgaf.happyhour.DealListType;
@@ -26,7 +24,6 @@ import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * Created by trentonrobison on 4/28/15.
@@ -108,11 +105,11 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         ParseQuery<DealModel> localDeals = ParseQuery.getQuery(DealModel.class);
         localDeals.whereMatchesQuery("restaurantId", localRestaurants);
         localDeals.include("restaurantId");
-        Log.e("Parse info", "Parse query started" );
+        Log.v("Parse info", "Parse query started" );
         final DealListAdapter listAdapter = this;
         localDeals.findInBackground(new FindCallback<DealModel>() {
             public void done(List<DealModel> deals, ParseException e) {
-                Log.e("Parse info","Parse query returned");
+                Log.v("Parse info","Parse query returned");
                 if (e == null) {
                     dealItems = deals;
                     //Log.e("Parse info",deals.toString());
