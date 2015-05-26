@@ -5,7 +5,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.dgaf.happyhour.Model.DealListAdapter;
+import com.dgaf.happyhour.Model.RestaurantAdapter;
 import com.dgaf.happyhour.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,8 +22,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
  */
 
 /*This is the fragment that our page view loads*/
-public class Restaurant extends Fragment {
+public class RestaurantFragment extends Fragment {
+    private static final String RESTAURANT_ID = "resId";
     private GoogleMap map;
+    private RestaurantAdapter mAdapter;
     static final LatLng UCSD = new LatLng(32.881122,-117.237631);
     /**
      * The fragment argument representing the section number for this
@@ -32,13 +37,15 @@ public class Restaurant extends Fragment {
      */
 
 
-    public static Restaurant newInstance(int sectionNumber) {
-        Restaurant fragment = new Restaurant();
+    public static RestaurantFragment newInstance(String restaurantId) {
+        RestaurantFragment fragment = new RestaurantFragment();
         Bundle args = new Bundle();
+        args.putString(RESTAURANT_ID, restaurantId);
+        fragment.setArguments(args);
         return fragment;
     }
 
-    public Restaurant() {
+    public RestaurantFragment() {
     }
 
     private void moveToCurrentLocation(LatLng currentLocation)
@@ -56,6 +63,14 @@ public class Restaurant extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.restaurant_fragment, container, false);
+
+        Bundle args = this.getArguments();
+        if (mAdapter == null) {
+            mAdapter = new RestaurantAdapter(getActivity(), args.getString(RESTAURANT_ID), rootView);
+        } else {
+            mAdapter.loadRestaurantDetails(args.getString(RESTAURANT_ID));
+            mAdapter.createViewHolders(container);
+        }
 
         //get support map fragment from xml
         map = ((SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map))

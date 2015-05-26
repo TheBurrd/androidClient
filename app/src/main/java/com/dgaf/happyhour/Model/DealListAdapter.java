@@ -1,9 +1,8 @@
 package com.dgaf.happyhour.Model;
-import com.dgaf.happyhour.Controller.MyLocationListener;
+import com.dgaf.happyhour.Controller.LocationService;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.app.Activity;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.app.FragmentActivity;
@@ -16,7 +15,7 @@ import android.widget.TextView;
 
 import com.dgaf.happyhour.DealListType;
 import com.dgaf.happyhour.R;
-import com.dgaf.happyhour.View.Restaurant;
+import com.dgaf.happyhour.View.RestaurantFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -36,7 +35,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private ImageLoader imageLoader;
     private List<DealModel> dealItems;
     private ParseGeoPoint parseLocation;
-    private MyLocationListener userLocation;
+    private LocationService userLocation;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -48,6 +47,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         public TextView hours;
         public ParseImageView thumbnail;
         public FragmentActivity activity;
+        public String restaurantId;
 
         public ViewHolder(View itemView,FragmentActivity activity) {
             super(itemView);
@@ -64,7 +64,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
         @Override
         public void onClick(View v) {
-            Fragment restaurant = new Restaurant();
+            Fragment restaurant = RestaurantFragment.newInstance(restaurantId);
             FragmentManager fragmentManager = activity.getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.mainfragment, restaurant).addToBackStack(null).commit();
@@ -77,11 +77,11 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         this.imageLoader = ImageLoader.getInstance();
         dealItems = new ArrayList<>();
 
-        // Geisel Library
+        // Geisel Library - Default Location
         double latitude = 32.881122;
         double longitude = -117.237631;
         if (!Build.FINGERPRINT.startsWith("generic")) {
-            userLocation = new MyLocationListener(activity);
+            userLocation = new LocationService(activity);
             // Is user location available and are we not running in an emulator
             if (userLocation.canGetLocation()) {
                 latitude = userLocation.getLatitude();
@@ -114,11 +114,11 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         ParseQuery<DealModel> localDeals = ParseQuery.getQuery(DealModel.class);
         localDeals.whereMatchesQuery("restaurantId", localRestaurants);
         localDeals.include("restaurantId");
-        Log.v("Parse info", "Parse query started" );
+        Log.v("Parse info", "Deal list query started" );
         final DealListAdapter listAdapter = this;
         localDeals.findInBackground(new FindCallback<DealModel>() {
             public void done(List<DealModel> deals, ParseException e) {
-                Log.v("Parse info","Parse query returned");
+                Log.v("Parse info","Deal list query returned");
                 if (e == null) {
                     dealItems = deals;
                     //Log.e("Parse info",deals.toString());
@@ -159,5 +159,6 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         holder.restaurant.setText(dealModel.getRestaurant());
         holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(parseLocation)) + " mi");
         holder.hours.setText("");
+        holder.restaurantId = dealModel.getRestaurantId();
     }
 }

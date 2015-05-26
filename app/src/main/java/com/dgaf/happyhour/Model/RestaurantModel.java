@@ -1,6 +1,7 @@
 package com.dgaf.happyhour.Model;
 
 import com.parse.ParseClassName;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 
 /**
@@ -10,7 +11,7 @@ import com.parse.ParseObject;
 public class RestaurantModel extends ParseObject {
 
     public String getId() {
-        return getString("objectId");
+        return getObjectId();
     }
 
     public String getName() {
@@ -44,6 +45,8 @@ public class RestaurantModel extends ParseObject {
     public String getPhoneNumber() {
         return getString("phoneNumber");
     }
+
+    public ParseFile getThumbnailFile() { return getParseFile("picture"); }
 
     public String getWebsite() {
         return getString("website");

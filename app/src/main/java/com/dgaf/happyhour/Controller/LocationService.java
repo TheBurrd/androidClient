@@ -11,9 +11,8 @@ package com.dgaf.happyhour.Controller;
         import android.os.Bundle;
         import android.os.IBinder;
         import android.provider.Settings;
-        import android.util.Log;
 
-public class MyLocationListener extends Service implements LocationListener{
+public class LocationService extends Service implements LocationListener{
 
     private final Context context;
 
@@ -31,7 +30,7 @@ public class MyLocationListener extends Service implements LocationListener{
 
     protected LocationManager locationManager;
 
-    public MyLocationListener(Context context) {
+    public LocationService(Context context) {
         this.context = context;
         getLocation();
     }
@@ -98,7 +97,7 @@ public class MyLocationListener extends Service implements LocationListener{
 
     public void stopUsingGPS() {
         if(locationManager != null) {
-            locationManager.removeUpdates(MyLocationListener.this);
+            locationManager.removeUpdates(LocationService.this);
         }
     }
 

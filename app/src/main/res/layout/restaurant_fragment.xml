@@ -9,41 +9,13 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:background="#FFA000"
         android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/back_button"
-            android:background="#006400"
-            android:text = "Back"
-            android:textColor = "#FFFFFF"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true" />
-
-        <TextView
-            android:id="@+id/center_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="50dp"
-            android:layout_centerInParent="true"
-            android:text="         Restaurant"
-            android:textSize="20sp"
-            android:textColor="#FFFFFF" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
+        <com.parse.ParseImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/llama"
-            android:id="@+id/imageView2" />
+            android:id="@+id/picture" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -56,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Rigoberto's Taco Shop"
+                android:textColor="#000000"
                 android:padding="5dp"
                 android:id="@+id/restaurantName" />
 
@@ -64,9 +36,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/description"
                 android:textColor="#000000"
-                android:text="Description:"
+                android:id="@+id/description"
                 android:paddingLeft="8dp"
                 android:layout_gravity="left" />
 
@@ -75,7 +46,6 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="#000000"
                 android:layout_width="wrap_content"
-                android:text="Address:"
                 android:paddingLeft="8dp"
                 android:id="@+id/address" />
         </LinearLayout>
@@ -95,7 +65,6 @@
             <ExpandableListView
                 android:id="@+id/lvExp"
                 android:layout_height="65dp"
-                android:text="Deal Name:"
                 android:layout_width="match_parent"
                 android:divider="#000000"
                 android:smoothScrollbar="true" />
@@ -105,14 +74,12 @@
 
     </LinearLayout>
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="phone"
-        android:shadowColor="#FFE0B2"
+        android:textColor="#000000"
         android:ems="10"
-        android:id="@+id/phoneNo"
-        android:text="Phone No: (858) 271-0170" />
+        android:id="@+id/phoneNo" />
 
     <fragment
         android:id="@+id/map"
@@ -127,7 +94,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Website: http://rigobertotacoshop.com/"
         android:textColor="#000000"
         android:id="@+id/website"
         android:layout_weight="0.00" />
