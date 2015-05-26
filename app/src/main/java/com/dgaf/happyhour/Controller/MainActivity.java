@@ -136,7 +136,7 @@ public class MainActivity extends ActionBarActivity {
             }
 
             // update selected item and title, then close the drawer
-            mDrawerList.setItemChecked(position, true);
+            mDrawerList.setItemChecked(position, false);
             mDrawerList.setSelection(position);
             //setTitle(mNames[position]);
             mDrawerLayout.closeDrawer(mDrawerList);
