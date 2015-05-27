@@ -24,6 +24,7 @@
         android:textSize="18dp"
         android:gravity="center_vertical"
         android:textColor="#000"
+        android:text="List"
         android:textStyle="bold"
         android:layout_toRightOf="@+id/icon" />
 

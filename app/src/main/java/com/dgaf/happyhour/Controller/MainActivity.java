@@ -3,37 +3,27 @@ package com.dgaf.happyhour.Controller;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.dgaf.happyhour.Model.DealModel;
-import com.dgaf.happyhour.Model.RestaurantModel;
 import com.dgaf.happyhour.R;
 import com.dgaf.happyhour.View.About;
 import com.dgaf.happyhour.View.ViewPagerFragment;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.parse.Parse;
-import com.parse.ParseObject;
 
 import java.util.ArrayList;
 
@@ -55,6 +45,7 @@ public class MainActivity extends ActionBarActivity {
     private RelativeLayout mDrawerPane;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
+    private View RootDrawerView;
 
     ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
 
@@ -75,19 +66,22 @@ public class MainActivity extends ActionBarActivity {
         }
 
         mNavItems.add(new NavItem("Deals", R.drawable.ic_drawer));
-        mNavItems.add(new NavItem("Rating", R.drawable.ic_drawer));
-        mNavItems.add(new NavItem("Proximity", R.drawable.ic_proximity));
-        mNavItems.add(new NavItem("Monday", R.drawable.ic_calendar));
-        mNavItems.add(new NavItem("Tuesday", R.drawable.ic_calendar));
-        mNavItems.add(new NavItem("Wednesday", R.drawable.ic_calendar));
-        mNavItems.add(new NavItem("Thursday", R.drawable.ic_calendar));
-        mNavItems.add(new NavItem("Friday", R.drawable.ic_calendar));
-        mNavItems.add(new NavItem("About", R.drawable.llama));
+        mNavItems.add(new NavItem("Divider", R.drawable.ic_drawer));
+        mNavItems.add(new NavItem("Rating", R.drawable.ic_proximity));
+        mNavItems.add(new NavItem("Proximity", R.drawable.ic_calendar));
+        mNavItems.add(new NavItem("SeekBar", R.drawable.ic_calendar));
+        mNavItems.add(new NavItem("Days of the Week", R.drawable.ic_calendar));
+        mNavItems.add(new NavItem("week days", R.drawable.ic_calendar));
+        mNavItems.add(new NavItem("bar", R.drawable.ic_calendar));
+        mNavItems.add(new NavItem("Favorites", R.drawable.llama));
+        mNavItems.add(new NavItem("bar", R.drawable.ic_calendar));
+        mNavItems.add(new NavItem("About Us", R.drawable.llama));
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        RootDrawerView = (View) findViewById(R.id.root_drawer);
 
         // Populate the Navigation Drawer with options
-        mDrawerPane = (RelativeLayout) findViewById(R.id.drawer_pane);
+        //mDrawerPane = (RelativeLayout) findViewById(R.id.drawer_pane);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         DrawerListAdapter adapter = new DrawerListAdapter(this, mNavItems);
         mDrawerList.setAdapter(adapter);
@@ -267,7 +261,10 @@ public class MainActivity extends ActionBarActivity {
             mDrawerList.setItemChecked(position, true);
             mDrawerList.setSelection(position);
             //setTitle(mNames[position]);
-            mDrawerLayout.closeDrawer(mDrawerList);
+
+            //TODO we need to get the rootview not the list
+            //mDrawerLayout.closeDrawer(mDrawerList);
+            mDrawerLayout.closeDrawer(RootDrawerView);
 
         }
 
@@ -348,6 +345,10 @@ class DrawerListAdapter extends BaseAdapter {
 
     Context mContext;
     ArrayList<NavItem> mNavItems;
+    private static final int NORMAL = 0;
+    private static final int DAYS = 1;
+    private static final int SEEK = 2;
+    private static final int DIVIDER = 3;
 
     public DrawerListAdapter(Context context, ArrayList<NavItem> navItems) {
         mContext = context;
@@ -369,9 +370,9 @@ class DrawerListAdapter extends BaseAdapter {
         return 0;
     }
 
-    @Override
+    /*@Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view;
+      View view;
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -389,5 +390,67 @@ class DrawerListAdapter extends BaseAdapter {
         iconView.setImageResource(mNavItems.get(position).mIcon);
 
         return view;
+    }*/
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View row = convertView;
+        LayoutInflater inflater = null;
+        int type = getItemViewType(position);
+        // instead of if else you can use a case
+
+
+        if (row == null) {
+            switch(type){
+                case NORMAL:
+
+                    inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    row = inflater.inflate(R.layout.drawer_item, null);
+                    TextView titleView = (TextView) row.findViewById(R.id.title);
+                    ImageView iconView = (ImageView) row.findViewById(R.id.icon);
+                    // Update the row with the correct title and image corresponding to the item
+                    titleView.setText( mNavItems.get(position).mTitle );
+                    iconView.setImageResource(mNavItems.get(position).mIcon);
+
+                    break;
+
+                case DAYS:
+                    inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    row = inflater.inflate(R.layout.weekday_item, null);
+                    break;
+
+                case DIVIDER:
+                    inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    row = inflater.inflate(R.layout.line_item, null);
+                    break;
+
+                case SEEK:
+                    inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    row = inflater.inflate(R.layout.seekbar_item, null);
+                    break;
+            }
+        }
+        return row;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 4;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        int type = 0;
+
+        if (position == 0 || position == 3 || position == 2 || position == 5 || position == 8 || position == 10) {
+            type = NORMAL;
+        }else if (position == 1 || position == 7 || position == 9) {
+            type = DIVIDER;
+        }else if( position == 4 ){
+            type = SEEK;
+        }else if( position == 6){
+            type = DAYS;
+        }
+        return type;
     }
 }

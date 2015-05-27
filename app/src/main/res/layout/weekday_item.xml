@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/custom_view"
+    android:orientation="horizontal"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:background="@android:color/darker_gray"
+
+    android:gravity="center"
+    >
+
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/imageButton1"
+        android:text = "Su"
+
+        />
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text = "M"
+
+        android:id="@+id/imageButton2"
+        />
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text = "T"
+
+        android:id="@+id/imageButton3"
+        />
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/imageButton4"
+        android:text = "W"
+
+        />
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/imageButton5"
+        android:text = "Th"
+
+        />
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text = "F"
+
+        android:id="@+id/imageButton6"
+        />
+
+
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text = "S"
+        android:id="@+id/imageButton7"
+        />
+
+
+</LinearLayout>

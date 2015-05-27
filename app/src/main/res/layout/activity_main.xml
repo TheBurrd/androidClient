@@ -4,44 +4,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <!--This is the fragment for the about page. How this app navigates is it basically toggles
-    different fragments views visibility-->
-    <RelativeLayout
+
+    <FrameLayout
         android:id="@+id/main_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" >
+
+    </FrameLayout>
 
 
-    <!-- The navigation drawer -->
-    <RelativeLayout
-        android:layout_width="280dp"
-        android:layout_height="match_parent"
-        android:id="@+id/drawer_pane"
+    <LinearLayout
+        android:id="@+id/root_drawer"
+        android:orientation="vertical"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
         android:layout_gravity="start">
 
-        <!-- List of Actions (pages) -->
         <ListView
             android:id="@+id/left_drawer"
-            android:layout_width="240dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
             android:choiceMode="singleChoice"
             android:background="@android:color/darker_gray"
-        />
+            />
+    </LinearLayout>
 
-    </RelativeLayout>
 
-<!--
-    <ListView
-        android:id="@+id/left_drawer"
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:layout_below="@+id/top_bar"
-        android:background="@android:color/darker_gray"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/background_dark"
-        android:dividerHeight="1dp" />
--->
 
 </android.support.v4.widget.DrawerLayout>
