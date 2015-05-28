@@ -17,11 +17,13 @@ import com.dgaf.happyhour.DealListType;
 import com.dgaf.happyhour.R;
 import com.dgaf.happyhour.View.RestaurantFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private List<DealModel> dealItems;
     private ParseGeoPoint parseLocation;
     private LocationService userLocation;
+    private static final String DEAL_LIST_CACHE = "dealList";
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -114,6 +117,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         ParseQuery<DealModel> localDeals = ParseQuery.getQuery(DealModel.class);
         localDeals.whereMatchesQuery("restaurantId", localRestaurants);
         localDeals.include("restaurantId");
+        localDeals.fromLocalDatastore();
         Log.v("Parse info", "Deal list query started" );
         final DealListAdapter listAdapter = this;
         localDeals.findInBackground(new FindCallback<DealModel>() {
@@ -121,7 +125,17 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                 Log.v("Parse info","Deal list query returned");
                 if (e == null) {
                     dealItems = deals;
-                    //Log.e("Parse info",deals.toString());
+                    // Release any objects previously pinned for this query.
+                    ParseObject.unpinAllInBackground(DEAL_LIST_CACHE, dealItems, new DeleteCallback() {
+                        public void done(ParseException e) {
+                            if (e != null) {
+                                Log.e("Parse error: ", e.getMessage());
+                                return;
+                            }
+                            // Add the latest results for this query to the cache.
+                            ParseObject.pinAllInBackground(DEAL_LIST_CACHE, dealItems);
+                        }
+                    });
                     listAdapter.notifyDataSetChanged();
                 } else {
                     Log.e("Parse error: ", e.getMessage());

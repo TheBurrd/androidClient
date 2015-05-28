@@ -78,6 +78,7 @@ public class RestaurantAdapter {
 
     public void loadRestaurantDetails(String restaurantId) {
         ParseQuery<RestaurantModel> restaurantQuery = ParseQuery.getQuery(RestaurantModel.class);
+        restaurantQuery.fromLocalDatastore();
         Log.v("Parse info:", "Started restaurant query");
         restaurantQuery.getInBackground(restaurantId, new GetCallback<RestaurantModel>() {
             public void done(RestaurantModel res, ParseException e) {
