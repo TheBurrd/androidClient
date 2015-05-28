@@ -1,10 +1,12 @@
 package com.dgaf.happyhour.Model;
-import com.dgaf.happyhour.Controller.MyLocationListener;
+import com.dgaf.happyhour.Controller.LocationService;
 
-
-import android.app.Activity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,12 +16,16 @@ import android.widget.TextView;
 
 import com.dgaf.happyhour.DealListType;
 import com.dgaf.happyhour.R;
+import com.dgaf.happyhour.View.RestaurantFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
@@ -28,12 +34,15 @@ import java.util.List;
 /**
  * Created by trentonrobison on 4/28/15.
  */
-public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder>{
-    private Activity activity;
+public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder> implements SwipeRefreshLayout.OnRefreshListener {
+    private FragmentActivity activity;
     private ImageLoader imageLoader;
     private List<DealModel> dealItems;
     private ParseGeoPoint parseLocation;
-    private MyLocationListener userLocation;
+    private LocationService userLocation;
+    private SwipeRefreshLayout swipeRefresh;
+    private static final String DEAL_LIST_CACHE = "dealList";
+    private static boolean loadedDeals = false;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -44,10 +53,13 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         public TextView likes;
         public TextView hours;
         public ParseImageView thumbnail;
+        public FragmentActivity activity;
+        public String restaurantId;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView,FragmentActivity activity) {
             super(itemView);
             itemView.setOnClickListener(this);
+            this.activity = activity;
             deal = (TextView) itemView.findViewById(R.id.deal);
             description = (TextView) itemView.findViewById(R.id.description);
             distance = (TextView) itemView.findViewById(R.id.distance);
@@ -59,31 +71,25 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
         @Override
         public void onClick(View v) {
-            // Do clicky stuff
+            Fragment restaurant = RestaurantFragment.newInstance(restaurantId);
+            FragmentManager fragmentManager = activity.getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.mainfragment, restaurant).addToBackStack(null).commit();
         }
+
     }
 
-    public DealListAdapter(Activity activity, DealListType listType) {
+    public DealListAdapter(FragmentActivity activity, DealListType listType, SwipeRefreshLayout swipeRefresh) {
         this.activity = activity;
         this.imageLoader = ImageLoader.getInstance();
-        dealItems = new ArrayList<>();
+        this.swipeRefresh = swipeRefresh;
+        this.dealItems = new ArrayList<>();
 
-        // Geisel Library
-        double latitude = 32.881122;
-        double longitude = -117.237631;
-        if (!Build.FINGERPRINT.startsWith("generic")) {
-            userLocation = new MyLocationListener(activity);
-            // Is user location available and are we not running in an emulator
-            if (userLocation.canGetLocation()) {
-                latitude = userLocation.getLatitude();
-                longitude = userLocation.getLongitude();
-            } else {
-                userLocation.showSettingsAlert();
-            }
-        }
+        swipeRefresh.setOnRefreshListener(this);
 
+        // Get radius
         double radiusMi = 100.0;
-        parseLocation = new ParseGeoPoint(latitude,longitude);
+        parseLocation = getLocation();
 
         switch(listType) {
             case DRINK:
@@ -98,21 +104,55 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
     }
 
+    public ParseGeoPoint getLocation() {
+        // Geisel Library - Default Location
+        double latitude = 32.881122;
+        double longitude = -117.237631;
+        if (!Build.FINGERPRINT.startsWith("generic")) {
+            userLocation = new LocationService(activity);
+            // Is user location available and are we not running in an emulator
+            if (userLocation.canGetLocation()) {
+                latitude = userLocation.getLatitude();
+                longitude = userLocation.getLongitude();
+            } else {
+                userLocation.showSettingsAlert();
+            }
+        }
+        return new ParseGeoPoint(latitude,longitude);
+    }
+
     public void loadLocalDeals(ParseGeoPoint location, double radiusMi) {
         // Setup the database Query
         ParseQuery<RestaurantModel> localRestaurants = ParseQuery.getQuery(RestaurantModel.class);
         localRestaurants.whereWithinMiles("location", location, radiusMi);
+        localRestaurants.whereNear("location", location);
         ParseQuery<DealModel> localDeals = ParseQuery.getQuery(DealModel.class);
         localDeals.whereMatchesQuery("restaurantId", localRestaurants);
         localDeals.include("restaurantId");
-        Log.v("Parse info", "Parse query started" );
+        if (loadedDeals) {
+            localDeals.fromLocalDatastore();
+        }
+        Log.v("Parse info", "Deal list query started" );
         final DealListAdapter listAdapter = this;
         localDeals.findInBackground(new FindCallback<DealModel>() {
             public void done(List<DealModel> deals, ParseException e) {
-                Log.v("Parse info","Parse query returned");
+                Log.v("Parse info","Deal list query returned");
                 if (e == null) {
                     dealItems = deals;
-                    //Log.e("Parse info",deals.toString());
+                    loadedDeals = true;
+                    // Release any objects previously pinned for this query.
+                    ParseObject.unpinAllInBackground(DEAL_LIST_CACHE, dealItems, new DeleteCallback() {
+                        public void done(ParseException e) {
+                            if (e != null) {
+                                Log.e("Parse error: ", e.getMessage());
+                                return;
+                            }
+                            // Update refresh indicator
+                            swipeRefresh.setRefreshing(false);
+                            // Add the latest results for this query to the cache.
+                            ParseObject.pinAllInBackground(DEAL_LIST_CACHE, dealItems);
+                        }
+                    });
                     listAdapter.notifyDataSetChanged();
                 } else {
                     Log.e("Parse error: ", e.getMessage());
@@ -122,11 +162,18 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     }
 
     @Override
+    public void onRefresh() {
+        parseLocation = getLocation();
+        double radiusMi = 5.0;
+        loadedDeals = false;
+        loadLocalDeals(parseLocation, radiusMi);
+    }
+
+    @Override
     public DealListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.deal_list_item, parent, false);
-        //v.setOnClickListener(mOnClickListener);
-        ViewHolder vh = new ViewHolder(v);
+        ViewHolder vh = new ViewHolder(v,activity);
         return vh;
     }
 
@@ -150,5 +197,6 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         holder.restaurant.setText(dealModel.getRestaurant());
         holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(parseLocation)) + " mi");
         holder.hours.setText("");
+        holder.restaurantId = dealModel.getRestaurantId();
     }
 }

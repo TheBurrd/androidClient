@@ -1,40 +1,24 @@
 package com.dgaf.happyhour.View;
 
-
-import android.app.ListFragment;
-import android.content.Context;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.app.ListFragment;
-import com.dgaf.happyhour.Controller.MyLocationListener;
 import com.dgaf.happyhour.DealListType;
 import com.dgaf.happyhour.Model.DealListAdapter;
-import com.dgaf.happyhour.Model.DealModel;
 import com.dgaf.happyhour.R;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /*This is the fragment that our page view loads*/
 public class DealListFragment extends Fragment {
 
     private static final String DEAL_LIST_TYPE = "listType";
     private DealListType listType;
+    private SwipeRefreshLayout mSwipeRefresh;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private LinearLayoutManager mLayoutManager;
@@ -55,6 +39,7 @@ public class DealListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.feature_food_drink, container, false);
 
+        mSwipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
         return rootView;
@@ -71,11 +56,12 @@ public class DealListFragment extends Fragment {
         Bundle args = this.getArguments();
         listType = DealListType.values()[args.getInt(DEAL_LIST_TYPE)];
 
-        mAdapter = new DealListAdapter(getActivity(), listType);
+        mAdapter = new DealListAdapter(getActivity(), listType, mSwipeRefresh);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
+
 
     }
 }

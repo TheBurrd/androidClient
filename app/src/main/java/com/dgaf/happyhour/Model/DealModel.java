@@ -13,7 +13,7 @@ public class DealModel extends ParseObject {
 
 
     public String getId() {
-        return getString("objectId");
+        return getObjectId();
     }
 
     public int getUpVotes() {
@@ -41,6 +41,8 @@ public class DealModel extends ParseObject {
     }
 
     public String getRestaurant() { return getParseObject("restaurantId").getString("name");}
+
+    public String getRestaurantId() { return getParseObject("restaurantId").getObjectId();}
 
     public ParseFile getThumbnailFile() { return getParseObject("restaurantId").getParseFile("picture"); }
 
