@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.dgaf.happyhour.View.RestaurantFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -32,12 +34,13 @@ import java.util.List;
 /**
  * Created by trentonrobison on 4/28/15.
  */
-public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder>{
+public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder> implements SwipeRefreshLayout.OnRefreshListener {
     private FragmentActivity activity;
     private ImageLoader imageLoader;
     private List<DealModel> dealItems;
     private ParseGeoPoint parseLocation;
     private LocationService userLocation;
+    private SwipeRefreshLayout swipeRefresh;
     private static final String DEAL_LIST_CACHE = "dealList";
     private static boolean loadedDeals = false;
 
@@ -76,11 +79,32 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
 
     }
 
-    public DealListAdapter(FragmentActivity activity, DealListType listType) {
+    public DealListAdapter(FragmentActivity activity, DealListType listType, SwipeRefreshLayout swipeRefresh) {
         this.activity = activity;
         this.imageLoader = ImageLoader.getInstance();
-        dealItems = new ArrayList<>();
+        this.swipeRefresh = swipeRefresh;
+        this.dealItems = new ArrayList<>();
 
+        swipeRefresh.setOnRefreshListener(this);
+
+        // Get radius
+        double radiusMi = 100.0;
+        parseLocation = getLocation();
+
+        switch(listType) {
+            case DRINK:
+                loadLocalDeals(parseLocation, radiusMi);
+                break;
+            case FOOD:
+                loadLocalDeals(parseLocation, radiusMi);
+                break;
+            case FEATURED:
+                loadLocalDeals(parseLocation, radiusMi);
+                break;
+        }
+    }
+
+    public ParseGeoPoint getLocation() {
         // Geisel Library - Default Location
         double latitude = 32.881122;
         double longitude = -117.237631;
@@ -94,21 +118,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                 userLocation.showSettingsAlert();
             }
         }
-
-        double radiusMi = 100.0;
-        parseLocation = new ParseGeoPoint(latitude,longitude);
-
-        switch(listType) {
-            case DRINK:
-                loadLocalDeals(parseLocation, radiusMi);
-                break;
-            case FOOD:
-                loadLocalDeals(parseLocation, radiusMi);
-                break;
-            case FEATURED:
-                loadLocalDeals(parseLocation, radiusMi);
-                break;
-        }
+        return new ParseGeoPoint(latitude,longitude);
     }
 
     public void loadLocalDeals(ParseGeoPoint location, double radiusMi) {
@@ -137,6 +147,8 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                                 Log.e("Parse error: ", e.getMessage());
                                 return;
                             }
+                            // Update refresh indicator
+                            swipeRefresh.setRefreshing(false);
                             // Add the latest results for this query to the cache.
                             ParseObject.pinAllInBackground(DEAL_LIST_CACHE, dealItems);
                         }
@@ -147,6 +159,14 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                 }
             }
         });
+    }
+
+    @Override
+    public void onRefresh() {
+        parseLocation = getLocation();
+        double radiusMi = 5.0;
+        loadedDeals = false;
+        loadLocalDeals(parseLocation, radiusMi);
     }
 
     @Override
