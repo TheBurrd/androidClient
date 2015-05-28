@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.dgaf.happyhour.Model.DealListAdapter;
 import com.dgaf.happyhour.Model.RestaurantAdapter;
 import com.dgaf.happyhour.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -24,9 +23,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 /*This is the fragment that our page view loads*/
 public class RestaurantFragment extends Fragment {
     private static final String RESTAURANT_ID = "resId";
-    private GoogleMap map;
     private RestaurantAdapter mAdapter;
-    static final LatLng UCSD = new LatLng(32.881122,-117.237631);
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -48,16 +45,6 @@ public class RestaurantFragment extends Fragment {
     public RestaurantFragment() {
     }
 
-    private void moveToCurrentLocation(LatLng currentLocation)
-    {
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
-        // Zoom in, animating the camera.
-        map.animateCamera(CameraUpdateFactory.zoomIn());
-        // Zoom out to zoom level 10, animating with a duration of 2 seconds.
-        map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
-
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,21 +53,10 @@ public class RestaurantFragment extends Fragment {
 
         Bundle args = this.getArguments();
         if (mAdapter == null) {
-            mAdapter = new RestaurantAdapter(getActivity(), args.getString(RESTAURANT_ID), rootView);
+            mAdapter = new RestaurantAdapter(this, args.getString(RESTAURANT_ID), rootView);
         } else {
             mAdapter.loadRestaurantDetails(args.getString(RESTAURANT_ID));
             mAdapter.createViewHolders(container);
-        }
-
-        //get support map fragment from xml
-        map = ((SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map))
-                .getMap();
-
-        //create a marker
-        if(map != null) {
-            Marker UCSDmarker = map.addMarker(new MarkerOptions().position(UCSD)
-                    .title("Here"));
-            moveToCurrentLocation(UCSD);
         }
 
         return rootView;

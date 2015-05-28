@@ -2,6 +2,7 @@ package com.dgaf.happyhour.Model;
 
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
 /**
@@ -18,9 +19,7 @@ public class RestaurantModel extends ParseObject {
         return getString("name");
     }
 
-    public String getDescription() {
-        return getString("description");
-    }
+    public String getDescription() { return getString("description"); }
 
     public String getStreetNumber() {
         return getString("streetNumber");
@@ -47,6 +46,8 @@ public class RestaurantModel extends ParseObject {
     }
 
     public ParseFile getThumbnailFile() { return getParseFile("picture"); }
+
+    public ParseGeoPoint getLocation() { return getParseGeoPoint("location"); }
 
     public String getWebsite() {
         return getString("website");
