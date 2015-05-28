@@ -39,6 +39,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private ParseGeoPoint parseLocation;
     private LocationService userLocation;
     private static final String DEAL_LIST_CACHE = "dealList";
+    private static boolean loadedDeals = false;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -118,7 +119,9 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         ParseQuery<DealModel> localDeals = ParseQuery.getQuery(DealModel.class);
         localDeals.whereMatchesQuery("restaurantId", localRestaurants);
         localDeals.include("restaurantId");
-        localDeals.fromLocalDatastore();
+        if (loadedDeals) {
+            localDeals.fromLocalDatastore();
+        }
         Log.v("Parse info", "Deal list query started" );
         final DealListAdapter listAdapter = this;
         localDeals.findInBackground(new FindCallback<DealModel>() {
@@ -126,6 +129,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                 Log.v("Parse info","Deal list query returned");
                 if (e == null) {
                     dealItems = deals;
+                    loadedDeals = true;
                     // Release any objects previously pinned for this query.
                     ParseObject.unpinAllInBackground(DEAL_LIST_CACHE, dealItems, new DeleteCallback() {
                         public void done(ParseException e) {
