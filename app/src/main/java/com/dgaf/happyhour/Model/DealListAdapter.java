@@ -114,6 +114,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         // Setup the database Query
         ParseQuery<RestaurantModel> localRestaurants = ParseQuery.getQuery(RestaurantModel.class);
         localRestaurants.whereWithinMiles("location", location, radiusMi);
+        localRestaurants.whereNear("location", location);
         ParseQuery<DealModel> localDeals = ParseQuery.getQuery(DealModel.class);
         localDeals.whereMatchesQuery("restaurantId", localRestaurants);
         localDeals.include("restaurantId");
@@ -148,7 +149,6 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     public DealListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.deal_list_item, parent, false);
-        //v.setOnClickListener(mOnClickListener);
         ViewHolder vh = new ViewHolder(v,activity);
         return vh;
     }

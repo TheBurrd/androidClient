@@ -1,9 +1,13 @@
 package com.dgaf.happyhour.Model;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ExpandableListView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.dgaf.happyhour.R;
@@ -31,47 +35,74 @@ public class RestaurantAdapter {
     private Fragment fragment;
     private ImageLoader imageLoader;
     private RestaurantModel restaurant;
-    private List<DealModel> dealItems;
     private RestaurantViewHolder restaurantHolder;
+    private ExpandDealListAdapter expandDealListAdapter;
 
-    public static class RestaurantViewHolder {
+    public static class RestaurantViewHolder  implements ListView.OnTouchListener {
         public TextView restaurantName;
         public TextView description;
         public TextView address;
         public TextView phoneNo;
         public TextView website;
+        public ExpandableListView dealList;
         public ParseImageView thumbnail;
         public GoogleMap map;
 
 
-        public RestaurantViewHolder(Fragment fragment, View rootView) {
+        public RestaurantViewHolder(Fragment fragment, View rootView, ExpandDealListAdapter listAdapter) {
             restaurantName = (TextView) rootView.findViewById(R.id.restaurantName);
             description = (TextView) rootView.findViewById(R.id.description);
             address = (TextView) rootView.findViewById(R.id.address);
             phoneNo = (TextView) rootView.findViewById(R.id.phoneNo);
             website = (TextView) rootView.findViewById(R.id.website);
+            dealList = (ExpandableListView) rootView.findViewById(R.id.deal_list);
+            dealList.setAdapter(listAdapter);
             thumbnail = (ParseImageView) rootView.findViewById(R.id.picture);
             thumbnail.setPlaceholder(ContextCompat.getDrawable(rootView.getContext(), R.drawable.llama));
             map = ((SupportMapFragment) fragment.getChildFragmentManager().findFragmentById(R.id.map))
                     .getMap();
+            map.getUiSettings().setScrollGesturesEnabled(false);
+
+            dealList.setOnTouchListener(this);
         }
 
-        public void updateMap(LatLng location)
+        public void updateMap(LatLng location, String markerText)
         {
-            map.addMarker(new MarkerOptions().position(location).title("Here"));
+            map.addMarker(new MarkerOptions().position(location).title(markerText));
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
             // Zoom in, animating the camera.
             map.animateCamera(CameraUpdateFactory.zoomIn());
             // Zoom out to zoom level 10, animating with a duration of 2 seconds.
             map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
         }
+
+        //Disable scrolling in parent scroll view
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            int action = event.getAction();
+            switch (action) {
+                case MotionEvent.ACTION_DOWN:
+                    // Disallow ScrollView to intercept touch events.
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    break;
+
+                case MotionEvent.ACTION_UP:
+                    // Allow ScrollView to intercept touch events.
+                    v.getParent().requestDisallowInterceptTouchEvent(false);
+                    break;
+            }
+
+            // Handle ListView touch events.
+            v.onTouchEvent(event);
+            return true;
+        }
     }
 
     public RestaurantAdapter(Fragment fragment, String restaurantId, View fragmentView) {
         this.fragment = fragment;
         this.imageLoader = ImageLoader.getInstance();
-        restaurant = new RestaurantModel();
-        dealItems = new ArrayList<>();
+        this.expandDealListAdapter = new ExpandDealListAdapter(fragment.getActivity(), restaurantId);
+        this.restaurant = new RestaurantModel();
         createViewHolders(fragmentView);
         loadRestaurantDetails(restaurantId);
     }
@@ -86,20 +117,6 @@ public class RestaurantAdapter {
                 if (e == null) {
                     restaurant = res;
                     bindRestaurantViewHolder();
-
-                    ParseQuery<DealModel> restaurantDeals = ParseQuery.getQuery(DealModel.class);
-                    restaurantDeals.whereEqualTo("restaurantId", restaurant);
-                    Log.v("Parse info:", "Started restaurant deals query");
-                    restaurantDeals.findInBackground(new FindCallback<DealModel>() {
-                        public void done(List<DealModel> deals, ParseException e) {
-                            Log.v("Parse info:", "Restaurant deals query returned");
-                            if (e == null) {
-                                dealItems = deals;
-                            } else {
-                                Log.e("Parse error: ", e.getMessage());
-                            }
-                        }
-                    });
                 } else {
                     Log.e("Parse error: ", e.getMessage());
                 }
@@ -109,7 +126,7 @@ public class RestaurantAdapter {
     }
 
     public void createViewHolders(View fragmentView) {
-        restaurantHolder = new RestaurantViewHolder(fragment, fragmentView);
+        restaurantHolder = new RestaurantViewHolder(fragment, fragmentView, expandDealListAdapter);
         bindRestaurantViewHolder();
     }
 
@@ -121,10 +138,10 @@ public class RestaurantAdapter {
             }
             ParseGeoPoint parsePoint = restaurant.getLocation();
             if (parsePoint != null) {
-                restaurantHolder.updateMap(new LatLng(parsePoint.getLatitude(), parsePoint.getLongitude()));
+                restaurantHolder.updateMap(new LatLng(parsePoint.getLatitude(), parsePoint.getLongitude()), restaurant.getName());
             } else {
                 // Defaults to Geisel library if a restaurant hasn't loaded yet.
-                restaurantHolder.updateMap(new LatLng(32.881122,-117.237631));
+                restaurantHolder.updateMap(new LatLng(32.881122,-117.237631),"UCSD - Geisel Library");
             }
             restaurantHolder.restaurantName.setText(restaurant.getName());
             restaurantHolder.description.setText(restaurant.getDescription());
