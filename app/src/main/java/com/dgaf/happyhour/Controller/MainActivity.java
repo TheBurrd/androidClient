@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -68,16 +69,16 @@ public class MainActivity extends ActionBarActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.main_fragment, new ViewPagerFragment()).commit();
         }
 
-        mNavItems.add(new NavItem("Deals", R.drawable.ic_drawer));
-        mNavItems.add(new NavItem("Divider", R.drawable.ic_drawer));
-        mNavItems.add(new NavItem("Rating", R.drawable.ic_proximity));
-        mNavItems.add(new NavItem("Proximity", R.drawable.ic_calendar));
-        mNavItems.add(new NavItem("SeekBar", R.drawable.ic_calendar));
+        mNavItems.add(new NavItem("Deals", R.drawable.ic_launcher));
+        mNavItems.add(new NavItem("divider", R.drawable.ic_drawer));
+        mNavItems.add(new NavItem("Rating", R.drawable.ic_drawer));
+        mNavItems.add(new NavItem("Proximity", R.drawable.ic_proximity));
+        mNavItems.add(new NavItem("SeekBar", R.drawable.ic_drawer));
         mNavItems.add(new NavItem("Days of the Week", R.drawable.ic_calendar));
-        mNavItems.add(new NavItem("week days", R.drawable.ic_calendar));
-        mNavItems.add(new NavItem("bar", R.drawable.ic_calendar));
+        mNavItems.add(new NavItem("week days", R.drawable.ic_drawer));
+        mNavItems.add(new NavItem("divider", R.drawable.ic_drawer));
         mNavItems.add(new NavItem("Favorites", R.drawable.llama));
-        mNavItems.add(new NavItem("bar", R.drawable.ic_calendar));
+        mNavItems.add(new NavItem("divider", R.drawable.ic_drawer));
         mNavItems.add(new NavItem("About Us", R.drawable.ic_aboutus));
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -90,13 +91,11 @@ public class MainActivity extends ActionBarActivity {
         DrawerListAdapter adapter = new DrawerListAdapter(this, mNavItems);
         mDrawerList.setAdapter(adapter);
 
-
         // Drawer Item click listeners
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectItem(position);
-
             }
         });
 
@@ -271,7 +270,6 @@ public class MainActivity extends ActionBarActivity {
             mDrawerLayout.closeDrawer(mRootDrawerView);
 
         }
-
     }
 
     @Override
@@ -377,113 +375,144 @@ class DrawerListAdapter extends BaseAdapter  {
     /** Return the view that should be inflated */
     public View getView(int position, View convertView, ViewGroup parent) {
         int type = getItemViewType(position);
-        // instead of if else you can use a case
         View v = convertView;
         LayoutInflater inflater;
 
-            switch (type) {
-                // Ordinary row
-                case NORMAL:
-                        inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        v = inflater.inflate(R.layout.drawer_item, null);
-
-                        TextView text = (TextView) v.findViewById(R.id.title);
-                        ImageView icon =  (ImageView) v.findViewById(R.id.icon);
-
-                        // Update the row with the correct title and image corresponding to the item
-                        text.setText(mNavItems.get(position).mTitle);
-                        icon.setImageResource(mNavItems.get(position).mIcon);
-                    break;
-
-                // Row containing the days of the week
-                case DAYS:
-                        inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        v = inflater.inflate(R.layout.weekday_item, null);
-
-                        Button monday =  (Button) v.findViewById(R.id.monday);
-                        Button tuesday = (Button) v.findViewById(R.id.tuesday);
-                        Button wednesday = (Button) v.findViewById(R.id.wednesday);
-                        Button thursday = (Button) v.findViewById(R.id.thursday);
-                        Button friday = (Button) v.findViewById(R.id.friday);
-                        Button saturday = (Button) v.findViewById(R.id.saturday);
-                        Button sunday =  (Button) v.findViewById(R.id.sunday);
-
-                        //TODO Respond to when the buttons are clicked
-                        monday.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View v) {
-                                Toast.makeText(mContext, "monday was clicked", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-                        tuesday.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View v) {
-                                Toast.makeText(mContext, "tuesday was clicked", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-                        wednesday.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View v) {
-                                Toast.makeText(mContext, "wednesday was clicked", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-                        thursday.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View v) {
-                                Toast.makeText(mContext, "thursday was clicked", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-                        friday.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View v) {
-                                Toast.makeText(mContext, "friday was clicked", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-                        saturday.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View v) {
-                                Toast.makeText(mContext, "saturday was clicked", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-                        sunday.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View v) {
-                                Toast.makeText(mContext, "sunday was clicked", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-                    break;
-
-                // Black line that divides the navdrawer
-                case DIVIDER:
+        switch (type) {
+            // Ordinary row
+            case NORMAL:
                     inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    v = inflater.inflate(R.layout.line_item, null);
-                   break;
+                    v = inflater.inflate(R.layout.drawer_item, null);
 
-                // Seek bar for proximity
-                case SEEK:
+                    TextView text = (TextView) v.findViewById(R.id.title);
+                    ImageView icon =  (ImageView) v.findViewById(R.id.icon);
+
+                    // Update the row with the correct title and image corresponding to the item
+                    text.setText(mNavItems.get(position).mTitle);
+                    icon.setImageResource(mNavItems.get(position).mIcon);
+                break;
+
+            // Row containing the days of the week
+            case DAYS:
                     inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    v = inflater.inflate(R.layout.seekbar_item, null);
-                    SeekBar seekBar = (SeekBar) v.findViewById(R.id.seek_bar);
-                    final TextView seekBarText = (TextView) v.findViewById(R.id.seek_bar_text);
+                    v = inflater.inflate(R.layout.weekday_item, null);
 
-                    seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    Button monday =  (Button) v.findViewById(R.id.monday);
+                    Button tuesday = (Button) v.findViewById(R.id.tuesday);
+                    Button wednesday = (Button) v.findViewById(R.id.wednesday);
+                    Button thursday = (Button) v.findViewById(R.id.thursday);
+                    Button friday = (Button) v.findViewById(R.id.friday);
+                    Button saturday = (Button) v.findViewById(R.id.saturday);
+                    Button sunday =  (Button) v.findViewById(R.id.sunday);
 
-                        @Override
-                        public void onStopTrackingTouch(SeekBar seekBar) {
-                        }
-
-                        @Override
-                        public void onStartTrackingTouch(SeekBar seekBar) {
-                        }
-
-                        @Override
-                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                            seekBarText.setText(progress + " mi");
+                    //TODO Respond to when the buttons are clicked
+                    monday.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Toast.makeText(mContext, "monday was clicked", Toast.LENGTH_SHORT).show();
                         }
                     });
-                    break;
-            }
 
+                    tuesday.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Toast.makeText(mContext, "tuesday was clicked", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    wednesday.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Toast.makeText(mContext, "wednesday was clicked", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    thursday.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Toast.makeText(mContext, "thursday was clicked", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    friday.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Toast.makeText(mContext, "friday was clicked", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    saturday.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Toast.makeText(mContext, "saturday was clicked", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    sunday.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Toast.makeText(mContext, "sunday was clicked", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                break;
+
+            // Black line that divides the navdrawer
+            case DIVIDER:
+                inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                v = inflater.inflate(R.layout.line_item, null);
+               break;
+
+            // Seek bar for proximity
+            case SEEK:
+                inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                v = inflater.inflate(R.layout.seekbar_item, null);
+
+                // Set a listener for the view to disable navdrawer movements
+                // when scrubbing the seekbar
+                v.setOnTouchListener(new View.OnTouchListener() {
+
+                    @Override
+                    // Disallow user access to navigation drawer when they are
+                    // touching the seekbar row
+                    public boolean onTouch(View v, MotionEvent event) {
+                        int action = event.getAction();
+                        switch (action) {
+                            case MotionEvent.ACTION_DOWN:
+                                // Disallow ScrollView to intercept touch events.
+                                v.getParent().requestDisallowInterceptTouchEvent(true);
+                                break;
+
+                            case MotionEvent.ACTION_UP:
+                                // Allow ScrollView to intercept touch events.
+                                v.getParent().requestDisallowInterceptTouchEvent(false);
+                                break;
+                        }
+
+                        // Handle ListView touch events.
+                        v.onTouchEvent(event);
+                        return true;
+                    }
+                });
+
+                SeekBar seekBar = (SeekBar) v.findViewById(R.id.seek_bar);
+                final TextView seekBarText = (TextView) v.findViewById(R.id.seek_bar_text);
+
+                // TODO what should happen when the seek bar is changed
+                seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                    }
+
+                });
+                break;
+        }
 
         return v;
     }
@@ -512,6 +541,8 @@ class DrawerListAdapter extends BaseAdapter  {
         return type;
     }
 
+    // These are not used in the current code as indicated by Android studio
+    /*
     //These view holders will speed up scrolling
     static class NormalHolder {
         TextView text;
@@ -531,4 +562,5 @@ class DrawerListAdapter extends BaseAdapter  {
         Button sunday;
 
     }
+    */
 }
