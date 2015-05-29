@@ -48,7 +48,7 @@ public class MainActivity extends ActionBarActivity {
     private RelativeLayout mDrawerPane;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
-    private View RootDrawerView;
+    private View mRootDrawerView;
 
     ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
 
@@ -78,11 +78,11 @@ public class MainActivity extends ActionBarActivity {
         mNavItems.add(new NavItem("bar", R.drawable.ic_calendar));
         mNavItems.add(new NavItem("Favorites", R.drawable.llama));
         mNavItems.add(new NavItem("bar", R.drawable.ic_calendar));
-        mNavItems.add(new NavItem("About Us", R.drawable.llama));
+        mNavItems.add(new NavItem("About Us", R.drawable.ic_aboutus));
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        RootDrawerView = (View) findViewById(R.id.root_drawer);
+        mRootDrawerView = (View) findViewById(R.id.root_drawer);
         // Populate the Navigation Drawer with options
         //mDrawerPane = (RelativeLayout) findViewById(R.id.drawer_pane);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -96,7 +96,6 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectItem(position);
-
 
             }
         });
@@ -236,6 +235,7 @@ public class MainActivity extends ActionBarActivity {
 
             //favorites
             case 8:
+                displayFavorites();
                 break;
 
             //bar
@@ -268,7 +268,7 @@ public class MainActivity extends ActionBarActivity {
 
             //TODO we need to get the rootview not the list
             //mDrawerLayout.closeDrawer(mDrawerList);
-            mDrawerLayout.closeDrawer(RootDrawerView);
+            mDrawerLayout.closeDrawer(mRootDrawerView);
 
         }
 
@@ -284,7 +284,6 @@ public class MainActivity extends ActionBarActivity {
     /*This is were all the action events happen*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
 
         // Pass the event to ActionBarDrawerToggle, if it returns
@@ -375,6 +374,7 @@ class DrawerListAdapter extends BaseAdapter  {
     }
 
     @Override
+    /** Return the view that should be inflated */
     public View getView(int position, View convertView, ViewGroup parent) {
         int type = getItemViewType(position);
         // instead of if else you can use a case
@@ -382,21 +382,20 @@ class DrawerListAdapter extends BaseAdapter  {
         LayoutInflater inflater;
 
             switch (type) {
+                // Ordinary row
                 case NORMAL:
-
-
                         inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         v = inflater.inflate(R.layout.drawer_item, null);
 
                         TextView text = (TextView) v.findViewById(R.id.title);
                         ImageView icon =  (ImageView) v.findViewById(R.id.icon);
-                        // Update the row with the correct title and image corresponding to the item
 
+                        // Update the row with the correct title and image corresponding to the item
                         text.setText(mNavItems.get(position).mTitle);
                         icon.setImageResource(mNavItems.get(position).mIcon);
-
                     break;
 
+                // Row containing the days of the week
                 case DAYS:
                         inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         v = inflater.inflate(R.layout.weekday_item, null);
@@ -409,7 +408,7 @@ class DrawerListAdapter extends BaseAdapter  {
                         Button saturday = (Button) v.findViewById(R.id.saturday);
                         Button sunday =  (Button) v.findViewById(R.id.sunday);
 
-                        //TODO make this one
+                        //TODO Respond to when the buttons are clicked
                         monday.setOnClickListener(new View.OnClickListener() {
                             public void onClick(View v) {
                                 Toast.makeText(mContext, "monday was clicked", Toast.LENGTH_SHORT).show();
@@ -454,13 +453,14 @@ class DrawerListAdapter extends BaseAdapter  {
 
                     break;
 
+                // Black line that divides the navdrawer
                 case DIVIDER:
                     inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     v = inflater.inflate(R.layout.line_item, null);
                    break;
 
+                // Seek bar for proximity
                 case SEEK:
-
                     inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     v = inflater.inflate(R.layout.seekbar_item, null);
                     SeekBar seekBar = (SeekBar) v.findViewById(R.id.seek_bar);
@@ -494,6 +494,9 @@ class DrawerListAdapter extends BaseAdapter  {
     }
 
     @Override
+    /** Given a position of a row on the navigation drawer, return the type
+     * of view that should be inflated.
+     */
     public int getItemViewType(int position) {
         int type = 0;
 
@@ -528,6 +531,4 @@ class DrawerListAdapter extends BaseAdapter  {
         Button sunday;
 
     }
-
-
 }
