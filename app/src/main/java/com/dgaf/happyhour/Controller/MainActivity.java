@@ -35,13 +35,9 @@ public class MainActivity extends ActionBarActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
 
- //   private String[] drawerItems = {"Deals","Favorites","Rating", "Proximity", "Monday",
- //           "Tuesday", "Wednesday", "Thursday", "Friday", "About Us"};
     private ListView mDrawerList;
-    private RelativeLayout mDrawerPane;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
-    private View mRootDrawerView;
 
     ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
 
@@ -187,7 +183,7 @@ public class MainActivity extends ActionBarActivity {
             }
 
             // update selected item and title, then close the drawer
-            mDrawerList.setItemChecked(position, true);
+            mDrawerList.setItemChecked(position, false);
             mDrawerList.setSelection(position);
             //setTitle(mNames[position]);
 
@@ -212,9 +208,7 @@ public class MainActivity extends ActionBarActivity {
         // true, then it has handled the app icon touch event
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
-        }
-        else if (id == R.id.action_settings) {
-            return true;
+
         }
 
         return super.onOptionsItemSelected(item);

@@ -13,7 +13,7 @@ public class DealModel extends ParseObject {
 
 
     public String getId() {
-        return getString("objectId");
+        return getObjectId();
     }
 
     public int getUpVotes() {
@@ -42,12 +42,11 @@ public class DealModel extends ParseObject {
 
     public String getRestaurant() { return getParseObject("restaurantId").getString("name");}
 
-    public ParseFile getThumbnailFile() {
-        return getParseFile("picture");
-    }
+    public String getRestaurantId() { return getParseObject("restaurantId").getObjectId();}
 
-    public double getDistanceFrom(ParseGeoPoint location) {
-        return location.distanceInMilesTo(getParseGeoPoint("location"));
+    public ParseFile getThumbnailFile() { return getParseObject("restaurantId").getParseFile("picture"); }
+
+    public double getDistanceFrom(ParseGeoPoint location) { return location.distanceInMilesTo(getParseObject("restaurantId").getParseGeoPoint("location"));
     }
 
     public AvailabilityModel getAvailability() {
