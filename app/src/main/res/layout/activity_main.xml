@@ -17,7 +17,7 @@
         android:id="@+id/root_drawer"
         android:orientation="vertical"
         android:layout_width="300dp"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_gravity="start">
 
         <ListView
