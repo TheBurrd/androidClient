@@ -17,18 +17,21 @@ import com.dgaf.happyhour.R;
 public class DealListFragment extends Fragment {
 
     private static final String DEAL_LIST_TYPE = "listType";
+    private static final String DEAL_LIST_RADIUS = "radius";
     private DealListType listType;
+    private double radiusMi;
     private SwipeRefreshLayout mSwipeRefresh;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private LinearLayoutManager mLayoutManager;
 
         //section ID acts like ID for the query search as well
-    public static DealListFragment newInstance(DealListType listType) {
+    public static DealListFragment newInstance(DealListType listType, double radiusMi) {
 
         DealListFragment fragment = new DealListFragment();
         Bundle args = new Bundle();
         args.putInt(DEAL_LIST_TYPE, listType.ordinal());
+        args.putDouble(DEAL_LIST_RADIUS, radiusMi);
         fragment.setArguments(args);
 
         return fragment;
@@ -55,8 +58,9 @@ public class DealListFragment extends Fragment {
 
         Bundle args = this.getArguments();
         listType = DealListType.values()[args.getInt(DEAL_LIST_TYPE)];
+        radiusMi = args.getDouble(DEAL_LIST_RADIUS);
 
-        mAdapter = new DealListAdapter(getActivity(), listType, mSwipeRefresh);
+        mAdapter = new DealListAdapter(getActivity(), mSwipeRefresh, listType, radiusMi);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());

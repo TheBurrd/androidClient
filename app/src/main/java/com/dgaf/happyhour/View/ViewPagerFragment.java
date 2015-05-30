@@ -18,32 +18,33 @@ import java.util.Locale;
 
 public class ViewPagerFragment extends Fragment{
 
-    private DealListFragment mFoodFragment;
-    private DealListFragment mDrinkFragment;
-    private DealListFragment mFeaturedFragment;
-
+    SectionsPagerAdapter mPagerAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View result = inflater.inflate(R.layout.view_pager,container,false);
         ViewPager vp = (ViewPager) result.findViewById(R.id.pager);
 
-        mDrinkFragment = DealListFragment.newInstance(DealListType.DRINK);
-        mFoodFragment = DealListFragment.newInstance(DealListType.FOOD);
-        mFeaturedFragment = DealListFragment.newInstance(DealListType.FEATURED);
+        // We only have 3 tabs. Setting this limit to 3 prevents the fragments from being recreated
+        // constantly at the expense of a little bit more memory usage.
+        vp.setOffscreenPageLimit(2);
 
-        vp.setAdapter(new SectionsPagerAdapter(getChildFragmentManager()));
+        mPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager(), 100.0);
+        vp.setAdapter(mPagerAdapter);
 
         return result;
     }
 
-
-
-
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
+        private DealListFragment mFoodFragment;
+        private DealListFragment mDrinkFragment;
+        private DealListFragment mFeaturedFragment;
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        public SectionsPagerAdapter(FragmentManager fm, double searchRadius) {
             super(fm);
+            mDrinkFragment = DealListFragment.newInstance(DealListType.DRINK, searchRadius);
+            mFoodFragment = DealListFragment.newInstance(DealListType.FOOD, searchRadius);
+            mFeaturedFragment = DealListFragment.newInstance(DealListType.FEATURED, searchRadius);
         }
 
         @Override
