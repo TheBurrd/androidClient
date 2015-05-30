@@ -83,8 +83,6 @@ public class MainActivity extends ActionBarActivity {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        mRootDrawerView = (View) findViewById(R.id.root_drawer);
-
         // Populate the Navigation Drawer with options
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setCacheColorHint(0);//avoids changing list color when scrolling
@@ -201,10 +199,6 @@ public class MainActivity extends ActionBarActivity {
             mDrawerList.setSelection(position);
             //setTitle(mNames[position]);
 
-            //TODO we need to get the rootview not the list
-
-            //mDrawerLayout.closeDrawer(mDrawerList);
-            //mDrawerLayout.closeDrawer(mRootDrawerView);
             mDrawerLayout.closeDrawers();//adds animation
 
         }
