@@ -74,7 +74,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
             Fragment restaurant = RestaurantFragment.newInstance(restaurantId);
             FragmentManager fragmentManager = activity.getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.mainfragment, restaurant).addToBackStack(null).commit();
+                    .replace(R.id.main_fragment, restaurant).addToBackStack(null).commit();
         }
 
     }

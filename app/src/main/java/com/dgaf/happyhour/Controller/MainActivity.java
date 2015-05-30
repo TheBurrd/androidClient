@@ -13,12 +13,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.dgaf.happyhour.Model.DrawerListAdapter;
+import com.dgaf.happyhour.Model.NavItem;
 import com.dgaf.happyhour.R;
 import com.dgaf.happyhour.View.About;
 import com.dgaf.happyhour.View.ViewPagerFragment;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -31,11 +34,12 @@ public class MainActivity extends AppCompatActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private String[] drawerItems = {"List","Favorites","Login","About"};
-    private DrawerLayout mDrawerLayout;
+
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
+    private DrawerLayout mDrawerLayout;
 
+    ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
 
     @Override
     public boolean onSupportNavigateUp(){
@@ -54,18 +58,37 @@ public class MainActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
         }
 
-        if(getSupportFragmentManager().findFragmentById(R.id.mainfragment) == null){
-            getSupportFragmentManager().beginTransaction().add(R.id.mainfragment, new ViewPagerFragment()).commit();
+        if(getSupportFragmentManager().findFragmentById(R.id.main_fragment) == null){
+            getSupportFragmentManager().beginTransaction().add(R.id.main_fragment, new ViewPagerFragment()).commit();
         }
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mNavItems.add(new NavItem("Deals", R.drawable.ic_launcher));
+        mNavItems.add(new NavItem("divider", R.drawable.ic_drawer));
+        mNavItems.add(new NavItem("Rating", R.drawable.ic_drawer));
+        mNavItems.add(new NavItem("Proximity", R.drawable.ic_proximity));
+        mNavItems.add(new NavItem("SeekBar", R.drawable.ic_drawer));
+        mNavItems.add(new NavItem("Days of the Week", R.drawable.ic_calendar));
+        mNavItems.add(new NavItem("week days", R.drawable.ic_drawer));
+        mNavItems.add(new NavItem("divider", R.drawable.ic_drawer));
+        mNavItems.add(new NavItem("Favorites", R.drawable.llama));
+        mNavItems.add(new NavItem("divider", R.drawable.ic_drawer));
+        mNavItems.add(new NavItem("About Us", R.drawable.ic_aboutus));
 
-        // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, drawerItems));
-        // Set the list's click listener
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        // Populate the Navigation Drawer with options
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerList.setCacheColorHint(0);//avoids changing list color when scrolling
+        DrawerListAdapter adapter = new DrawerListAdapter(this, mNavItems);
+        mDrawerList.setAdapter(adapter);
+
+        // Drawer Item click listeners
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectItem(position);
+            }
+        });
 
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
@@ -77,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 //getSupportActionBar().setTitle("HappyHour");
+
                 // invalidateOptionsMenu();
             }
 
@@ -94,38 +118,61 @@ public class MainActivity extends AppCompatActivity {
         //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
     }
 
-    /*TODO this needs to be declared in its own file*/
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
-
-
     /** Swaps fragments in the main content view */
-    public void selectItem(int position) {
+    private void selectItem(int position) {
 
         Fragment fragment = null;
         String identifier = null;
         /*we will open all the various fragments from the sliding drawer here*/
         switch(position){
+            // List of deals
             case 0:
                 fragment = new ViewPagerFragment();
                 break;
+
+            // divider
             case 1:
-
                 break;
+
+            // rating
             case 2:
+                sortByRating();
+                break;
+
+            //proximity
+            case 3:
 
                 break;
 
-            case 3:
+            //seek
+            case 4:
+                break;
+
+            //days of the week
+            case 5:
+                break;
+
+            //days
+            case 6:
+                break;
+
+            //bar
+            case 7:
+                break;
+
+            //favorites
+            case 8:
+                displayFavorites();
+                break;
+
+            //bar
+            case 9:
+                break;
+
+            // About Us
+            case 10:
                 fragment = new About();
                 identifier = "about";
-                break;
-
-            default:
                 break;
         }
         if (fragment != null)
@@ -133,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.mainfragment, fragment).addToBackStack(identifier).commit();
+                    .replace(R.id.main_fragment, fragment).addToBackStack(identifier).commit();
             if (position == 0)
             {
                 while (fragmentManager.getBackStackEntryCount() > 0) {
@@ -144,11 +191,10 @@ public class MainActivity extends AppCompatActivity {
             // update selected item and title, then close the drawer
             mDrawerList.setItemChecked(position, false);
             mDrawerList.setSelection(position);
-            //setTitle(mNames[position]);
-            mDrawerLayout.closeDrawer(mDrawerList);
+
+            mDrawerLayout.closeDrawers();//adds animation
 
         }
-
     }
 
     @Override
@@ -161,7 +207,6 @@ public class MainActivity extends AppCompatActivity {
     /*This is were all the action events happen*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
 
         // Pass the event to ActionBarDrawerToggle, if it returns
@@ -187,4 +232,20 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+    // Displays the users favorites
+    private void displayFavorites() {
+
+    }
+
+    // Change the sorting mechanism for deals to sort by rating
+    private void sortByRating() {
+
+    }
+
+    // Change the sorting mechanism for deals to sort by proximity
+    private void sortByProximity() {
+
+    }
+
 }
+

@@ -51,7 +51,7 @@ public class About extends Fragment implements View.OnClickListener {
         // Display the secret button
         llamaButton = (Button) rootView.findViewById(R.id.llamaButton);
         llamaButton.setOnClickListener(this);
-        llamaButton.setAlpha(0.0f);
+        //llamaButton.setAlpha(0.0f); im testing this on API < 10 uncomment for final project
 
         // Display the hidden llama picture
         llamaPic = (ImageView) rootView.findViewById(R.id.llamaPic);
