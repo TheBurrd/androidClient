@@ -84,8 +84,8 @@ public class MainActivity extends ActionBarActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         mRootDrawerView = (View) findViewById(R.id.root_drawer);
+
         // Populate the Navigation Drawer with options
-        //mDrawerPane = (RelativeLayout) findViewById(R.id.drawer_pane);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setCacheColorHint(0);//avoids changing list color when scrolling
         DrawerListAdapter adapter = new DrawerListAdapter(this, mNavItems);
@@ -121,75 +121,10 @@ public class MainActivity extends ActionBarActivity {
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-
-/*
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-        // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, drawerItems));
-        // Set the list's click listener
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this,
-                mDrawerLayout,
-                R.drawable.ic_drawer,
-                R.string.open,
-                R.string.closed) {
-
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                getSupportActionBar().setTitle("HappyHour");
-                // invalidateOptionsMenu();
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle("Options");
-                // invalidateOptionsMenu();
-            }
-        };
-
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-*/
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
     }
-
-    /* TODO this needs to be declared in its own file*/
- /*
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
- */
-
-
-    /* This can be used if we want to open a new fragment such as the
-     * PreferencesFragment for when we click an item in the nav drawer.
-     */
- /*
-    private void selectItemFromDrawer(int position) {
-        Fragment fragment = new PreferencesFragment();
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.main_fragment, fragment)
-                .commit();
-
-        mDrawerList.setItemChecked(position, true);
-        setTitle(mNavItems.get(position).mTitle);
-
-        mDrawerLayout.closeDrawer(mDrawerPane);
-    }
- */
-
-
 
     /** Swaps fragments in the main content view */
     private void selectItem(int position) {
@@ -214,6 +149,7 @@ public class MainActivity extends ActionBarActivity {
 
             //proximity
             case 3:
+
                 break;
 
             //seek
@@ -266,8 +202,10 @@ public class MainActivity extends ActionBarActivity {
             //setTitle(mNames[position]);
 
             //TODO we need to get the rootview not the list
+
             //mDrawerLayout.closeDrawer(mDrawerList);
-            mDrawerLayout.closeDrawer(mRootDrawerView);
+            //mDrawerLayout.closeDrawer(mRootDrawerView);
+            mDrawerLayout.closeDrawers();//adds animation
 
         }
     }
@@ -350,6 +288,7 @@ class DrawerListAdapter extends BaseAdapter  {
     private static final int DAYS = 1;
     private static final int SEEK = 2;
     private static final int DIVIDER = 3;
+    private static int seekProgress = 3;//for seekbar
 
     public DrawerListAdapter(Context context, ArrayList<NavItem> navItems) {
         mContext = context;
@@ -489,6 +428,7 @@ class DrawerListAdapter extends BaseAdapter  {
                 });
 
                 SeekBar seekBar = (SeekBar) v.findViewById(R.id.seek_bar);
+                seekBar.setProgress(seekProgress);
                 final TextView seekBarText = (TextView) v.findViewById(R.id.seek_bar_text);
 
                 // TODO what should happen when the seek bar is changed
@@ -496,7 +436,8 @@ class DrawerListAdapter extends BaseAdapter  {
 
                     @Override
                     public void onStopTrackingTouch(SeekBar seekBar) {
-
+                        //close drawer
+                        //sort list
                     }
 
                     @Override
@@ -507,13 +448,13 @@ class DrawerListAdapter extends BaseAdapter  {
 
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                        seekProgress = progress;//save current seekbar value
+                        seekBarText.setText(progress+" mi");
                     }
 
                 });
                 break;
         }
-
         return v;
     }
 
@@ -540,27 +481,4 @@ class DrawerListAdapter extends BaseAdapter  {
         }
         return type;
     }
-
-    // These are not used in the current code as indicated by Android studio
-    /*
-    //These view holders will speed up scrolling
-    static class NormalHolder {
-        TextView text;
-        ImageView icon;
-    }
-    static class SeekHolder {
-        TextView text;
-        SeekBar radius;
-    }
-    static class DaysHolder {
-        Button monday;
-        Button tuesday;
-        Button wednesday;
-        Button thursday;
-        Button friday;
-        Button saturday;
-        Button sunday;
-
-    }
-    */
 }

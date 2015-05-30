@@ -9,6 +9,7 @@
         android:id="@+id/seek_bar"
         android:layout_gravity="left"
         android:padding="5dp"
+        android:max="6"
         android:indeterminate="false" />
 
     <TextView
@@ -16,7 +17,6 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="3.0 mi"
-        android:max="6"
         android:id="@+id/seek_bar_text"
         android:layout_gravity="center_vertical" />
 
