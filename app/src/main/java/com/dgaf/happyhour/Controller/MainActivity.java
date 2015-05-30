@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 
 import com.dgaf.happyhour.Model.DrawerListAdapter;
 import com.dgaf.happyhour.Model.NavItem;
@@ -124,7 +123,7 @@ public class MainActivity extends ActionBarActivity {
                 fragment = new ViewPagerFragment();
                 break;
 
-            // bar
+            // divider
             case 1:
                 break;
 
@@ -185,7 +184,6 @@ public class MainActivity extends ActionBarActivity {
             // update selected item and title, then close the drawer
             mDrawerList.setItemChecked(position, false);
             mDrawerList.setSelection(position);
-            //setTitle(mNames[position]);
 
             mDrawerLayout.closeDrawers();//adds animation
 
