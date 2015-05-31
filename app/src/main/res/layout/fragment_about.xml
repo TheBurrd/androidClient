@@ -24,6 +24,12 @@
                 android:gravity="center"
                 android:padding="5dp"/>
 
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_launcher"
+                android:layout_gravity="center_horizontal"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -122,13 +128,6 @@
         android:orientation="vertical"
         android:gravity="center_horizontal">
 
-        <Button
-            android:id="@+id/llamaButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/hide_pic" />
-
-
         <ImageView
             android:id="@+id/llamaPic"
             android:layout_width="wrap_content"
@@ -136,6 +135,13 @@
             android:layout_gravity="center"
             android:src="@drawable/llama"
             android:visibility="invisible"/>
+
+        <Button
+            android:id="@+id/llamaButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:text="@string/hide_pic" />
 
     </LinearLayout>
 
