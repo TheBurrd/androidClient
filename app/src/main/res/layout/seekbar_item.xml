@@ -2,20 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingLeft="10dp">
 
     <SeekBar
-        android:layout_width="230dp"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:id="@+id/seek_bar"
         android:layout_gravity="left"
         android:padding="5dp"
-        android:paddingLeft="20dp"
         android:max="6"
         android:indeterminate="false" />
 
     <TextView
-        android:layout_width="70dp"
+        android:layout_width="60dp"
         android:layout_height="40dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="3.0 mi"

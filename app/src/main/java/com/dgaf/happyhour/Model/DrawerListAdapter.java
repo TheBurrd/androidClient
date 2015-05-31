@@ -24,7 +24,9 @@ import java.util.ArrayList;
 
 /**
  * Created by Adam on 5/30/2015.
- */ /* An adapter used for the drawer list view.  Contains the actual rows for the
+ * Written by Sherman and Trent
+ */
+/**An adapter used for the drawer list view.  Contains the actual rows for the
  * Navigation Drawer in terms of an ArrayList of NavItems
  */
 public class DrawerListAdapter extends BaseAdapter {
@@ -213,6 +215,7 @@ public class DrawerListAdapter extends BaseAdapter {
 
     /** Helper method to unselect all the buttons */
     private void unselectButtons() {
+        // Set the images to the unactive versions
         monday.setImageResource(R.drawable.ic_monday);
         tuesday.setImageResource(R.drawable.ic_tuesday);
         wednesday.setImageResource(R.drawable.ic_wednesday);
@@ -221,6 +224,7 @@ public class DrawerListAdapter extends BaseAdapter {
         saturday.setImageResource(R.drawable.ic_saturday);
         sunday.setImageResource(R.drawable.ic_sunday);
 
+        // Unselect all buttons
         monSelected = false;
         tueSelected = false;
         wedSelected = false;
