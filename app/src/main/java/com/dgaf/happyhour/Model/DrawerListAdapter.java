@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -134,6 +135,7 @@ public class DrawerListAdapter extends BaseAdapter {
             case DIVIDER:
                 inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = inflater.inflate(R.layout.line_item, null);
+
                break;
 
             // Seek bar for proximity
@@ -141,36 +143,12 @@ public class DrawerListAdapter extends BaseAdapter {
                 inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = inflater.inflate(R.layout.seekbar_item, null);
 
-                // Set a listener for the view to disable navdrawer movements
-                // when scrubbing the seekbar
-                v.setOnTouchListener(new View.OnTouchListener() {
-
-                    @Override
-                    // Disallow user access to navigation drawer when they are
-                    // touching the seekbar row
-                    public boolean onTouch(View v, MotionEvent event) {
-                        int action = event.getAction();
-                        switch (action) {
-                            case MotionEvent.ACTION_DOWN:
-                                // Disallow ScrollView to intercept touch events.
-                                v.getParent().requestDisallowInterceptTouchEvent(true);
-                                break;
-
-                            case MotionEvent.ACTION_UP:
-                                // Allow ScrollView to intercept touch events.
-                                v.getParent().requestDisallowInterceptTouchEvent(false);
-                                break;
-                        }
-
-                        // Handle ListView touch events.
-                        v.onTouchEvent(event);
-                        return true;
-                    }
-                });
-
                 SeekBar seekBar = (SeekBar) v.findViewById(R.id.seek_bar);
                 seekBar.setProgress(seekProgress);
                 final TextView seekBarText = (TextView) v.findViewById(R.id.seek_bar_text);
+
+                seekBarText.setOnTouchListener(navLockListener);
+                seekBar.setOnTouchListener(navLockListener);
 
                 // TODO what should happen when the seek bar is changed
                 seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -183,12 +161,12 @@ public class DrawerListAdapter extends BaseAdapter {
 
                     @Override
                     public void onStartTrackingTouch(SeekBar seekBar) {
-
                     }
 
 
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
                         seekProgress = progress;//save current seekbar value
                         seekBarText.setText(progress+" mi");
                     }
@@ -222,4 +200,34 @@ public class DrawerListAdapter extends BaseAdapter {
         }
         return type;
     }
+
+    /* Lock the navigation drawer from closing when the user is
+     * changing the seekbar
+     */
+    private ListView.OnTouchListener navLockListener= new ListView.OnTouchListener() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event)
+        {
+            int action = event.getAction();
+            switch (action) {
+                case MotionEvent.ACTION_DOWN:
+                    // Disallow Drawer to intercept touch events.
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    break;
+
+                case MotionEvent.ACTION_UP:
+                    // Allow Drawer to intercept touch events.
+                    v.getParent().requestDisallowInterceptTouchEvent(false);
+                    break;
+            }
+
+            // Handle seekbar touch events.
+            v.onTouchEvent(event);
+            return true;
+        }
+    };
+
 }
+
+
