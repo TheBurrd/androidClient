@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <SeekBar
@@ -9,6 +10,7 @@
         android:id="@+id/seek_bar"
         android:layout_gravity="left"
         android:padding="5dp"
+        android:paddingLeft="20dp"
         android:max="6"
         android:indeterminate="false" />
 
