@@ -20,7 +20,6 @@ import com.dgaf.happyhour.View.RestaurantFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -28,7 +27,6 @@ import com.parse.ParseImageView;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,12 +38,12 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private ImageLoader imageLoader;
     private List<DealModel> dealItems;
     private ParseGeoPoint parseLocation;
-    private double searchRadius;
     private DealListType listType;
     private LocationService userLocation;
     private SwipeRefreshLayout swipeRefresh;
     private static final String DEAL_LIST_CACHE = "dealList";
-    private static Boolean[] loadedDeals = new Boolean[DealListType.values().length];
+    private static double searchRadius;
+    private static boolean[] loadedDeals = new boolean[DealListType.values().length];
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -90,7 +88,6 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
 
         swipeRefresh.setOnRefreshListener(this);
         listType = dealListType;
-        loadedDeals[dealListType.ordinal()] = false;
         parseLocation = getLocation();
         loadLocalDeals(parseLocation, radiusMi);
 
