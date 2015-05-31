@@ -20,7 +20,6 @@ import com.dgaf.happyhour.View.RestaurantFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -29,20 +28,26 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by trentonrobison on 4/28/15.
  */
-public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder> implements SwipeRefreshLayout.OnRefreshListener {
+public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder> implements SwipeRefreshLayout.OnRefreshListener, QueryParameters.Listener {
     private FragmentActivity activity;
     private ImageLoader imageLoader;
     private List<DealModel> dealItems;
     private ParseGeoPoint parseLocation;
+    private DealListType listType;
     private LocationService userLocation;
     private SwipeRefreshLayout swipeRefresh;
+    private QueryParameters mQueryParams;
     private static final String DEAL_LIST_CACHE = "dealList";
-    private static boolean loadedDeals = false;
+    private static HashMap queryHashes = new HashMap<>();
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -79,29 +84,18 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
 
     }
 
-    public DealListAdapter(FragmentActivity activity, DealListType listType, SwipeRefreshLayout swipeRefresh) {
+    public DealListAdapter(FragmentActivity activity, SwipeRefreshLayout swipeRefresh, DealListType dealListType) {
         this.activity = activity;
         this.imageLoader = ImageLoader.getInstance();
         this.swipeRefresh = swipeRefresh;
         this.dealItems = new ArrayList<>();
 
         swipeRefresh.setOnRefreshListener(this);
-
-        // Get radius
-        double radiusMi = 100.0;
+        listType = dealListType;
         parseLocation = getLocation();
-
-        switch(listType) {
-            case DRINK:
-                loadLocalDeals(parseLocation, radiusMi);
-                break;
-            case FOOD:
-                loadLocalDeals(parseLocation, radiusMi);
-                break;
-            case FEATURED:
-                loadLocalDeals(parseLocation, radiusMi);
-                break;
-        }
+        mQueryParams = QueryParameters.getInstance();
+        mQueryParams.addListener(this);
+        onRefresh();
     }
 
     public ParseGeoPoint getLocation() {
@@ -121,17 +115,28 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         return new ParseGeoPoint(latitude,longitude);
     }
 
-    public void loadLocalDeals(ParseGeoPoint location, double radiusMi) {
+    public void loadDeals() {
         // Setup the database Query
         ParseQuery<RestaurantModel> localRestaurants = ParseQuery.getQuery(RestaurantModel.class);
-        localRestaurants.whereWithinMiles("location", location, radiusMi);
-        localRestaurants.whereNear("location", location);
+        localRestaurants.whereWithinMiles("location", parseLocation, mQueryParams.getRadiusMi());
         ParseQuery<DealModel> localDeals = ParseQuery.getQuery(DealModel.class);
         localDeals.whereMatchesQuery("restaurantId", localRestaurants);
-        localDeals.include("restaurantId");
-        if (loadedDeals) {
-            localDeals.fromLocalDatastore();
+        switch(listType) {
+            case DRINK:
+                localDeals.whereEqualTo("tags","drink");
+                break;
+            case FOOD:
+                localDeals.whereEqualTo("tags","food");
+                break;
+            case FEATURED:
+                localDeals.whereEqualTo("tags","featured");
+                break;
         }
+        if (mQueryParams.getQueryType() == QueryParameters.QueryType.RATING) {
+            localDeals.addDescendingOrder("rating");
+        }
+        applyDayOfWeekForQuery(localDeals);
+        localDeals.include("restaurantId");
         Log.v("Parse info", "Deal list query started" );
         final DealListAdapter listAdapter = this;
         localDeals.findInBackground(new FindCallback<DealModel>() {
@@ -139,7 +144,24 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                 Log.v("Parse info","Deal list query returned");
                 if (e == null) {
                     dealItems = deals;
-                    loadedDeals = true;
+                    if (mQueryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
+                        Collections.sort(dealItems, new Comparator<DealModel>() {
+                            @Override
+                            public int compare(DealModel lhs, DealModel rhs) {
+                                double diff = lhs.getDistanceFrom(parseLocation) - rhs.getDistanceFrom(parseLocation);
+                                if (diff < 0 && diff > -1.0) {
+                                    diff = -1.0;
+                                } else if (diff > 0 && diff < 1.0) {
+                                    diff = 1.0;
+                                }
+                                if (diff == 0) {
+                                    diff = rhs.getRating() - lhs.getRating();
+                                }
+                                return (int) (diff);
+                            }
+                        });
+                    }
+                    queryHashes.put(mQueryParams.hashCode(), true);
                     // Release any objects previously pinned for this query.
                     ParseObject.unpinAllInBackground(DEAL_LIST_CACHE, dealItems, new DeleteCallback() {
                         public void done(ParseException e) {
@@ -161,12 +183,49 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         });
     }
 
+    public void applyDayOfWeekForQuery(ParseQuery<DealModel> query) {
+        switch (mQueryParams.getWeekDay()) {
+            case MONDAY:
+                query.whereGreaterThanOrEqualTo("mondaySt",0);
+                query.whereLessThanOrEqualTo("mondayEn", 2400);
+                break;
+            case TUESDAY:
+                query.whereGreaterThanOrEqualTo("tuesdaySt",0);
+                query.whereLessThanOrEqualTo("tuesdayEn",2400);
+                break;
+            case WEDNESDAY:
+                query.whereGreaterThanOrEqualTo("wednesdaySt",0);
+                query.whereLessThanOrEqualTo("wednesdayEn",2400);
+                break;
+            case THURSDAY:
+                query.whereGreaterThanOrEqualTo("thursdaySt",0);
+                query.whereLessThanOrEqualTo("thursdayEn",2400);
+                break;
+            case FRIDAY:
+                query.whereGreaterThanOrEqualTo("fridaySt",0);
+                query.whereLessThanOrEqualTo("fridayEn",2400);
+                break;
+            case SATURDAY:
+                query.whereGreaterThanOrEqualTo("saturdaySt",0);
+                query.whereLessThanOrEqualTo("saturdayEn",2400);
+                break;
+            case SUNDAY:
+                query.whereGreaterThanOrEqualTo("sundaySt",0);
+                query.whereLessThanOrEqualTo("sundayEn",2400);
+                break;
+        }
+    }
+
+    @Override
+    public void onUpdate() {
+        mQueryParams = QueryParameters.getInstance();
+        onRefresh();
+    }
+
     @Override
     public void onRefresh() {
         parseLocation = getLocation();
-        double radiusMi = 5.0;
-        loadedDeals = false;
-        loadLocalDeals(parseLocation, radiusMi);
+        loadDeals();
     }
 
     @Override
@@ -192,7 +251,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
 
         holder.deal.setText(dealModel.getTitle());
-        holder.likes.setText("Rating: " + String.valueOf(dealModel.getUpVotes()));
+        holder.likes.setText("Rating: " + String.valueOf(dealModel.getRating()));
         holder.description.setText(dealModel.getDescription());
         holder.restaurant.setText(dealModel.getRestaurant());
         holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(parseLocation)) + " mi");

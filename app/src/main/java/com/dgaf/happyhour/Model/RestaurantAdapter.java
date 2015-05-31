@@ -38,7 +38,7 @@ public class RestaurantAdapter {
     private RestaurantViewHolder restaurantHolder;
     private ExpandDealListAdapter expandDealListAdapter;
 
-    public static class RestaurantViewHolder  implements ListView.OnTouchListener {
+    public static class RestaurantViewHolder implements ListView.OnTouchListener {
         public TextView restaurantName;
         public TextView description;
         public TextView address;

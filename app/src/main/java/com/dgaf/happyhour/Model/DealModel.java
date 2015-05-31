@@ -20,6 +20,10 @@ public class DealModel extends ParseObject {
         return getInt("upVotes");
     }
 
+    public int getRating() {
+        return getInt("rating");
+    }
+
     public void addUpVote() {
         increment("upVotes");
     }
@@ -48,9 +52,61 @@ public class DealModel extends ParseObject {
 
     public double getDistanceFrom(ParseGeoPoint location) { return location.distanceInMilesTo(getParseObject("restaurantId").getParseGeoPoint("location"));
     }
-
-    public AvailabilityModel getAvailability() {
-        return new AvailabilityModel(getJSONObject("availability"));
+    public int getMondaySt() {
+        return getInt("mondaySt");
     }
+
+    public int getMondayEn() {
+        return getInt("mondayEn");
+    }
+
+    public int getTuesdaySt() {
+        return getInt("tuesdaySt");
+    }
+
+    public int getTuesdayEn() {
+        return getInt("tuesdayEn");
+    }
+
+    public int getWednesdaySt() {
+        return getInt("wednesdaySt");
+    }
+
+    public int getWednesdayEn() {
+        return getInt("wednesdayEn");
+    }
+
+    public int getThursdaySt() {
+        return getInt("thursdaySt");
+    }
+
+    public int getThrusdayEn() {
+        return getInt("thursdayEn");
+    }
+
+    public int getFridaySt() {
+        return getInt("fridaySt");
+    }
+
+    public int getFridayEn() {
+        return getInt("fridayEn");
+    }
+
+    public int getSaturdaySt() {
+        return getInt("saturdaySt");
+    }
+
+    public int getSaturdayEnd() {
+        return getInt("saturdayEn");
+    }
+
+    public int getSundaySt() {
+        return getInt("sundaySt");
+    }
+
+    public int getSundayEn() {
+        return getInt("sundayEn");
+    }
+
 
 }

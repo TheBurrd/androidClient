@@ -1,5 +1,6 @@
 package com.dgaf.happyhour.Model;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -37,7 +38,7 @@ public class DrawerListAdapter extends BaseAdapter {
     private static final int DAYS = 1;
     private static final int SEEK = 2;
     private static final int DIVIDER = 3;
-    private static int seekProgress = 3;//for seekbar
+    private QueryParameters queryParameters;
 
     private static boolean monSelected = false;
     private static boolean tueSelected = false;
@@ -58,6 +59,7 @@ public class DrawerListAdapter extends BaseAdapter {
     public DrawerListAdapter(Context context, ArrayList<NavItem> navItems) {
         mContext = context;
         mNavItems = navItems;
+        queryParameters = QueryParameters.getInstance();
     }
 
     @Override
@@ -94,6 +96,7 @@ public class DrawerListAdapter extends BaseAdapter {
                 // Update the row with the correct title and image corresponding to the item
                 text.setText(mNavItems.get(position).mTitle);
                 icon.setImageResource(mNavItems.get(position).mIcon);
+
                 break;
 
             // Row containing the days of the week
@@ -156,19 +159,18 @@ public class DrawerListAdapter extends BaseAdapter {
                 v = inflater.inflate(R.layout.seekbar_item, null);
 
                 SeekBar seekBar = (SeekBar) v.findViewById(R.id.seek_bar);
-                seekBar.setProgress(seekProgress);
+                seekBar.setProgress(queryParameters.getRadiusMi());
                 final TextView seekBarText = (TextView) v.findViewById(R.id.seek_bar_text);
 
                 seekBarText.setOnTouchListener(navLockListener);
                 seekBar.setOnTouchListener(navLockListener);
 
-                // TODO what should happen when the seek bar is changed
                 seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
                     @Override
                     public void onStopTrackingTouch(SeekBar seekBar) {
-                        //close drawer
-                        //sort list
+                        queryParameters.setRadiusMi(seekBar.getProgress());
+                        queryParameters.notifyAllListeners();
                     }
 
                     @Override
@@ -179,7 +181,6 @@ public class DrawerListAdapter extends BaseAdapter {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-                        seekProgress = progress;//save current seekbar value
                         seekBarText.setText(progress + " mi");
                     }
 
@@ -272,93 +273,114 @@ public class DrawerListAdapter extends BaseAdapter {
             int id = v.getId();
             switch(id) {
                 case R.id.monday:
-                    Toast.makeText(mContext, "monday was clicked", Toast.LENGTH_SHORT).show();
                     if (!monSelected) {
                         unselectButtons();
                         ((ImageView) v).setImageResource(R.drawable.ic_monday_active);
                         monSelected = true;
+                        queryParameters.setWeekDay(QueryParameters.WeekDay.MONDAY);
+                        queryParameters.notifyAllListeners();
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_monday);
                         monSelected = false;
+                        queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
+                        queryParameters.notifyAllListeners();
                     }
                     break;
 
                 case R.id.tuesday:
-                    Toast.makeText(mContext, "tuesday was clicked", Toast.LENGTH_SHORT).show();
                     if (!tueSelected) {
                         unselectButtons();
                         ((ImageView) v).setImageResource(R.drawable.ic_tuesday_active);
                         tueSelected = true;
+                        queryParameters.setWeekDay(QueryParameters.WeekDay.TUESDAY);
+                        queryParameters.notifyAllListeners();
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_tuesday);
                         tueSelected = false;
+                        queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
+                        queryParameters.notifyAllListeners();
                     }
                     break;
 
                 case R.id.wednesday:
-                    Toast.makeText(mContext, "wednesday was clicked", Toast.LENGTH_SHORT).show();
                     if (!wedSelected) {
                         unselectButtons();
                         ((ImageView) v).setImageResource(R.drawable.ic_wednesday_active);
                         wedSelected = true;
+                        queryParameters.setWeekDay(QueryParameters.WeekDay.WEDNESDAY);
+                        queryParameters.notifyAllListeners();
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_wednesday);
                         wedSelected = false;
+                        queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
+                        queryParameters.notifyAllListeners();
                     }
                     break;
 
                 case R.id.thursday:
-                    Toast.makeText(mContext, "thursday was clicked", Toast.LENGTH_SHORT).show();
                     if (!thuSelected) {
                         unselectButtons();
                         ((ImageView) v).setImageResource(R.drawable.ic_thursday_active);
                         thuSelected = true;
+                        queryParameters.setWeekDay(QueryParameters.WeekDay.THURSDAY);
+                        queryParameters.notifyAllListeners();
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_thursday);
                         thuSelected = false;
+                        queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
+                        queryParameters.notifyAllListeners();
                     }
                     break;
 
                 case R.id.friday:
-                    Toast.makeText(mContext, "friday was clicked", Toast.LENGTH_SHORT).show();
                     if (!friSelected) {
                         unselectButtons();
                         ((ImageView) v).setImageResource(R.drawable.ic_friday_active);
                         friSelected = true;
+                        queryParameters.setWeekDay(QueryParameters.WeekDay.FRIDAY);
+                        queryParameters.notifyAllListeners();
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_friday);
                         friSelected = false;
+                        queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
+                        queryParameters.notifyAllListeners();
                     }
                     break;
 
                 case R.id.saturday:
-                    Toast.makeText(mContext, "saturday was clicked", Toast.LENGTH_SHORT).show();
                     if (!satSelected) {
                         unselectButtons();
                         ((ImageView) v).setImageResource(R.drawable.ic_saturday_active);
                         satSelected = true;
+                        queryParameters.setWeekDay(QueryParameters.WeekDay.SATURDAY);
+                        queryParameters.notifyAllListeners();
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_saturday);
                         satSelected = false;
+                        queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
+                        queryParameters.notifyAllListeners();
                     }
                     break;
 
                 case R.id.sunday:
-                    Toast.makeText(mContext, "sunday was clicked", Toast.LENGTH_SHORT).show();
                     if (!sunSelected) {
                         unselectButtons();
                         ((ImageView) v).setImageResource(R.drawable.ic_sunday_active);
                         sunSelected = true;
+                        queryParameters.setWeekDay(QueryParameters.WeekDay.SUNDAY);
+                        queryParameters.notifyAllListeners();
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_sunday);
                         sunSelected = false;
+                        queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
+                        queryParameters.notifyAllListeners();
                     }
                     break;
 

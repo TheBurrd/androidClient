@@ -17,6 +17,7 @@ import android.widget.ListView;
 
 import com.dgaf.happyhour.Model.DrawerListAdapter;
 import com.dgaf.happyhour.Model.NavItem;
+import com.dgaf.happyhour.Model.QueryParameters;
 import com.dgaf.happyhour.R;
 import com.dgaf.happyhour.View.About;
 import com.dgaf.happyhour.View.ViewPagerFragment;
@@ -127,7 +128,8 @@ public class MainActivity extends AppCompatActivity {
         switch(position){
             // List of deals
             case 0:
-                fragment = new ViewPagerFragment();
+                fragment = ViewPagerFragment.newInstance();
+                identifier = "viewPager";
                 break;
 
             // divider
@@ -137,11 +139,13 @@ public class MainActivity extends AppCompatActivity {
             // rating
             case 2:
                 sortByRating();
+                mDrawerLayout.closeDrawers();
                 break;
 
             // proximity
             case 3:
                 sortByProximity();
+                mDrawerLayout.closeDrawers();
                 break;
 
             //seek
@@ -239,12 +243,16 @@ public class MainActivity extends AppCompatActivity {
 
     // Change the sorting mechanism for deals to sort by rating
     private void sortByRating() {
-
+        QueryParameters queryParams = QueryParameters.getInstance();
+        queryParams.setQueryType(QueryParameters.QueryType.RATING);
+        queryParams.notifyAllListeners();
     }
 
     // Change the sorting mechanism for deals to sort by proximity
     private void sortByProximity() {
-
+        QueryParameters queryParams = QueryParameters.getInstance();
+        queryParams.setQueryType(QueryParameters.QueryType.PROXIMITY);
+        queryParams.notifyAllListeners();
     }
 
 }
