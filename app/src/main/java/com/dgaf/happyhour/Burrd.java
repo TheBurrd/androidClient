@@ -22,6 +22,8 @@ public class Burrd extends Application {
         // Setup Model objects
         ParseObject.registerSubclass(DealModel.class);
         ParseObject.registerSubclass(RestaurantModel.class);
+        // Production Database
+        //Parse.initialize(this, "2TR1bOpjpFL8Wm7a7TXcbuoFCyJRB0VdSOXnf8tB", "hY2oFPc3k8RJLsZIsadM1Me0JS1ndnwRwim104WK");
         // Setup Parse db connection
         Parse.initialize(this, "aOa7pfDy6GLtckl4cYBEMCnkBW9NyDLZ7ta4FVoI", "SRlu6KjPyWSVvge8NPZ5NU78lH5LCT1Ve5qXQHOY");
 
