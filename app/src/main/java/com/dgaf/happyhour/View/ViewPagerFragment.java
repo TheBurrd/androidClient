@@ -1,6 +1,5 @@
 package com.dgaf.happyhour.View;
 
-import android.app.ListFragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,38 +11,50 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dgaf.happyhour.DealListType;
+import com.dgaf.happyhour.Model.QueryParameters;
 import com.dgaf.happyhour.R;
 
 import java.util.Locale;
 
-public class ViewPagerFragment extends Fragment{
+public class ViewPagerFragment extends Fragment {
 
-    private DealListFragment mFoodFragment;
-    private DealListFragment mDrinkFragment;
-    private DealListFragment mFeaturedFragment;
+    private SectionsPagerAdapter mPagerAdapter;
+    private QueryParameters mQueryParams;
 
+    public static ViewPagerFragment newInstance() {
+        ViewPagerFragment fragment = new ViewPagerFragment();
+
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View result = inflater.inflate(R.layout.view_pager,container,false);
         ViewPager vp = (ViewPager) result.findViewById(R.id.pager);
 
-        mDrinkFragment = DealListFragment.newInstance(DealListType.DRINK);
-        mFoodFragment = DealListFragment.newInstance(DealListType.FOOD);
-        mFeaturedFragment = DealListFragment.newInstance(DealListType.FEATURED);
+        // We only have 3 tabs. Setting this limit to 3 prevents the fragments from being recreated
+        // constantly at the expense of a little bit more memory usage.
+        vp.setOffscreenPageLimit(2);
 
-        vp.setAdapter(new SectionsPagerAdapter(getChildFragmentManager()));
+        mPagerAdapter = new SectionsPagerAdapter(this, getChildFragmentManager());
+        vp.setAdapter(mPagerAdapter);
 
         return result;
     }
 
-
-
-
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
+        private ViewPagerFragment viewPagerFragment;
+        private DealListFragment mFoodFragment;
+        private DealListFragment mDrinkFragment;
+        private DealListFragment mFeaturedFragment;
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        public SectionsPagerAdapter(ViewPagerFragment viewPagerFragment, FragmentManager fm) {
             super(fm);
+            this.viewPagerFragment = viewPagerFragment;
+            QueryParameters.getInstance().detachAllListeners();
+            mDrinkFragment = DealListFragment.newInstance(DealListType.DRINK);
+            mFoodFragment = DealListFragment.newInstance(DealListType.FOOD);
+            mFeaturedFragment = DealListFragment.newInstance(DealListType.FEATURED);
         }
 
         @Override
@@ -51,7 +62,7 @@ public class ViewPagerFragment extends Fragment{
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
 
-            switch(position) {
+            switch (position) {
                 case 0: {
                     return mDrinkFragment;
                 }
@@ -61,7 +72,7 @@ public class ViewPagerFragment extends Fragment{
                 case 2: {
                     return mFeaturedFragment;
                 }
-                default:{
+                default: {
                     Log.e("Sections Adapter: ", "Bad page position requested");
                     return null;
                 }
@@ -79,14 +90,15 @@ public class ViewPagerFragment extends Fragment{
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    return getString(R.string.drink).toUpperCase(l);
+                    return viewPagerFragment.getString(R.string.drink).toUpperCase(l);
                 case 1:
-                    return getString(R.string.food).toUpperCase(l);
+                    return viewPagerFragment.getString(R.string.food).toUpperCase(l);
                 case 2:
-                    return getString(R.string.featured).toUpperCase(l);
+                    return viewPagerFragment.getString(R.string.featured).toUpperCase(l);
             }
             return null;
         }
+
     }
 
 }

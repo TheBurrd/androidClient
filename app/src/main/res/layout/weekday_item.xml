@@ -5,63 +5,72 @@
     android:layout_width="300dp"
     android:layout_height="wrap_content"
     android:background="@android:color/darker_gray"
-
     android:gravity="center"
     >
 
-    <Button
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:id="@+id/sunday"
+        android:src="@drawable/ic_sunday"
         android:text = "Su"
         android:tag="sunday"
+        android:cropToPadding="false" />
 
-        />
-    <Button
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:text = "M"
         android:tag="monday"
         android:id="@+id/monday"
+        android:src="@drawable/ic_monday"
+        android:cropToPadding="false"
         />
-    <Button
+
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:text = "T"
         android:tag="tuesday"
         android:id="@+id/tuesday"
+        android:src="@drawable/ic_tuesday"
         />
-    <Button
+
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:id="@+id/wednesday"
         android:tag="wednesday"
         android:text = "W"
-
+        android:src="@drawable/ic_wednesday"
         />
-    <Button
+
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:id="@+id/thursday"
         android:text = "Th"
         android:tag="thursday"
-
+        android:src="@drawable/ic_thursday"
         />
-    <Button
+
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:text = "F"
         android:tag="friday"
         android:id="@+id/friday"
+        android:src="@drawable/ic_friday"
         />
 
 
-    <Button
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:text = "saturday"
         android:id="@+id/saturday"
         android:tag="saturday"
+        android:src="@drawable/ic_saturday"
         />
 
 
