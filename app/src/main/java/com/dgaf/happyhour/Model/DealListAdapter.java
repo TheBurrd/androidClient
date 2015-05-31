@@ -28,12 +28,13 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by trentonrobison on 4/28/15.
  */
-public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder> implements SwipeRefreshLayout.OnRefreshListener {
+public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder> implements SwipeRefreshLayout.OnRefreshListener, QueryParameters.Listener {
     private FragmentActivity activity;
     private ImageLoader imageLoader;
     private List<DealModel> dealItems;
@@ -41,9 +42,9 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private DealListType listType;
     private LocationService userLocation;
     private SwipeRefreshLayout swipeRefresh;
+    private QueryParameters mQueryParams;
     private static final String DEAL_LIST_CACHE = "dealList";
-    private static double searchRadius;
-    private static boolean[] loadedDeals = new boolean[DealListType.values().length];
+    private static HashMap queryHashes = new HashMap<>();
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -80,7 +81,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
 
     }
 
-    public DealListAdapter(FragmentActivity activity, SwipeRefreshLayout swipeRefresh, DealListType dealListType, double radiusMi) {
+    public DealListAdapter(FragmentActivity activity, SwipeRefreshLayout swipeRefresh, DealListType dealListType) {
         this.activity = activity;
         this.imageLoader = ImageLoader.getInstance();
         this.swipeRefresh = swipeRefresh;
@@ -89,8 +90,9 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         swipeRefresh.setOnRefreshListener(this);
         listType = dealListType;
         parseLocation = getLocation();
-        loadLocalDeals(parseLocation, radiusMi);
-
+        mQueryParams = QueryParameters.getInstance();
+        mQueryParams.addListener(this);
+        onRefresh();
     }
 
     public ParseGeoPoint getLocation() {
@@ -110,19 +112,10 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         return new ParseGeoPoint(latitude,longitude);
     }
 
-    public void loadLocalDeals(ParseGeoPoint location, double radiusMi) {
-        if (!location.equals(parseLocation)) {
-            loadedDeals[listType.ordinal()] = false;
-            parseLocation = location;
-        }
-        if (radiusMi != searchRadius) {
-            loadedDeals[listType.ordinal()] = false;
-            searchRadius = radiusMi;
-        }
+    public void loadLocalDeals() {
         // Setup the database Query
         ParseQuery<RestaurantModel> localRestaurants = ParseQuery.getQuery(RestaurantModel.class);
-        localRestaurants.whereWithinMiles("location", location, radiusMi);
-        localRestaurants.whereNear("location", location);
+        localRestaurants.whereWithinMiles("location", parseLocation, mQueryParams.getRadiusMi());
         ParseQuery<DealModel> localDeals = ParseQuery.getQuery(DealModel.class);
         localDeals.whereMatchesQuery("restaurantId", localRestaurants);
         switch(listType) {
@@ -136,7 +129,8 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                 localDeals.whereEqualTo("tags","featured");
                 break;
         }
-        if (loadedDeals[listType.ordinal()]) {
+        //if (loadedDeals[listType.ordinal()]) {
+        if (queryHashes.containsKey(mQueryParams.hashCode())) {
             localDeals.fromLocalDatastore();
         }
         localDeals.include("restaurantId");
@@ -147,7 +141,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                 Log.v("Parse info","Deal list query returned");
                 if (e == null) {
                     dealItems = deals;
-                    loadedDeals[listType.ordinal()] = true;
+                    queryHashes.put(mQueryParams.hashCode(), true);
                     // Release any objects previously pinned for this query.
                     ParseObject.unpinAllInBackground(DEAL_LIST_CACHE, dealItems, new DeleteCallback() {
                         public void done(ParseException e) {
@@ -169,11 +163,24 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         });
     }
 
+    public void loadHotDeals() {
+
+    }
+
+    @Override
+    public void onUpdate() {
+        mQueryParams = QueryParameters.getInstance();
+        onRefresh();
+    }
+
     @Override
     public void onRefresh() {
         parseLocation = getLocation();
-        loadedDeals[listType.ordinal()] = false;
-        loadLocalDeals(parseLocation, searchRadius);
+        if (mQueryParams.getQueryType() == QueryParameters.QueryType.RATING) {
+            loadLocalDeals();
+        } else if (mQueryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
+            loadLocalDeals();
+        }
     }
 
     @Override

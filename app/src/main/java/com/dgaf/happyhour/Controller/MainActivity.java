@@ -127,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
         switch(position){
             // List of deals
             case 0:
-                fragment = new ViewPagerFragment();
+                fragment = ViewPagerFragment.newInstance();
+                identifier = "viewPager";
                 break;
 
             // divider
@@ -141,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
             //proximity
             case 3:
-
+                sortByProximity();
                 break;
 
             //seek

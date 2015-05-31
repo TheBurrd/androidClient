@@ -9,7 +9,7 @@
         android:id="@+id/seek_bar"
         android:layout_gravity="left"
         android:padding="5dp"
-        android:max="6"
+        android:max="25"
         android:indeterminate="false" />
 
     <TextView

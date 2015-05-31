@@ -1,5 +1,6 @@
 package com.dgaf.happyhour.Model;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -30,10 +31,12 @@ public class DrawerListAdapter extends BaseAdapter {
     private static final int SEEK = 2;
     private static final int DIVIDER = 3;
     private static int seekProgress = 3;//for seekbar
+    private QueryParameters queryParameters;
 
     public DrawerListAdapter(Context context, ArrayList<NavItem> navItems) {
         mContext = context;
         mNavItems = navItems;
+        queryParameters = QueryParameters.getInstance();
     }
 
     @Override
@@ -89,6 +92,7 @@ public class DrawerListAdapter extends BaseAdapter {
                     monday.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
                             Toast.makeText(mContext, "monday was clicked", Toast.LENGTH_SHORT).show();
+
                         }
                     });
 
@@ -177,8 +181,7 @@ public class DrawerListAdapter extends BaseAdapter {
 
                     @Override
                     public void onStopTrackingTouch(SeekBar seekBar) {
-                        //close drawer
-                        //sort list
+
                     }
 
                     @Override
