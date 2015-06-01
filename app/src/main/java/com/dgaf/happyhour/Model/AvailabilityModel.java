@@ -44,4 +44,23 @@ public class AvailabilityModel {
             Log.e("Parse error: ", "Invalid availability JSONObject");
         }
     }
+
+    public AvailabilityModel(DealModel avail) {
+        sundayStart = avail.getInt("sundaySt");
+        sundayEnd = avail.getInt("sundayEn");
+        mondayStart = avail.getInt("mondaySt");
+        mondayEnd = avail.getInt("mondayEn");
+        tuesdayStart = avail.getInt("tuesdaySt");
+        tuesdayEnd = avail.getInt("tuesdayEn");
+        wednesdayStart = avail.getInt("wednesdaySt");
+        wednesdayEnd = avail.getInt("wednesdayEn");
+        thursdayStart = avail.getInt("thursdaySt");
+        thursdayEnd = avail.getInt("thursdayEn");
+        fridayStart = avail.getInt("fridaySt");
+        fridayEnd = avail.getInt("fridayEn");
+        saturdayStart = avail.getInt("saturdaySt");
+        saturdayEnd = avail.getInt("saturdayEn");
+    }
+
+
 }
