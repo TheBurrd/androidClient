@@ -37,8 +37,9 @@ import java.util.List;
 /**
  * Created by trentonrobison on 4/28/15.
  */
-public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder> implements SwipeRefreshLayout.OnRefreshListener, QueryParameters.Listener {
+public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder> implements SwipeRefreshLayout.OnRefreshListener, QueryParameters.Listener, View.OnClickListener {
     private FragmentActivity activity;
+    private RecyclerView mRecyclerView;
     private ImageLoader imageLoader;
     private List<DealModel> dealItems;
     private ParseGeoPoint parseLocation;
@@ -50,7 +51,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private static HashMap queryHashes = new HashMap<>();
 
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView deal;
         public TextView description;
         public TextView distance;
@@ -58,13 +59,10 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         public TextView likes;
         public TextView hours;
         public ParseImageView thumbnail;
-        public FragmentActivity activity;
         public String restaurantId;
 
-        public ViewHolder(View itemView,FragmentActivity activity) {
+        public ViewHolder(View itemView, DealListType listType) {
             super(itemView);
-            itemView.setOnClickListener(this);
-            this.activity = activity;
             deal = (TextView) itemView.findViewById(R.id.deal);
             description = (TextView) itemView.findViewById(R.id.description);
             distance = (TextView) itemView.findViewById(R.id.distance);
@@ -72,20 +70,17 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
             likes = (TextView) itemView.findViewById(R.id.likes);
             hours = (TextView) itemView.findViewById(R.id.hours);
             thumbnail = (ParseImageView) itemView.findViewById(R.id.thumb_nal);
-            thumbnail.setPlaceholder(ContextCompat.getDrawable(itemView.getContext(), R.drawable.llama));
+            if (listType == DealListType.FOOD) {
+                thumbnail.setPlaceholder(ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_food_placeholder));
+            } else {
+                thumbnail.setPlaceholder(ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_drinks_placeholder));
+            }
         }
-        @Override
-        public void onClick(View v) {
-            Fragment restaurant = RestaurantFragment.newInstance(restaurantId);
-            FragmentManager fragmentManager = activity.getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.main_fragment, restaurant).addToBackStack(null).commit();
-        }
-
     }
 
-    public DealListAdapter(FragmentActivity activity, SwipeRefreshLayout swipeRefresh, DealListType dealListType) {
+    public DealListAdapter(FragmentActivity activity, RecyclerView recyclerView, SwipeRefreshLayout swipeRefresh, DealListType dealListType) {
         this.activity = activity;
+        this.mRecyclerView = recyclerView;
         this.imageLoader = ImageLoader.getInstance();
         this.swipeRefresh = swipeRefresh;
         this.dealItems = new ArrayList<>();
@@ -229,10 +224,23 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     }
 
     @Override
+    public void onClick(View v) {
+        int position = mRecyclerView.getChildAdapterPosition(v);
+        DealModel dealModel = dealItems.get(position);
+        String restaurantId = dealModel.getRestaurantId();
+        String dealId = dealModel.getId();
+        Fragment restaurant = RestaurantFragment.newInstance(restaurantId, dealId);
+        FragmentManager fragmentManager = activity.getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.main_fragment, restaurant).addToBackStack(null).commit();
+    }
+
+    @Override
     public DealListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.deal_list_item, parent, false);
-        ViewHolder vh = new ViewHolder(v,activity);
+        v.setOnClickListener(this);
+        ViewHolder vh = new ViewHolder(v, listType);
         return vh;
     }
 

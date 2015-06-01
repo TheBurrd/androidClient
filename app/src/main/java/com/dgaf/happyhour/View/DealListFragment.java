@@ -56,13 +56,12 @@ public class DealListFragment extends Fragment {
         Bundle args = this.getArguments();
         listType = DealListType.values()[args.getInt(DEAL_LIST_TYPE)];
 
-        mAdapter = new DealListAdapter(getActivity(), mSwipeRefresh, listType);
+        mAdapter = new DealListAdapter(getActivity(), mRecyclerView, mSwipeRefresh, listType);
 
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
-
 
     }
 }

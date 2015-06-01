@@ -16,7 +16,7 @@
             <com.parse.ParseImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:src="@drawable/llama"
+                android:src="@drawable/ic_drinks_placeholder"
                 android:id="@+id/picture" />
 
             <LinearLayout
@@ -24,42 +24,54 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left"
-                android:id="@+id/restaurant_details">
+                android:id="@+id/deal_hero">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:padding="5dp"
-                    android:id="@+id/restaurantName" />
+                    android:id="@+id/deal_title" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:id="@+id/description"
+                    android:id="@+id/current_deal_avail"
                     android:paddingLeft="8dp" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:autoLink="phone"
-                    android:paddingLeft="8dp"
-                    android:id="@+id/phoneNo" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:autoLink="web"
-                    android:paddingLeft="8dp"
-                    android:id="@+id/website" />
+                    android:id="@+id/rating"/>
 
 
             </LinearLayout>
 
         </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/deal_description"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/restaurant_name"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/restaurant_description"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hours_of_operation"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/proximity"/>
 
         <TextView
             android:layout_height="match_parent"
@@ -68,6 +80,22 @@
             android:paddingLeft="8dp"
             android:textIsSelectable="true"
             android:id="@+id/address" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:autoLink="phone"
+            android:paddingLeft="8dp"
+            android:id="@+id/phoneNo" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:autoLink="web"
+            android:paddingLeft="8dp"
+            android:id="@+id/website" />
 
         <fragment
             android:id="@+id/map"

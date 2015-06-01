@@ -12,7 +12,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:src="@drawable/llama" />
+        android:src="@drawable/ic_drinks_placeholder" />
 
     <TextView
         android:layout_width="wrap_content"

@@ -23,6 +23,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 /*This is the fragment that our page view loads*/
 public class RestaurantFragment extends Fragment {
     private static final String RESTAURANT_ID = "resId";
+    private static final String DEAL_ID = "dealId";
     private RestaurantAdapter mAdapter;
     /**
      * The fragment argument representing the section number for this
@@ -34,10 +35,11 @@ public class RestaurantFragment extends Fragment {
      */
 
 
-    public static RestaurantFragment newInstance(String restaurantId) {
+    public static RestaurantFragment newInstance(String restaurantId, String dealId) {
         RestaurantFragment fragment = new RestaurantFragment();
         Bundle args = new Bundle();
         args.putString(RESTAURANT_ID, restaurantId);
+        args.putString(DEAL_ID, dealId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,9 +55,9 @@ public class RestaurantFragment extends Fragment {
 
         Bundle args = this.getArguments();
         if (mAdapter == null) {
-            mAdapter = new RestaurantAdapter(this, args.getString(RESTAURANT_ID), rootView);
+            mAdapter = new RestaurantAdapter(this, rootView, args.getString(RESTAURANT_ID), args.getString(DEAL_ID));
         } else {
-            mAdapter.loadRestaurantDetails(args.getString(RESTAURANT_ID));
+            mAdapter.loadRestaurantDetails(args.getString(RESTAURANT_ID), args.getString(DEAL_ID));
             mAdapter.createViewHolders(container);
         }
 
