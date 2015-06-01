@@ -5,6 +5,10 @@ import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by Adam on 5/12/2015.
  */
@@ -19,7 +23,22 @@ public class RestaurantModel extends ParseObject {
         return getString("name");
     }
 
-    public String getDescription() { return getString("description"); }
+    public String getDescription() {
+        JSONArray description = getJSONArray("description");
+        String result = "";
+        if (description == null) {
+            return result;
+        }
+        for (int i = 0; i < description.length(); i++) {
+            try {
+                result += description.getString(i) + ", ";
+            } catch (JSONException e) {
+
+            }
+        }
+        return result;
+
+    }
 
     public String getStreetNumber() {
         return getString("streetNumber");
@@ -53,7 +72,23 @@ public class RestaurantModel extends ParseObject {
         return getString("website");
     }
 
+    public double getDistanceFrom(ParseGeoPoint location) {
+        ParseGeoPoint restaurant = getParseGeoPoint("location");
+
+        if (restaurant == null) {
+            return 0.0;
+        }
+        return location.distanceInMilesTo(restaurant);
+    }
+
     public AvailabilityModel getAvailability() {
+        JSONObject avail = getJSONObject("availability");
+
+        if (avail == null) {
+            return new AvailabilityModel();
+        }
+
         return new AvailabilityModel(getJSONObject("availability"));
+
     }
 }

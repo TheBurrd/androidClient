@@ -1,13 +1,15 @@
-package com.dgaf.happyhour.Model;
+package com.dgaf.happyhour.Model.Adapter;
 import com.dgaf.happyhour.Controller.LocationService;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Fade;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dgaf.happyhour.DealListType;
+import com.dgaf.happyhour.Model.AvailabilityModel;
+import com.dgaf.happyhour.Model.DealModel;
+import com.dgaf.happyhour.Model.QueryParameters;
+import com.dgaf.happyhour.Model.RestaurantModel;
 import com.dgaf.happyhour.R;
 import com.dgaf.happyhour.View.RestaurantFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -28,7 +34,6 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -37,8 +42,9 @@ import java.util.List;
 /**
  * Created by trentonrobison on 4/28/15.
  */
-public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder> implements SwipeRefreshLayout.OnRefreshListener, QueryParameters.Listener {
+public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder> implements SwipeRefreshLayout.OnRefreshListener, QueryParameters.Listener, View.OnClickListener {
     private FragmentActivity activity;
+    private RecyclerView mRecyclerView;
     private ImageLoader imageLoader;
     private List<DealModel> dealItems;
     private ParseGeoPoint parseLocation;
@@ -50,42 +56,34 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private static HashMap queryHashes = new HashMap<>();
 
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView deal;
         public TextView description;
         public TextView distance;
-        public TextView restaurant;
-        public TextView likes;
+        public TextView rating;
         public TextView hours;
         public ParseImageView thumbnail;
-        public FragmentActivity activity;
         public String restaurantId;
 
-        public ViewHolder(View itemView,FragmentActivity activity) {
+        public ViewHolder(View itemView, DealListType listType) {
             super(itemView);
-            itemView.setOnClickListener(this);
-            this.activity = activity;
             deal = (TextView) itemView.findViewById(R.id.deal);
             description = (TextView) itemView.findViewById(R.id.description);
             distance = (TextView) itemView.findViewById(R.id.distance);
-            restaurant = (TextView) itemView.findViewById(R.id.restaurant);
-            likes = (TextView) itemView.findViewById(R.id.likes);
+            rating = (TextView) itemView.findViewById(R.id.rating);
             hours = (TextView) itemView.findViewById(R.id.hours);
             thumbnail = (ParseImageView) itemView.findViewById(R.id.thumb_nal);
-            thumbnail.setPlaceholder(ContextCompat.getDrawable(itemView.getContext(), R.drawable.llama));
+            if (listType == DealListType.FOOD) {
+                thumbnail.setPlaceholder(ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_food_placeholder));
+            } else {
+                thumbnail.setPlaceholder(ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_drinks_placeholder));
+            }
         }
-        @Override
-        public void onClick(View v) {
-            Fragment restaurant = RestaurantFragment.newInstance(restaurantId);
-            FragmentManager fragmentManager = activity.getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.main_fragment, restaurant).addToBackStack(null).commit();
-        }
-
     }
 
-    public DealListAdapter(FragmentActivity activity, SwipeRefreshLayout swipeRefresh, DealListType dealListType) {
+    public DealListAdapter(FragmentActivity activity, RecyclerView recyclerView, SwipeRefreshLayout swipeRefresh, DealListType dealListType) {
         this.activity = activity;
+        this.mRecyclerView = recyclerView;
         this.imageLoader = ImageLoader.getInstance();
         this.swipeRefresh = swipeRefresh;
         this.dealItems = new ArrayList<>();
@@ -143,9 +141,8 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
             public void done(List<DealModel> deals, ParseException e) {
                 Log.v("Parse info","Deal list query returned");
                 if (e == null) {
-                    dealItems = deals;
                     if (mQueryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
-                        Collections.sort(dealItems, new Comparator<DealModel>() {
+                        Collections.sort(deals, new Comparator<DealModel>() {
                             @Override
                             public int compare(DealModel lhs, DealModel rhs) {
                                 double diff = lhs.getDistanceFrom(parseLocation) - rhs.getDistanceFrom(parseLocation);
@@ -175,7 +172,21 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                             ParseObject.pinAllInBackground(DEAL_LIST_CACHE, dealItems);
                         }
                     });
-                    listAdapter.notifyDataSetChanged();
+                    int i = 0;
+                    List<DealModel> prevDealItems = dealItems;
+                    dealItems = deals;
+                    for (;i < deals.size(); i++) {
+                        if (i >= prevDealItems.size()) {
+                            listAdapter.notifyItemRangeInserted(i,deals.size()-i);
+                            break;
+                        }
+                        if (deals.get(i).getId() != prevDealItems.get(i).getId()) {
+                            listAdapter.notifyItemChanged(i);
+                        }
+                    }
+                    if (i < prevDealItems.size()) {
+                        listAdapter.notifyItemRangeRemoved(i, prevDealItems.size()-i);
+                    }
                 } else {
                     Log.e("Parse error: ", e.getMessage());
                 }
@@ -213,6 +224,9 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                 query.whereGreaterThanOrEqualTo("sundaySt",0);
                 query.whereLessThanOrEqualTo("sundayEn",2400);
                 break;
+            case TODAY:
+                //TODO filter todays deals after current time
+                break;
         }
     }
 
@@ -229,10 +243,25 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     }
 
     @Override
+    public void onClick(View v) {
+        int position = mRecyclerView.getChildAdapterPosition(v);
+        DealModel dealModel = dealItems.get(position);
+        String restaurantId = dealModel.getRestaurantId();
+        String dealId = dealModel.getId();
+        Fragment restaurant = RestaurantFragment.newInstance(restaurantId, dealId);
+        restaurant.setEnterTransition(new Fade());
+        restaurant.setExitTransition(new Fade());
+        FragmentManager fragmentManager = activity.getSupportFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.main_fragment, restaurant).addToBackStack(null).commit();
+    }
+
+    @Override
     public DealListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.deal_list_item, parent, false);
-        ViewHolder vh = new ViewHolder(v,activity);
+        v.setOnClickListener(this);
+        ViewHolder vh = new ViewHolder(v, listType);
         return vh;
     }
 
@@ -251,11 +280,13 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
 
         holder.deal.setText(dealModel.getTitle());
-        holder.likes.setText("Rating: " + String.valueOf(dealModel.getRating()));
+        int rating = dealModel.getRating();
+        if (rating != 0) {
+            holder.rating.setText(String.valueOf(dealModel.getRating()) + "%");
+        }
         holder.description.setText(dealModel.getDescription());
-        holder.restaurant.setText(dealModel.getRestaurant());
         holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(parseLocation)) + " mi");
-        holder.hours.setText("");
+        holder.hours.setText(dealModel.getAvailability().getDayAvailability( AvailabilityModel.getDayOfWeek(), true));
         holder.restaurantId = dealModel.getRestaurantId();
     }
 }
