@@ -5,6 +5,8 @@ import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
+import org.json.JSONObject;
+
 /**
  * Created by Adam on 5/12/2015.
  */
@@ -54,6 +56,13 @@ public class RestaurantModel extends ParseObject {
     }
 
     public AvailabilityModel getAvailability() {
+        JSONObject avail = getJSONObject("availability");
+
+        if (avail == null) {
+            return new AvailabilityModel();
+        }
+
         return new AvailabilityModel(getJSONObject("availability"));
+
     }
 }
