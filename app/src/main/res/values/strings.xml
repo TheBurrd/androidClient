@@ -5,6 +5,7 @@
     <string name="drink">Drink</string>
     <string name="food">Food</string>
     <string name="featured">Featured</string>
+    <string name="website"> <a href="burrdgamma.herokuapp.com">Add Deals</a> </string>
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_about">About</string>

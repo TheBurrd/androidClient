@@ -13,12 +13,14 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/main_fragment">
+
         <android.support.v7.widget.Toolbar
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimaryDark"/>
+
     </LinearLayout>
 
 
@@ -28,9 +30,10 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:layout_below="@+id/top_bar"
-        android:background="@android:color/darker_gray"
+        android:background="@android:color/white"
         android:choiceMode="singleChoice"
-        android:divider="@android:color/background_dark"
+        android:divider="#d3d3d3"
+        android:listSelector="@color/colorPrimary"
         android:dividerHeight="1dp" />
 
 </android.support.v4.widget.DrawerLayout>
