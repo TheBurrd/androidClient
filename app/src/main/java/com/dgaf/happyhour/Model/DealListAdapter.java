@@ -28,7 +28,6 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -263,7 +262,8 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         holder.description.setText(dealModel.getDescription());
         holder.restaurant.setText(dealModel.getRestaurant());
         holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(parseLocation)) + " mi");
-        holder.hours.setText("");
+        // TODO Get correct days availability
+        holder.hours.setText(dealModel.getAvailability().getDayAvailability(AvailabilityModel.WeekDay.FRIDAY, true));
         holder.restaurantId = dealModel.getRestaurantId();
     }
 }

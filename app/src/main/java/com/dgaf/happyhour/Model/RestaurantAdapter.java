@@ -1,5 +1,6 @@
 package com.dgaf.happyhour.Model;
 
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.dgaf.happyhour.Controller.LocationService;
 import com.dgaf.happyhour.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,8 +25,6 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
 import com.parse.ParseQuery;
 
-import org.w3c.dom.Text;
-
 
 /**
  * Created by Adam on 5/24/2015.
@@ -34,13 +34,15 @@ public class RestaurantAdapter {
     private ImageLoader imageLoader;
     private RestaurantModel restaurant;
     private DealModel deal;
+    private ParseGeoPoint parseLocation;
     private RestaurantViewHolder restaurantHolder;
     private ExpandDealListAdapter expandDealListAdapter;
 
     public static class RestaurantViewHolder implements ListView.OnTouchListener {
         public TextView dealTitle;
         public TextView dealDescription;
-        public TextView rating;
+        public TextView dealAvailability;
+        public TextView dealRating;
         public TextView restaurantName;
         public TextView restaurantDescription;
         public TextView proximity;
@@ -55,7 +57,8 @@ public class RestaurantAdapter {
         public RestaurantViewHolder(Fragment fragment, View rootView, ExpandDealListAdapter listAdapter) {
             dealTitle = (TextView) rootView.findViewById(R.id.deal_title);
             dealDescription = (TextView) rootView.findViewById(R.id.deal_description);
-            rating = (TextView) rootView.findViewById(R.id.rating);
+            dealAvailability = (TextView) rootView.findViewById(R.id.current_deal_avail);
+            dealRating = (TextView) rootView.findViewById(R.id.deal_rating);
             restaurantName = (TextView) rootView.findViewById(R.id.restaurant_name);
             restaurantDescription = (TextView) rootView.findViewById(R.id.restaurant_description);
             proximity = (TextView) rootView.findViewById(R.id.proximity);
@@ -112,8 +115,26 @@ public class RestaurantAdapter {
         this.expandDealListAdapter = new ExpandDealListAdapter(fragment.getActivity(), restaurantId);
         this.restaurant = new RestaurantModel();
         this.deal = new DealModel();
+        parseLocation = getLocation();
         createViewHolders(fragmentView);
         loadRestaurantDetails(restaurantId, dealId);
+    }
+
+    public ParseGeoPoint getLocation() {
+        // Geisel Library - Default Location
+        double latitude = 32.881122;
+        double longitude = -117.237631;
+        if (!Build.FINGERPRINT.startsWith("generic")) {
+            LocationService userLocation = new LocationService(fragment.getActivity());
+            // Is user location available and are we not running in an emulator
+            if (userLocation.canGetLocation()) {
+                latitude = userLocation.getLatitude();
+                longitude = userLocation.getLongitude();
+            } else {
+                userLocation.showSettingsAlert();
+            }
+        }
+        return new ParseGeoPoint(latitude,longitude);
     }
 
     public void loadRestaurantDetails(String restaurantId, String dealId) {
@@ -168,10 +189,13 @@ public class RestaurantAdapter {
             }
             restaurantHolder.restaurantName.setText(restaurant.getName());
             restaurantHolder.restaurantDescription.setText(restaurant.getDescription());
+            // TODO Get correct day availability
+            restaurantHolder.dealAvailability.setText(deal.getAvailability().getDayAvailability(AvailabilityModel.WeekDay.FRIDAY, true));
             restaurantHolder.dealTitle.setText(deal.getTitle());
             restaurantHolder.dealDescription.setText(deal.getDescription());
-            //restaurantHolder.rating.setText(deal.getRating());
-            //restaurantHolder.hoursOfOperation.setText(restaurant.getAvailability());
+            restaurantHolder.dealRating.setText(String.valueOf(deal.getRating()));
+            restaurantHolder.proximity.setText(String.format("%.1f", restaurant.getDistanceFrom(parseLocation)) + " mi");
+            restaurantHolder.hoursOfOperation.setText(restaurant.getAvailability().getEntireAvailability());
             restaurantHolder.address.setText(restaurant.getStreetNumber() + " " + restaurant.getStreetAddress() + ", " + restaurant.getCity() + ", " + restaurant.getState()+ ", " + restaurant.getZipcode());
             restaurantHolder.phoneNo.setText(restaurant.getPhoneNumber());
             restaurantHolder.website.setText(restaurant.getWebsite());
