@@ -4,38 +4,9 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/ic_launcher"
-        android:id="@+id/imageView" />
-
-
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-       >
-
-        <TextView
-            android:paddingTop="30dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/app_name"
-            android:id="@+id/appName" />
-
-        <TextView
-            android:paddingTop="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/website"
-            android:autoLink="web"
-            android:id="@+id/textView" />
-
-
-    </LinearLayout>
+        android:src="@drawable/burrd_nav_header"
+        android:id="@+id/imageView" />
 
 </LinearLayout>

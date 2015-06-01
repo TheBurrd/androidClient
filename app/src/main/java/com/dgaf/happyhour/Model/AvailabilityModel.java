@@ -5,6 +5,8 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
+
 /**
  * Created by Adam on 5/12/2015.
  * Written by Sherman
@@ -75,6 +77,11 @@ public class AvailabilityModel {
         fridayEnd = avail.getInt("fridayEn");
         saturdayStart = avail.getInt("saturdaySt");
         saturdayEnd = avail.getInt("saturdayEn");
+    }
+
+    public static WeekDay getDayOfWeek() {
+        Calendar calendar = Calendar.getInstance();
+        return WeekDay.values()[calendar.get(Calendar.DAY_OF_WEEK)-1];
     }
 
     /** Return a string representing the availability for the input day. Takes

@@ -5,16 +5,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ScrollView;
 
-import com.dgaf.happyhour.Model.RestaurantAdapter;
+import com.dgaf.happyhour.Model.Adapter.RestaurantAdapter;
 import com.dgaf.happyhour.R;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * Created by trentonrobison on 4/26/15.

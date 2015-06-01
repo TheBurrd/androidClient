@@ -1,4 +1,4 @@
-package com.dgaf.happyhour.Model;
+package com.dgaf.happyhour.Model.Adapter;
 
 import android.os.Build;
 import android.support.v4.app.Fragment;
@@ -11,6 +11,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.dgaf.happyhour.Controller.LocationService;
+import com.dgaf.happyhour.Model.AvailabilityModel;
+import com.dgaf.happyhour.Model.DealModel;
+import com.dgaf.happyhour.Model.RestaurantModel;
 import com.dgaf.happyhour.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -48,8 +51,6 @@ public class RestaurantAdapter {
         public TextView proximity;
         public TextView hoursOfOperation;
         public TextView address;
-        public TextView phoneNo;
-        public TextView website;
         public ExpandableListView dealList;
         public ParseImageView thumbnail;
         public GoogleMap map;
@@ -64,9 +65,8 @@ public class RestaurantAdapter {
             proximity = (TextView) rootView.findViewById(R.id.proximity);
             hoursOfOperation = (TextView) rootView.findViewById(R.id.hours_of_operation);
             address = (TextView) rootView.findViewById(R.id.address);
-            phoneNo = (TextView) rootView.findViewById(R.id.phoneNo);
-            website = (TextView) rootView.findViewById(R.id.website);
             dealList = (ExpandableListView) rootView.findViewById(R.id.deal_list);
+            dealList.setFocusable(false);
             dealList.setAdapter(listAdapter);
             thumbnail = (ParseImageView) rootView.findViewById(R.id.picture);
             thumbnail.setPlaceholder(ContextCompat.getDrawable(rootView.getContext(), R.drawable.ic_food_placeholder));
@@ -189,16 +189,13 @@ public class RestaurantAdapter {
             }
             restaurantHolder.restaurantName.setText(restaurant.getName());
             restaurantHolder.restaurantDescription.setText(restaurant.getDescription());
-            // TODO Get correct day availability
-            restaurantHolder.dealAvailability.setText(deal.getAvailability().getDayAvailability(AvailabilityModel.WeekDay.FRIDAY, true));
+            restaurantHolder.dealAvailability.setText(deal.getAvailability().getDayAvailability(AvailabilityModel.getDayOfWeek(), true));
             restaurantHolder.dealTitle.setText(deal.getTitle());
             restaurantHolder.dealDescription.setText(deal.getDescription());
-            restaurantHolder.dealRating.setText(String.valueOf(deal.getRating()));
+            restaurantHolder.dealRating.setText(String.valueOf(deal.getRating()) + "%");
             restaurantHolder.proximity.setText(String.format("%.1f", restaurant.getDistanceFrom(parseLocation)) + " mi");
             restaurantHolder.hoursOfOperation.setText(restaurant.getAvailability().getEntireAvailability());
             restaurantHolder.address.setText(restaurant.getStreetNumber() + " " + restaurant.getStreetAddress() + ", " + restaurant.getCity() + ", " + restaurant.getState()+ ", " + restaurant.getZipcode());
-            restaurantHolder.phoneNo.setText(restaurant.getPhoneNumber());
-            restaurantHolder.website.setText(restaurant.getWebsite());
 
         }
     }

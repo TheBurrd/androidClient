@@ -1,4 +1,4 @@
-package com.dgaf.happyhour.Model;
+package com.dgaf.happyhour.Model.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.dgaf.happyhour.Model.QueryParameters;
 import com.dgaf.happyhour.R;
 
 import java.util.ArrayList;

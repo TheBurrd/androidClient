@@ -1,13 +1,15 @@
-package com.dgaf.happyhour.Model;
+package com.dgaf.happyhour.Model.Adapter;
 import com.dgaf.happyhour.Controller.LocationService;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Fade;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dgaf.happyhour.DealListType;
+import com.dgaf.happyhour.Model.AvailabilityModel;
+import com.dgaf.happyhour.Model.DealModel;
+import com.dgaf.happyhour.Model.QueryParameters;
+import com.dgaf.happyhour.Model.RestaurantModel;
 import com.dgaf.happyhour.R;
 import com.dgaf.happyhour.View.RestaurantFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -54,8 +60,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         public TextView deal;
         public TextView description;
         public TextView distance;
-        public TextView restaurant;
-        public TextView likes;
+        public TextView rating;
         public TextView hours;
         public ParseImageView thumbnail;
         public String restaurantId;
@@ -65,8 +70,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
             deal = (TextView) itemView.findViewById(R.id.deal);
             description = (TextView) itemView.findViewById(R.id.description);
             distance = (TextView) itemView.findViewById(R.id.distance);
-            restaurant = (TextView) itemView.findViewById(R.id.restaurant);
-            likes = (TextView) itemView.findViewById(R.id.likes);
+            rating = (TextView) itemView.findViewById(R.id.rating);
             hours = (TextView) itemView.findViewById(R.id.hours);
             thumbnail = (ParseImageView) itemView.findViewById(R.id.thumb_nal);
             if (listType == DealListType.FOOD) {
@@ -137,9 +141,8 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
             public void done(List<DealModel> deals, ParseException e) {
                 Log.v("Parse info","Deal list query returned");
                 if (e == null) {
-                    dealItems = deals;
                     if (mQueryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
-                        Collections.sort(dealItems, new Comparator<DealModel>() {
+                        Collections.sort(deals, new Comparator<DealModel>() {
                             @Override
                             public int compare(DealModel lhs, DealModel rhs) {
                                 double diff = lhs.getDistanceFrom(parseLocation) - rhs.getDistanceFrom(parseLocation);
@@ -169,7 +172,21 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                             ParseObject.pinAllInBackground(DEAL_LIST_CACHE, dealItems);
                         }
                     });
-                    listAdapter.notifyDataSetChanged();
+                    int i = 0;
+                    List<DealModel> prevDealItems = dealItems;
+                    dealItems = deals;
+                    for (;i < deals.size(); i++) {
+                        if (i >= prevDealItems.size()) {
+                            listAdapter.notifyItemRangeInserted(i,deals.size()-i);
+                            break;
+                        }
+                        if (deals.get(i).getId() != prevDealItems.get(i).getId()) {
+                            listAdapter.notifyItemChanged(i);
+                        }
+                    }
+                    if (i < prevDealItems.size()) {
+                        listAdapter.notifyItemRangeRemoved(i, prevDealItems.size()-i);
+                    }
                 } else {
                     Log.e("Parse error: ", e.getMessage());
                 }
@@ -207,6 +224,9 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                 query.whereGreaterThanOrEqualTo("sundaySt",0);
                 query.whereLessThanOrEqualTo("sundayEn",2400);
                 break;
+            case TODAY:
+                //TODO filter todays deals after current time
+                break;
         }
     }
 
@@ -229,9 +249,11 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         String restaurantId = dealModel.getRestaurantId();
         String dealId = dealModel.getId();
         Fragment restaurant = RestaurantFragment.newInstance(restaurantId, dealId);
+        restaurant.setEnterTransition(new Fade());
+        restaurant.setExitTransition(new Fade());
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.main_fragment, restaurant).addToBackStack(null).commit();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.main_fragment, restaurant).addToBackStack(null).commit();
     }
 
     @Override
@@ -258,12 +280,13 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
 
         holder.deal.setText(dealModel.getTitle());
-        holder.likes.setText("Rating: " + String.valueOf(dealModel.getRating()));
+        int rating = dealModel.getRating();
+        if (rating != 0) {
+            holder.rating.setText(String.valueOf(dealModel.getRating()) + "%");
+        }
         holder.description.setText(dealModel.getDescription());
-        holder.restaurant.setText(dealModel.getRestaurant());
         holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(parseLocation)) + " mi");
-        // TODO Get correct days availability
-        holder.hours.setText(dealModel.getAvailability().getDayAvailability(AvailabilityModel.WeekDay.FRIDAY, true));
+        holder.hours.setText(dealModel.getAvailability().getDayAvailability( AvailabilityModel.getDayOfWeek(), true));
         holder.restaurantId = dealModel.getRestaurantId();
     }
 }
