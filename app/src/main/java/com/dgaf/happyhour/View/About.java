@@ -10,8 +10,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 
 import com.dgaf.happyhour.R;
 
@@ -20,10 +20,9 @@ import com.dgaf.happyhour.R;
  */
 public class About extends Fragment implements View.OnClickListener {
 
-    private ImageView llamaPic;
+    private ScrollView scrollView;
+    private ImageView burrdIcon;
     private boolean displayed = false;
-    private boolean transparent = true;
-    private Button llamaButton;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -47,15 +46,13 @@ public class About extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_about, container, false);
 
-
-        // Display the secret button
-        llamaButton = (Button) rootView.findViewById(R.id.llamaButton);
-        llamaButton.setOnClickListener(this);
+        // App icon is also a secret button
+        burrdIcon = (ImageView) rootView.findViewById(R.id.burrdIcon);
+        burrdIcon.setOnClickListener(this);
         //llamaButton.setAlpha(0.0f); im testing this on API < 10 uncomment for final project
 
-        // Display the hidden llama picture
-        llamaPic = (ImageView) rootView.findViewById(R.id.llamaPic);
-        llamaPic.setOnClickListener(this);
+        // The scroll view to set the background for
+        scrollView = (ScrollView) rootView.findViewById(R.id.aboutScrollView);
 
         return rootView;
     }
@@ -63,17 +60,15 @@ public class About extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
-            case R.id.llamaButton:
-                // Show the llama and the button when the user clicks the secret button
+            case R.id.burrdIcon:
+                // Show the llama when the user clicks the Burrd Icon
                 if (!displayed) {
-                    llamaPic.setVisibility(View.VISIBLE);
+                    scrollView.setBackgroundResource(R.drawable.llama);
                     displayed = true;
-                    llamaButton.setAlpha(0.2f);
-                    transparent = false;
                 }
-                // Hide the llama again when the user clicks the secret button
+                // Return to default background when the user clicks the Burrd Icon
                 else {
-                    llamaPic.setVisibility(View.INVISIBLE);
+                    scrollView.setBackgroundResource(0);
                     displayed = false;
                 }
         }
