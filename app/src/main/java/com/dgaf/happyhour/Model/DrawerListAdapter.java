@@ -1,19 +1,15 @@
 package com.dgaf.happyhour.Model;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dgaf.happyhour.R;
 
@@ -37,7 +33,6 @@ public class DrawerListAdapter extends BaseAdapter {
     private static final int NORMAL = 0;
     private static final int DAYS = 1;
     private static final int SEEK = 2;
-    private static final int DIVIDER = 3;
     private QueryParameters queryParameters;
 
     private static boolean monSelected = false;
@@ -104,6 +99,7 @@ public class DrawerListAdapter extends BaseAdapter {
                 inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = inflater.inflate(R.layout.weekday_item, null);
 
+
                 monday =  (ImageView) v.findViewById(R.id.monday);
                 tuesday = (ImageView) v.findViewById(R.id.tuesday);
                 wednesday = (ImageView) v.findViewById(R.id.wednesday);
@@ -146,22 +142,15 @@ public class DrawerListAdapter extends BaseAdapter {
 
                 break;
 
-            // Black line that divides the navdrawer
-            case DIVIDER:
-                inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                v = inflater.inflate(R.layout.line_item, null);
-
-               break;
-
             // Seek bar for proximity
             case SEEK:
                 inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = inflater.inflate(R.layout.seekbar_item, null);
 
                 SeekBar seekBar = (SeekBar) v.findViewById(R.id.seek_bar);
-                seekBar.setProgress(queryParameters.getRadiusMi());
+                seekBar.setProgress(queryParameters.getRadiusMi()-1);
                 final TextView seekBarText = (TextView) v.findViewById(R.id.seek_bar_text);
-
+                seekBarText.setText(queryParameters.getRadiusMi()+" mi");
                 seekBarText.setOnTouchListener(navLockListener);
                 seekBar.setOnTouchListener(navLockListener);
 
@@ -169,7 +158,7 @@ public class DrawerListAdapter extends BaseAdapter {
 
                     @Override
                     public void onStopTrackingTouch(SeekBar seekBar) {
-                        queryParameters.setRadiusMi(seekBar.getProgress());
+                        queryParameters.setRadiusMi(seekBar.getProgress() + 1);
                         queryParameters.notifyAllListeners();
                     }
 
@@ -181,9 +170,8 @@ public class DrawerListAdapter extends BaseAdapter {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-                        seekBarText.setText(progress + " mi");
+                        seekBarText.setText((progress+1) + " mi");
                     }
-
                 });
                 break;
         }
@@ -202,13 +190,11 @@ public class DrawerListAdapter extends BaseAdapter {
     public int getItemViewType(int position) {
         int type = 0;
 
-        if (position == 0 || position == 2 || position == 3 || position == 5 || position == 8 || position == 10) {
+        if (position == 0 || position == 1 || position == 4 ) {
             type = NORMAL;
-        }else if (position == 1 || position == 7 || position == 9) {
-            type = DIVIDER;
-        }else if( position == 4 ){
+        }else if( position == 2 ){
             type = SEEK;
-        }else if( position == 6){
+        }else if( position == 3){
             type = DAYS;
         }
         return type;
@@ -383,7 +369,6 @@ public class DrawerListAdapter extends BaseAdapter {
                         queryParameters.notifyAllListeners();
                     }
                     break;
-
             }
         }
     };

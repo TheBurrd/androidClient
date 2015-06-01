@@ -2,11 +2,11 @@ package com.dgaf.happyhour.Controller;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -36,9 +36,16 @@ public class MainActivity extends AppCompatActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
 
+    private static final int HEADER = 0;
+    private static final int RATING = 1;
+    private static final int PROXIMITY = 2;
+    private static final int ABOUT_US = 5;
+
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
+    private ViewPagerFragment viewPagerFragment;
+
 
     ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
 
@@ -63,16 +70,10 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.main_fragment, new ViewPagerFragment()).commit();
         }
 
-        mNavItems.add(new NavItem("Deals", R.drawable.ic_launcher));
-        mNavItems.add(new NavItem("divider", R.drawable.ic_drawer));
         mNavItems.add(new NavItem("Rating", R.drawable.ic_thumb_up));
         mNavItems.add(new NavItem("Proximity", R.drawable.ic_proximity));
         mNavItems.add(new NavItem("SeekBar", R.drawable.ic_drawer));
         mNavItems.add(new NavItem("Days of the Week", R.drawable.ic_calendar));
-        mNavItems.add(new NavItem("week days", R.drawable.ic_drawer));
-        mNavItems.add(new NavItem("divider", R.drawable.ic_drawer));
-        mNavItems.add(new NavItem("Favorites", R.drawable.llama));
-        mNavItems.add(new NavItem("divider", R.drawable.ic_drawer));
         mNavItems.add(new NavItem("About Us", R.drawable.ic_aboutus));
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -80,7 +81,16 @@ public class MainActivity extends AppCompatActivity {
         // Populate the Navigation Drawer with options
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setCacheColorHint(0);//avoids changing list color when scrolling
+
         DrawerListAdapter adapter = new DrawerListAdapter(this, mNavItems);
+        View header = getLayoutInflater().inflate(R.layout.header_nav, null);//inflate header view
+        header.setEnabled(false);
+        header.setOnClickListener(null);
+
+        mDrawerList.addHeaderView(header);//add header to
+        mDrawerList.setSelectionAfterHeaderView();
+
+
         mDrawerList.setAdapter(adapter);
 
         // Drawer Item click listeners
@@ -101,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 //getSupportActionBar().setTitle("HappyHour");
-
                 // invalidateOptionsMenu();
             }
 
@@ -112,11 +121,9 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        viewPagerFragment = ViewPagerFragment.newInstance();
 
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setHomeButtonEnabled(true);
-        //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
     /** Swaps fragments in the main content view */
@@ -127,54 +134,28 @@ public class MainActivity extends AppCompatActivity {
         /*we will open all the various fragments from the sliding drawer here*/
         switch(position){
             // List of deals
-            case 0:
-                fragment = ViewPagerFragment.newInstance();
+            case HEADER:
+                fragment = viewPagerFragment;
                 identifier = "viewPager";
+                mDrawerLayout.closeDrawers();
                 break;
 
-            // divider
-            case 1:
-                break;
 
-            // rating
-            case 2:
+            case RATING:
+                fragment = viewPagerFragment;
+                identifier = "viewPager";
                 sortByRating();
                 mDrawerLayout.closeDrawers();
                 break;
 
-            // proximity
-            case 3:
+            case PROXIMITY:
+                fragment = viewPagerFragment;
+                identifier = "viewPager";
                 sortByProximity();
                 mDrawerLayout.closeDrawers();
                 break;
 
-            //seek
-            case 4:
-                break;
-
-            // days of the week
-            case 5:
-                break;
-
-            // days
-            case 6:
-                break;
-
-            // divider
-            case 7:
-                break;
-
-            // favorites
-            case 8:
-                displayFavorites();
-                break;
-
-            // divider
-            case 9:
-                break;
-
-            // About Us
-            case 10:
+            case ABOUT_US:
                 fragment = new About();
                 identifier = "about";
                 break;
@@ -217,7 +198,6 @@ public class MainActivity extends AppCompatActivity {
         // true, then it has handled the app icon touch event
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
-
         }
 
         return super.onOptionsItemSelected(item);
