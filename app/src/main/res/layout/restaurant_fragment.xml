@@ -137,9 +137,9 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_location"
-                android:paddingTop="5dp"
                 android:layout_alignTop="@+id/proximity"
                 android:layout_toLeftOf="@+id/proximity"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="10dp" />
 

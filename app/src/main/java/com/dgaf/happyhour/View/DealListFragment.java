@@ -67,7 +67,7 @@ public class DealListFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new LandingAnimator());
-        mRecyclerView.addItemDecoration(new DealListDecoration(getActivity()));
+        //mRecyclerView.addItemDecoration(new DealListDecoration(getActivity()));
         //mRecyclerView.setHasFixedSize(true);
 
     }

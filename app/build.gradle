@@ -25,6 +25,7 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.android.support:cardview-v7:+'
     compile 'com.android.support:recyclerview-v7:+'
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.google.android.gms:play-services:7.3.0'
