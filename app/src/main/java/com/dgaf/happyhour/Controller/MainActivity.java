@@ -218,6 +218,7 @@ public class MainActivity extends AppCompatActivity  {
             searchView = (SearchView) searchItem.getActionView();
             searchView.setSearchableInfo(searchManager.getSearchableInfo(MainActivity.this.getComponentName()));
         }
+        searchView.setQueryHint("What's the wurrd?");
 
         searchView.setOnQueryTextListener(
         new SearchView.OnQueryTextListener(){
@@ -234,14 +235,14 @@ public class MainActivity extends AppCompatActivity  {
                 //Output the new list with the query results
 
                 Context context = getApplicationContext();
-                CharSequence start = "Start";
                 int duration = Toast.LENGTH_SHORT;
 
-                Toast toast = Toast.makeText(context, start, duration);
+                Toast toast = Toast.makeText(context, query, duration);
                 toast.show();
                 return false;
             }
         });
+
 
         return true;
     }

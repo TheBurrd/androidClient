@@ -3,5 +3,5 @@
     <item name="colorPrimary" type="color">#FFC107</item>
     <item name="colorPrimaryDark" type="color">#FFA000</item>
     <item name="burrd" type="color">#FFFFFF</item>
-
+    <item name="defaultSearch" type="color">#7000</item>
 </resources>
