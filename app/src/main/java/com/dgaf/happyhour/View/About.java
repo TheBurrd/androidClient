@@ -5,6 +5,8 @@ package com.dgaf.happyhour.View;
  * Written by Sherman Cheung
  */
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -65,6 +67,10 @@ public class About extends Fragment implements View.OnClickListener {
                 if (!displayed) {
                     scrollView.setBackgroundResource(R.drawable.llama);
                     displayed = true;
+
+                    Uri uri = Uri.parse("https://youtu.be/9Gc4QTqslN4?t=1s");
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
                 }
                 // Return to default background when the user clicks the Burrd Icon
                 else {
