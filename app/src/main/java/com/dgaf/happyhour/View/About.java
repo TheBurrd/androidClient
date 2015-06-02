@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.dgaf.happyhour.R;
 
@@ -24,6 +25,7 @@ public class About extends Fragment implements View.OnClickListener {
 
     private ScrollView scrollView;
     private ImageView burrdIcon;
+    private TextView aboutText;
     private boolean displayed = false;
 
     /**
@@ -56,6 +58,10 @@ public class About extends Fragment implements View.OnClickListener {
         // The scroll view to set the background for
         scrollView = (ScrollView) rootView.findViewById(R.id.aboutScrollView);
 
+        // About Text is the secret button
+        aboutText = (TextView) rootView.findViewById(R.id.aboutText);
+        aboutText.setOnClickListener(this);
+
         return rootView;
     }
 
@@ -63,20 +69,24 @@ public class About extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.burrdIcon:
+                Uri uri = Uri.parse("https://youtu.be/9Gc4QTqslN4?t=1s");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+                break;
+
+            case R.id.aboutText:
                 // Show the llama when the user clicks the Burrd Icon
                 if (!displayed) {
                     scrollView.setBackgroundResource(R.drawable.llama);
                     displayed = true;
-
-                    Uri uri = Uri.parse("https://youtu.be/9Gc4QTqslN4?t=1s");
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
                 }
                 // Return to default background when the user clicks the Burrd Icon
                 else {
                     scrollView.setBackgroundResource(0);
                     displayed = false;
                 }
+                break;
+
         }
     }
 
