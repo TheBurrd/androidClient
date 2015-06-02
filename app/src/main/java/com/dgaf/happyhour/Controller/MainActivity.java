@@ -1,5 +1,7 @@
 package com.dgaf.happyhour.Controller;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -8,12 +10,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.dgaf.happyhour.Model.DrawerListAdapter;
 import com.dgaf.happyhour.Model.NavItem;
@@ -24,7 +28,8 @@ import com.dgaf.happyhour.View.ViewPagerFragment;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity  {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -52,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+
+
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -61,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         if(getSupportFragmentManager().findFragmentById(R.id.main_fragment) == null){
             getSupportFragmentManager().beginTransaction().add(R.id.main_fragment, new ViewPagerFragment()).commit();
         }
+
 
         mNavItems.add(new NavItem("Deals", R.drawable.ic_launcher));
         mNavItems.add(new NavItem("divider", R.drawable.ic_drawer));
@@ -106,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                //getSupportActionBar().setTitle("Options");
+                toolbar.setTitle("Options");
                 // invalidateOptionsMenu();
             }
         };
@@ -201,8 +208,47 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_settings);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = new SearchView(this);
+        searchView.setIconifiedByDefault(false);
+        if (searchItem != null) {
+            searchView = (SearchView) searchItem.getActionView();
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(MainActivity.this.getComponentName()));
+        }
+
+        searchView.setOnQueryTextListener(
+        new SearchView.OnQueryTextListener(){
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // TODO Auto-generated method stub
+                return false;
+            }
+
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // TODO Auto-generated method stub
+                //Output the new list with the query results
+
+                Context context = getApplicationContext();
+                CharSequence start = "Start";
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, start, duration);
+                toast.show();
+                return false;
+            }
+        });
+
         return true;
     }
+
+
+
+
 
     /*This is were all the action events happen*/
     @Override
@@ -218,6 +264,7 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -246,6 +293,7 @@ public class MainActivity extends AppCompatActivity {
     private void sortByProximity() {
 
     }
+
 
 }
 
