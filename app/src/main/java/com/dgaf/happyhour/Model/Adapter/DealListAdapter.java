@@ -1,6 +1,8 @@
 package com.dgaf.happyhour.Model.Adapter;
 import com.dgaf.happyhour.Controller.LocationService;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -52,6 +54,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private LocationService userLocation;
     private SwipeRefreshLayout swipeRefresh;
     private QueryParameters mQueryParams;
+    private AvailabilityModel.WeekDay currentDayFilter;
     private static final String DEAL_LIST_CACHE = "dealList";
     private static HashMap queryHashes = new HashMap<>();
 
@@ -130,9 +133,6 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                 localDeals.whereEqualTo("tags","featured");
                 break;
         }
-        if (mQueryParams.getQueryType() == QueryParameters.QueryType.RATING) {
-            localDeals.addDescendingOrder("rating");
-        }
         applyDayOfWeekForQuery(localDeals);
         localDeals.include("restaurantId");
         Log.v("Parse info", "Deal list query started" );
@@ -157,6 +157,22 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                                 return (int) (diff);
                             }
                         });
+                    } else if (mQueryParams.getQueryType() == QueryParameters.QueryType.RATING){
+                        Collections.sort(deals, new Comparator<DealModel>() {
+                            @Override
+                            public int compare(DealModel lhs, DealModel rhs) {
+                                double diff = (double)(rhs.getRating() - lhs.getRating());
+                                if (diff == 0) {
+                                    diff = lhs.getDistanceFrom(parseLocation) - rhs.getDistanceFrom(parseLocation);
+                                    if (diff < 0 && diff > -1.0) {
+                                        diff = -1.0;
+                                    } else if (diff > 0 && diff < 1.0) {
+                                        diff = 1.0;
+                                    }
+                                }
+                                return (int) (diff);
+                            }
+                        });
                     }
                     queryHashes.put(mQueryParams.hashCode(), true);
                     // Release any objects previously pinned for this query.
@@ -175,17 +191,11 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                     int i = 0;
                     List<DealModel> prevDealItems = dealItems;
                     dealItems = deals;
-                    for (;i < deals.size(); i++) {
-                        if (i >= prevDealItems.size()) {
-                            listAdapter.notifyItemRangeInserted(i,deals.size()-i);
-                            break;
-                        }
-                        if (deals.get(i).getId() != prevDealItems.get(i).getId()) {
-                            listAdapter.notifyItemChanged(i);
-                        }
-                    }
-                    if (i < prevDealItems.size()) {
-                        listAdapter.notifyItemRangeRemoved(i, prevDealItems.size()-i);
+                    if (prevDealItems.size() == 0) {
+                        listAdapter.notifyItemRangeInserted(0, dealItems.size());
+                    } else {
+                        listAdapter.notifyItemRangeChanged(0, prevDealItems.size());
+                        listAdapter.notifyItemRangeInserted(prevDealItems.size(),dealItems.size());
                     }
                 } else {
                     Log.e("Parse error: ", e.getMessage());
@@ -196,38 +206,45 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
 
     public void applyDayOfWeekForQuery(ParseQuery<DealModel> query) {
         switch (mQueryParams.getWeekDay()) {
+            case TODAY:
+                // TODO THIS IS HARDCODED FOR THE PRESNETATION
+                // IMPLEMENT ME!!!
+                int time = 1500;
+                String today = "wednesdayEn";
+                String endDay = "wednesdaySt";
+                query.whereGreaterThanOrEqualTo(today, time);
+                query.whereLessThanOrEqualTo(endDay, (time + mQueryParams.TODAY_TIME_RANGE) % 2400);
+                break;
             case MONDAY:
-                query.whereGreaterThanOrEqualTo("mondaySt",0);
-                query.whereLessThanOrEqualTo("mondayEn", 2400);
+                query.whereGreaterThanOrEqualTo("mondayEn", 0);
+                query.whereLessThanOrEqualTo("mondaySt", 2400);
                 break;
             case TUESDAY:
-                query.whereGreaterThanOrEqualTo("tuesdaySt",0);
-                query.whereLessThanOrEqualTo("tuesdayEn",2400);
+                query.whereGreaterThanOrEqualTo("tuesdayEn",0);
+                query.whereLessThanOrEqualTo("tuesdaySt",2400);
                 break;
             case WEDNESDAY:
-                query.whereGreaterThanOrEqualTo("wednesdaySt",0);
-                query.whereLessThanOrEqualTo("wednesdayEn",2400);
+                query.whereGreaterThanOrEqualTo("wednesdayEn",0);
+                query.whereLessThanOrEqualTo("wednesdaySt",2400);
                 break;
             case THURSDAY:
-                query.whereGreaterThanOrEqualTo("thursdaySt",0);
-                query.whereLessThanOrEqualTo("thursdayEn",2400);
+                query.whereGreaterThanOrEqualTo("thursdayEn",0);
+                query.whereLessThanOrEqualTo("thursdaySt",2400);
                 break;
             case FRIDAY:
-                query.whereGreaterThanOrEqualTo("fridaySt",0);
-                query.whereLessThanOrEqualTo("fridayEn",2400);
+                query.whereGreaterThanOrEqualTo("fridayEn",0);
+                query.whereLessThanOrEqualTo("fridaySt",2400);
                 break;
             case SATURDAY:
-                query.whereGreaterThanOrEqualTo("saturdaySt",0);
-                query.whereLessThanOrEqualTo("saturdayEn",2400);
+                query.whereGreaterThanOrEqualTo("saturdayEn",0);
+                query.whereLessThanOrEqualTo("saturdaySt",2400);
                 break;
             case SUNDAY:
-                query.whereGreaterThanOrEqualTo("sundaySt",0);
-                query.whereLessThanOrEqualTo("sundayEn",2400);
-                break;
-            case TODAY:
-                //TODO filter todays deals after current time
+                query.whereGreaterThanOrEqualTo("sundayEn",0);
+                query.whereLessThanOrEqualTo("sundaySt",2400);
                 break;
         }
+        currentDayFilter = AvailabilityModel.getDayOfWeek( mQueryParams.getWeekDay());
     }
 
     @Override
@@ -286,7 +303,12 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
         holder.description.setText(dealModel.getDescription());
         holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(parseLocation)) + " mi");
-        holder.hours.setText(dealModel.getAvailability().getDayAvailability( AvailabilityModel.getDayOfWeek(), true));
+        holder.hours.setText(dealModel.getAvailability().getDayAvailability(currentDayFilter, true));
+        if (AvailabilityModel.getDayOfWeek() != currentDayFilter) {
+            holder.hours.setTextColor(Color.BLACK);
+        } else {
+            holder.hours.setTextColor(Color.rgb(0,170,0));
+        }
         holder.restaurantId = dealModel.getRestaurantId();
     }
 }

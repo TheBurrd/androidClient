@@ -84,6 +84,28 @@ public class AvailabilityModel {
         return WeekDay.values()[calendar.get(Calendar.DAY_OF_WEEK)-1];
     }
 
+    public static WeekDay getDayOfWeek(QueryParameters.WeekDay weekDay) {
+        switch (weekDay) {
+            case TODAY:
+                return getDayOfWeek();
+            case MONDAY:
+                return WeekDay.MONDAY;
+            case TUESDAY:
+                return WeekDay.TUESDAY;
+            case WEDNESDAY:
+                return WeekDay.WEDNESDAY;
+            case THURSDAY:
+                return WeekDay.THURSDAY;
+            case FRIDAY:
+                return WeekDay.FRIDAY;
+            case SATURDAY:
+                return WeekDay.SATURDAY;
+            case SUNDAY:
+                return WeekDay.SUNDAY;
+        }
+        return getDayOfWeek();
+    }
+
     /** Return a string representing the availability for the input day. Takes
      * a weekday and a boolean, displayDay as a parameter.  If displayDay is true,
      * the weekday will be included in the returned String.  Otherwise, it will

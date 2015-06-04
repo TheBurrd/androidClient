@@ -21,7 +21,7 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:id="@+id/thumb_nal"
-            android:src="@drawable/ic_drinks_placeholder"/>
+            android:src="@drawable/ic_drinks_placeholder" />
 
         <TextView
             android:layout_width="wrap_content"
