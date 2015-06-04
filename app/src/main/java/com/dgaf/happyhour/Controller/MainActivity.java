@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         mDrawerList.addHeaderView(header);//add header to
         mDrawerList.setSelectionAfterHeaderView();
 
-
         mDrawerList.setAdapter(adapter);
 
         // Drawer Item click listeners
@@ -125,6 +124,8 @@ public class MainActivity extends AppCompatActivity {
         viewPagerFragment = ViewPagerFragment.newInstance();
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        selectItem(RATING);
     }
 
     /** Swaps fragments in the main content view */
