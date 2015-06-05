@@ -23,7 +23,7 @@
         <activity
             android:uiOptions="splitActionBarWhenNarrow"
             android:name=".Controller.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

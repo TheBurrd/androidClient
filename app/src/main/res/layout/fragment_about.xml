@@ -116,27 +116,4 @@
 
     </ScrollView>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
-
-        <Button
-            android:id="@+id/llamaButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/hide_pic" />
-
-
-        <ImageView
-            android:id="@+id/llamaPic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/llama"
-            android:visibility="invisible"/>
-
-    </LinearLayout>
-
 </FrameLayout>

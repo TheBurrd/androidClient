@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
@@ -101,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        toolbar.setTitle("Today's Deals");
+
+
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
@@ -110,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
 
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                //getSupportActionBar().setTitle("HappyHour");
                 // invalidateOptionsMenu();
             }
 

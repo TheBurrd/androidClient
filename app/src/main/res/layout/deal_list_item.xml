@@ -47,6 +47,7 @@
             android:layout_toLeftOf="@+id/rating"
             android:layout_above="@+id/hours" />
 
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
