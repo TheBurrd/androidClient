@@ -7,6 +7,8 @@ import java.util.List;
  * Created by Adam on 5/30/2015.
  */
 public class QueryParameters {
+    // Today's deals show all deals from now till TODAY_TIME_RANGE/100 hours in the future
+    public static final int TODAY_TIME_RANGE = 800;
     private static QueryParameters ourInstance = new QueryParameters();
     private QueryType mQueryType;
     private WeekDay mWeekDay;

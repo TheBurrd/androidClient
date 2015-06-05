@@ -9,14 +9,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Fade;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.dgaf.happyhour.Model.DrawerListAdapter;
-import com.dgaf.happyhour.Model.NavItem;
+import com.dgaf.happyhour.Model.Adapter.DrawerListAdapter;
+import com.dgaf.happyhour.Model.Adapter.NavItem;
 import com.dgaf.happyhour.Model.QueryParameters;
 import com.dgaf.happyhour.R;
 import com.dgaf.happyhour.View.About;
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
@@ -90,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         mDrawerList.addHeaderView(header);//add header to
         mDrawerList.setSelectionAfterHeaderView();
 
-
         mDrawerList.setAdapter(adapter);
 
         // Drawer Item click listeners
@@ -101,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        toolbar.setTitle("Today's Deals");
+
+
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
@@ -110,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
 
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                //getSupportActionBar().setTitle("HappyHour");
                 // invalidateOptionsMenu();
             }
 
@@ -124,6 +126,8 @@ public class MainActivity extends AppCompatActivity {
         viewPagerFragment = ViewPagerFragment.newInstance();
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        selectItem(RATING);
     }
 
     /** Swaps fragments in the main content view */

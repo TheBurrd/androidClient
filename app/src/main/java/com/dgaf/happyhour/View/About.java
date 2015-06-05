@@ -46,7 +46,7 @@ public class About extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_about, container, false);
-
+/*
 
         // Display the secret button
         llamaButton = (Button) rootView.findViewById(R.id.llamaButton);
@@ -56,12 +56,13 @@ public class About extends Fragment implements View.OnClickListener {
         // Display the hidden llama picture
         llamaPic = (ImageView) rootView.findViewById(R.id.llamaPic);
         llamaPic.setOnClickListener(this);
-
+*/
         return rootView;
     }
 
     @Override
     public void onClick(View v) {
+        /*
         switch(v.getId()) {
             case R.id.llamaButton:
                 // Show the llama and the button when the user clicks the secret button
@@ -77,6 +78,7 @@ public class About extends Fragment implements View.OnClickListener {
                     displayed = false;
                 }
         }
+        */
     }
 
 }

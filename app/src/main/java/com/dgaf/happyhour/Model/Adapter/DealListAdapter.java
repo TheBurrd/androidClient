@@ -1,13 +1,17 @@
-package com.dgaf.happyhour.Model;
+package com.dgaf.happyhour.Model.Adapter;
 import com.dgaf.happyhour.Controller.LocationService;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Fade;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +19,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dgaf.happyhour.DealListType;
+import com.dgaf.happyhour.Model.AvailabilityModel;
+import com.dgaf.happyhour.Model.DealModel;
+import com.dgaf.happyhour.Model.QueryParameters;
+import com.dgaf.happyhour.Model.RestaurantModel;
 import com.dgaf.happyhour.R;
 import com.dgaf.happyhour.View.RestaurantFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -28,7 +36,6 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -37,8 +44,9 @@ import java.util.List;
 /**
  * Created by trentonrobison on 4/28/15.
  */
-public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder> implements SwipeRefreshLayout.OnRefreshListener, QueryParameters.Listener {
+public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder> implements SwipeRefreshLayout.OnRefreshListener, QueryParameters.Listener, View.OnClickListener {
     private FragmentActivity activity;
+    private RecyclerView mRecyclerView;
     private ImageLoader imageLoader;
     private List<DealModel> dealItems;
     private ParseGeoPoint parseLocation;
@@ -46,46 +54,39 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private LocationService userLocation;
     private SwipeRefreshLayout swipeRefresh;
     private QueryParameters mQueryParams;
+    private AvailabilityModel.WeekDay currentDayFilter;
     private static final String DEAL_LIST_CACHE = "dealList";
     private static HashMap queryHashes = new HashMap<>();
 
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView deal;
         public TextView description;
         public TextView distance;
-        public TextView restaurant;
-        public TextView likes;
+        public TextView rating;
         public TextView hours;
         public ParseImageView thumbnail;
-        public FragmentActivity activity;
         public String restaurantId;
 
-        public ViewHolder(View itemView,FragmentActivity activity) {
+        public ViewHolder(View itemView, DealListType listType) {
             super(itemView);
-            itemView.setOnClickListener(this);
-            this.activity = activity;
             deal = (TextView) itemView.findViewById(R.id.deal);
             description = (TextView) itemView.findViewById(R.id.description);
             distance = (TextView) itemView.findViewById(R.id.distance);
-            restaurant = (TextView) itemView.findViewById(R.id.restaurant);
-            likes = (TextView) itemView.findViewById(R.id.likes);
+            rating = (TextView) itemView.findViewById(R.id.rating);
             hours = (TextView) itemView.findViewById(R.id.hours);
             thumbnail = (ParseImageView) itemView.findViewById(R.id.thumb_nal);
-            thumbnail.setPlaceholder(ContextCompat.getDrawable(itemView.getContext(), R.drawable.llama));
+            if (listType == DealListType.FOOD) {
+                thumbnail.setPlaceholder(ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_food_placeholder));
+            } else {
+                thumbnail.setPlaceholder(ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_drinks_placeholder));
+            }
         }
-        @Override
-        public void onClick(View v) {
-            Fragment restaurant = RestaurantFragment.newInstance(restaurantId);
-            FragmentManager fragmentManager = activity.getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.main_fragment, restaurant).addToBackStack(null).commit();
-        }
-
     }
 
-    public DealListAdapter(FragmentActivity activity, SwipeRefreshLayout swipeRefresh, DealListType dealListType) {
+    public DealListAdapter(FragmentActivity activity, RecyclerView recyclerView, SwipeRefreshLayout swipeRefresh, DealListType dealListType) {
         this.activity = activity;
+        this.mRecyclerView = recyclerView;
         this.imageLoader = ImageLoader.getInstance();
         this.swipeRefresh = swipeRefresh;
         this.dealItems = new ArrayList<>();
@@ -132,9 +133,6 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                 localDeals.whereEqualTo("tags","featured");
                 break;
         }
-        if (mQueryParams.getQueryType() == QueryParameters.QueryType.RATING) {
-            localDeals.addDescendingOrder("rating");
-        }
         applyDayOfWeekForQuery(localDeals);
         localDeals.include("restaurantId");
         Log.v("Parse info", "Deal list query started" );
@@ -143,9 +141,8 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
             public void done(List<DealModel> deals, ParseException e) {
                 Log.v("Parse info","Deal list query returned");
                 if (e == null) {
-                    dealItems = deals;
                     if (mQueryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
-                        Collections.sort(dealItems, new Comparator<DealModel>() {
+                        Collections.sort(deals, new Comparator<DealModel>() {
                             @Override
                             public int compare(DealModel lhs, DealModel rhs) {
                                 double diff = lhs.getDistanceFrom(parseLocation) - rhs.getDistanceFrom(parseLocation);
@@ -156,6 +153,22 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                                 }
                                 if (diff == 0) {
                                     diff = rhs.getRating() - lhs.getRating();
+                                }
+                                return (int) (diff);
+                            }
+                        });
+                    } else if (mQueryParams.getQueryType() == QueryParameters.QueryType.RATING){
+                        Collections.sort(deals, new Comparator<DealModel>() {
+                            @Override
+                            public int compare(DealModel lhs, DealModel rhs) {
+                                double diff = (double)(rhs.getRating() - lhs.getRating());
+                                if (diff == 0) {
+                                    diff = lhs.getDistanceFrom(parseLocation) - rhs.getDistanceFrom(parseLocation);
+                                    if (diff < 0 && diff > -1.0) {
+                                        diff = -1.0;
+                                    } else if (diff > 0 && diff < 1.0) {
+                                        diff = 1.0;
+                                    }
                                 }
                                 return (int) (diff);
                             }
@@ -175,7 +188,15 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                             ParseObject.pinAllInBackground(DEAL_LIST_CACHE, dealItems);
                         }
                     });
-                    listAdapter.notifyDataSetChanged();
+                    int i = 0;
+                    List<DealModel> prevDealItems = dealItems;
+                    dealItems = deals;
+                    if (prevDealItems.size() == 0) {
+                        listAdapter.notifyItemRangeInserted(0, dealItems.size());
+                    } else {
+                        listAdapter.notifyItemRangeChanged(0, prevDealItems.size());
+                        listAdapter.notifyItemRangeInserted(prevDealItems.size(),dealItems.size());
+                    }
                 } else {
                     Log.e("Parse error: ", e.getMessage());
                 }
@@ -185,35 +206,45 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
 
     public void applyDayOfWeekForQuery(ParseQuery<DealModel> query) {
         switch (mQueryParams.getWeekDay()) {
+            case TODAY:
+                // TODO THIS IS HARDCODED FOR THE PRESNETATION
+                // IMPLEMENT ME!!!
+                int time = 1500;
+                String today = "wednesdayEn";
+                String endDay = "wednesdaySt";
+                query.whereGreaterThanOrEqualTo(today, time);
+                query.whereLessThanOrEqualTo(endDay, (time + mQueryParams.TODAY_TIME_RANGE) % 2400);
+                break;
             case MONDAY:
-                query.whereGreaterThanOrEqualTo("mondaySt",0);
-                query.whereLessThanOrEqualTo("mondayEn", 2400);
+                query.whereGreaterThanOrEqualTo("mondayEn", 0);
+                query.whereLessThanOrEqualTo("mondaySt", 2400);
                 break;
             case TUESDAY:
-                query.whereGreaterThanOrEqualTo("tuesdaySt",0);
-                query.whereLessThanOrEqualTo("tuesdayEn",2400);
+                query.whereGreaterThanOrEqualTo("tuesdayEn",0);
+                query.whereLessThanOrEqualTo("tuesdaySt",2400);
                 break;
             case WEDNESDAY:
-                query.whereGreaterThanOrEqualTo("wednesdaySt",0);
-                query.whereLessThanOrEqualTo("wednesdayEn",2400);
+                query.whereGreaterThanOrEqualTo("wednesdayEn",0);
+                query.whereLessThanOrEqualTo("wednesdaySt",2400);
                 break;
             case THURSDAY:
-                query.whereGreaterThanOrEqualTo("thursdaySt",0);
-                query.whereLessThanOrEqualTo("thursdayEn",2400);
+                query.whereGreaterThanOrEqualTo("thursdayEn",0);
+                query.whereLessThanOrEqualTo("thursdaySt",2400);
                 break;
             case FRIDAY:
-                query.whereGreaterThanOrEqualTo("fridaySt",0);
-                query.whereLessThanOrEqualTo("fridayEn",2400);
+                query.whereGreaterThanOrEqualTo("fridayEn",0);
+                query.whereLessThanOrEqualTo("fridaySt",2400);
                 break;
             case SATURDAY:
-                query.whereGreaterThanOrEqualTo("saturdaySt",0);
-                query.whereLessThanOrEqualTo("saturdayEn",2400);
+                query.whereGreaterThanOrEqualTo("saturdayEn",0);
+                query.whereLessThanOrEqualTo("saturdaySt",2400);
                 break;
             case SUNDAY:
-                query.whereGreaterThanOrEqualTo("sundaySt",0);
-                query.whereLessThanOrEqualTo("sundayEn",2400);
+                query.whereGreaterThanOrEqualTo("sundayEn",0);
+                query.whereLessThanOrEqualTo("sundaySt",2400);
                 break;
         }
+        currentDayFilter = AvailabilityModel.getDayOfWeek( mQueryParams.getWeekDay());
     }
 
     @Override
@@ -229,10 +260,25 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     }
 
     @Override
+    public void onClick(View v) {
+        int position = mRecyclerView.getChildAdapterPosition(v);
+        DealModel dealModel = dealItems.get(position);
+        String restaurantId = dealModel.getRestaurantId();
+        String dealId = dealModel.getId();
+        Fragment restaurant = RestaurantFragment.newInstance(restaurantId, dealId);
+        restaurant.setEnterTransition(new Fade());
+        restaurant.setExitTransition(new Fade());
+        FragmentManager fragmentManager = activity.getSupportFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.main_fragment, restaurant).addToBackStack(null).commit();
+    }
+
+    @Override
     public DealListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.deal_list_item, parent, false);
-        ViewHolder vh = new ViewHolder(v,activity);
+        v.setOnClickListener(this);
+        ViewHolder vh = new ViewHolder(v, listType);
         return vh;
     }
 
@@ -251,11 +297,18 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
 
         holder.deal.setText(dealModel.getTitle());
-        holder.likes.setText("Rating: " + String.valueOf(dealModel.getRating()));
+        int rating = dealModel.getRating();
+        if (rating != 0) {
+            holder.rating.setText(String.valueOf(dealModel.getRating()) + "%");
+        }
         holder.description.setText(dealModel.getDescription());
-        holder.restaurant.setText(dealModel.getRestaurant());
         holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(parseLocation)) + " mi");
-        holder.hours.setText("");
+        holder.hours.setText(dealModel.getAvailability().getDayAvailability(currentDayFilter, true));
+        if (AvailabilityModel.getDayOfWeek() != currentDayFilter) {
+            holder.hours.setTextColor(Color.BLACK);
+        } else {
+            holder.hours.setTextColor(Color.rgb(0,170,0));
+        }
         holder.restaurantId = dealModel.getRestaurantId();
     }
 }

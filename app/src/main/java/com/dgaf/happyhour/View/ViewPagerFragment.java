@@ -38,6 +38,8 @@ public class ViewPagerFragment extends Fragment {
 
         mPagerAdapter = new SectionsPagerAdapter(this, getChildFragmentManager());
         vp.setAdapter(mPagerAdapter);
+        vp.setCurrentItem(1);
+
 
         return result;
     }
@@ -64,10 +66,10 @@ public class ViewPagerFragment extends Fragment {
 
             switch (position) {
                 case 0: {
-                    return mDrinkFragment;
+                    return mFoodFragment;
                 }
                 case 1: {
-                    return mFoodFragment;
+                    return mDrinkFragment;
                 }
                 case 2: {
                     return mFeaturedFragment;
@@ -90,9 +92,9 @@ public class ViewPagerFragment extends Fragment {
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    return viewPagerFragment.getString(R.string.drink).toUpperCase(l);
-                case 1:
                     return viewPagerFragment.getString(R.string.food).toUpperCase(l);
+                case 1:
+                    return viewPagerFragment.getString(R.string.drink).toUpperCase(l);
                 case 2:
                     return viewPagerFragment.getString(R.string.featured).toUpperCase(l);
             }
