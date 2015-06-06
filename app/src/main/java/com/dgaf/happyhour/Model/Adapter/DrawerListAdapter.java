@@ -1,6 +1,7 @@
 package com.dgaf.happyhour.Model.Adapter;
 
 import android.content.Context;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -52,9 +53,12 @@ public class DrawerListAdapter extends BaseAdapter {
     private ImageView saturday;
     private ImageView sunday;
 
-    public DrawerListAdapter(Context context, ArrayList<NavItem> navItems) {
+    private DrawerLayout mDrawerLayout;
+
+    public DrawerListAdapter(Context context, ArrayList<NavItem> navItems, DrawerLayout drawerLayout) {
         mContext = context;
         mNavItems = navItems;
+        mDrawerLayout = drawerLayout;
         queryParameters = QueryParameters.getInstance();
     }
 
@@ -371,6 +375,7 @@ public class DrawerListAdapter extends BaseAdapter {
                     }
                     break;
             }
+            mDrawerLayout.closeDrawers();
         }
     };
 }

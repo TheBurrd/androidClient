@@ -24,6 +24,7 @@ import com.dgaf.happyhour.View.About;
 import com.dgaf.happyhour.View.ViewPagerFragment;
 
 import java.util.ArrayList;
+import java.util.TooManyListenersException;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private ViewPagerFragment viewPagerFragment;
+    private Toolbar mToolbar;
 
 
     ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
@@ -62,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
+        final Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
         }
 
         if(getSupportFragmentManager().findFragmentById(R.id.main_fragment) == null){
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setCacheColorHint(0);//avoids changing list color when scrolling
 
-        DrawerListAdapter adapter = new DrawerListAdapter(this, mNavItems);
+        DrawerListAdapter adapter = new DrawerListAdapter(this, mNavItems, mDrawerLayout);
         View header = getLayoutInflater().inflate(R.layout.header_nav, null);//inflate header view
         header.setEnabled(false);
         header.setOnClickListener(null);
@@ -101,13 +103,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        toolbar.setTitle("Today's Deals");
+        //mToolbar.setTitle("Today's Deals");
 
 
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
-                toolbar,
+                mToolbar,
                 R.string.open,
                 R.string.closed) {
 
@@ -144,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
                 mDrawerLayout.closeDrawers();
                 break;
 
-
             case RATING:
                 fragment = viewPagerFragment;
                 identifier = "viewPager";
@@ -169,12 +170,10 @@ public class MainActivity extends AppCompatActivity {
 
             FragmentManager fragmentManager = getSupportFragmentManager();
 
-            if (position == HEADER || position == RATING || position == PROXIMITY)
-            {
-                while (fragmentManager.getBackStackEntryCount() > 0) {
-                    fragmentManager.popBackStackImmediate();
-                }
+            while (fragmentManager.getBackStackEntryCount() > 0) {
+                fragmentManager.popBackStackImmediate();
             }
+
             fragmentManager.beginTransaction()
                     .replace(R.id.main_fragment, fragment).addToBackStack(identifier).commit();
 
