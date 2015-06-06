@@ -1,10 +1,12 @@
 package com.dgaf.happyhour.Model.Adapter;
 
 import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -51,6 +53,8 @@ public class DrawerListAdapter extends BaseAdapter {
     private ImageView friday;
     private ImageView saturday;
     private ImageView sunday;
+
+    private Window w;
 
     public DrawerListAdapter(Context context, ArrayList<NavItem> navItems) {
         mContext = context;
@@ -264,12 +268,14 @@ public class DrawerListAdapter extends BaseAdapter {
                         unselectButtons();
                         ((ImageView) v).setImageResource(R.drawable.ic_monday_active);
                         monSelected = true;
+                        ((AppCompatActivity) mContext).setTitle("Monday's Deals");
                         queryParameters.setWeekDay(QueryParameters.WeekDay.MONDAY);
                         queryParameters.notifyAllListeners();
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_monday);
                         monSelected = false;
+                        ((AppCompatActivity) mContext).setTitle("Today's Deals");
                         queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
                         queryParameters.notifyAllListeners();
                     }
@@ -280,12 +286,14 @@ public class DrawerListAdapter extends BaseAdapter {
                         unselectButtons();
                         ((ImageView) v).setImageResource(R.drawable.ic_tuesday_active);
                         tueSelected = true;
+                        ((AppCompatActivity) mContext).setTitle("Tuesday's Deals");
                         queryParameters.setWeekDay(QueryParameters.WeekDay.TUESDAY);
                         queryParameters.notifyAllListeners();
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_tuesday);
                         tueSelected = false;
+                        ((AppCompatActivity) mContext).setTitle("Today's Deals");
                         queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
                         queryParameters.notifyAllListeners();
                     }
@@ -296,12 +304,14 @@ public class DrawerListAdapter extends BaseAdapter {
                         unselectButtons();
                         ((ImageView) v).setImageResource(R.drawable.ic_wednesday_active);
                         wedSelected = true;
+                        ((AppCompatActivity) mContext).setTitle("Wednesday's Deals");
                         queryParameters.setWeekDay(QueryParameters.WeekDay.WEDNESDAY);
                         queryParameters.notifyAllListeners();
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_wednesday);
                         wedSelected = false;
+                        ((AppCompatActivity) mContext).setTitle("Today's Deals");
                         queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
                         queryParameters.notifyAllListeners();
                     }
@@ -312,12 +322,14 @@ public class DrawerListAdapter extends BaseAdapter {
                         unselectButtons();
                         ((ImageView) v).setImageResource(R.drawable.ic_thursday_active);
                         thuSelected = true;
+                        ((AppCompatActivity) mContext).setTitle("Thursday's Deals");
                         queryParameters.setWeekDay(QueryParameters.WeekDay.THURSDAY);
                         queryParameters.notifyAllListeners();
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_thursday);
                         thuSelected = false;
+                        ((AppCompatActivity) mContext).setTitle("Today's Deals");
                         queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
                         queryParameters.notifyAllListeners();
                     }
@@ -328,12 +340,14 @@ public class DrawerListAdapter extends BaseAdapter {
                         unselectButtons();
                         ((ImageView) v).setImageResource(R.drawable.ic_friday_active);
                         friSelected = true;
+                        ((AppCompatActivity) mContext).setTitle("Friday's Deals");
                         queryParameters.setWeekDay(QueryParameters.WeekDay.FRIDAY);
                         queryParameters.notifyAllListeners();
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_friday);
                         friSelected = false;
+                        ((AppCompatActivity) mContext).setTitle("Today's Deals");
                         queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
                         queryParameters.notifyAllListeners();
                     }
@@ -344,12 +358,14 @@ public class DrawerListAdapter extends BaseAdapter {
                         unselectButtons();
                         ((ImageView) v).setImageResource(R.drawable.ic_saturday_active);
                         satSelected = true;
+                        ((AppCompatActivity) mContext).setTitle("Saturday's Deals");
                         queryParameters.setWeekDay(QueryParameters.WeekDay.SATURDAY);
                         queryParameters.notifyAllListeners();
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_saturday);
                         satSelected = false;
+                        ((AppCompatActivity) mContext).setTitle("Today's Deals");
                         queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
                         queryParameters.notifyAllListeners();
                     }
@@ -360,12 +376,14 @@ public class DrawerListAdapter extends BaseAdapter {
                         unselectButtons();
                         ((ImageView) v).setImageResource(R.drawable.ic_sunday_active);
                         sunSelected = true;
+                        ((AppCompatActivity) mContext).setTitle("Sunday's Deals");
                         queryParameters.setWeekDay(QueryParameters.WeekDay.SUNDAY);
                         queryParameters.notifyAllListeners();
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_sunday);
                         sunSelected = false;
+                        ((AppCompatActivity) mContext).setTitle("Today's Deals");
                         queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
                         queryParameters.notifyAllListeners();
                     }

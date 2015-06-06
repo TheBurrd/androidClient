@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private ViewPagerFragment viewPagerFragment;
+    private Toolbar toolbar;
+
 
 
     ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
@@ -61,8 +63,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        this.setTitle("Today's Deals");
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
@@ -100,8 +103,6 @@ public class MainActivity extends AppCompatActivity {
                 selectItem(position);
             }
         });
-
-        toolbar.setTitle("Today's Deals");
 
 
         mDrawerToggle = new ActionBarDrawerToggle(
