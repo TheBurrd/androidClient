@@ -2,11 +2,11 @@ package com.dgaf.happyhour.Model.Adapter;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -53,12 +53,12 @@ public class DrawerListAdapter extends BaseAdapter {
     private ImageView friday;
     private ImageView saturday;
     private ImageView sunday;
+    private DrawerLayout mDrawerLayout;
 
-    private Window w;
-
-    public DrawerListAdapter(Context context, ArrayList<NavItem> navItems) {
+    public DrawerListAdapter(Context context, ArrayList<NavItem> navItems, DrawerLayout drawerLayout) {
         mContext = context;
         mNavItems = navItems;
+        mDrawerLayout = drawerLayout;
         queryParameters = QueryParameters.getInstance();
     }
 
@@ -389,6 +389,7 @@ public class DrawerListAdapter extends BaseAdapter {
                     }
                     break;
             }
+            mDrawerLayout.closeDrawers();
         }
     };
 }
