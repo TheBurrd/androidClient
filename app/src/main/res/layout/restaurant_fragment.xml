@@ -63,23 +63,27 @@
                         android:layout_alignParentTop="true"
                         android:layout_centerInParent="true" />
 
-                    <ImageView
+                    <ImageButton
                         android:id="@+id/downVote"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:src="@drawable/ic_thumb_down"
+                        android:src="@drawable/downvote_button_selector"
                         android:layout_below="@id/deal_rating"
                         android:layout_alignParentRight="true"
-                        android:padding="5dp" />
+                        android:padding="5dp"
+                        android:background="@null"
+                        android:scaleType="fitCenter"/>
 
-                    <ImageView
+                    <ImageButton
                         android:id="@+id/upVote"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:src="@drawable/ic_thumb_up"
+                        android:src="@drawable/upvote_button_selector"
                         android:layout_below="@+id/deal_rating"
                         android:layout_toLeftOf="@+id/downVote"
-                        android:padding="5dp" />
+                        android:padding="5dp"
+                        android:background="@null"
+                        android:scaleType="fitCenter"/>
                 </RelativeLayout>
 
             </RelativeLayout>
@@ -157,6 +161,7 @@
                 android:layout_height="60dp"
                 android:src="@drawable/ic_phone_number"
                 android:id="@+id/phoneButton"
+                android:clickable="true"
                 android:padding="5dp"
                 android:layout_below="@+id/proximity"
                 android:layout_alignParentRight="true" />
@@ -166,6 +171,7 @@
                 android:layout_height="60dp"
                 android:src="@drawable/ic_restaurant_website"
                 android:id="@+id/websiteButton"
+                android:clickable="true"
                 android:padding="5dp"
                 android:layout_below="@+id/proximity"
                 android:layout_toLeftOf="@+id/phoneButton" />
@@ -186,6 +192,12 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="180dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="More deals:"
+            android:textSize="18sp"/>
 
         <ExpandableListView
             android:id="@+id/deal_list"

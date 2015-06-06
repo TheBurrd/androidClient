@@ -1,12 +1,18 @@
 package com.dgaf.happyhour.Model.Adapter;
 
+import android.content.Intent;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -41,13 +47,17 @@ public class RestaurantAdapter {
     private RestaurantViewHolder restaurantHolder;
     private ExpandDealListAdapter expandDealListAdapter;
 
-    public static class RestaurantViewHolder implements ListView.OnTouchListener {
+    public static class RestaurantViewHolder implements ListView.OnTouchListener, View.OnClickListener {
         public TextView dealTitle;
         public TextView dealDescription;
         public TextView dealAvailability;
         public TextView dealRating;
+        public ImageButton upVote;
+        public ImageButton downVote;
         public TextView restaurantName;
         public TextView restaurantDescription;
+        public ImageView dialPhone;
+        public ImageView visitWebsite;
         public TextView proximity;
         public TextView hoursOfOperation;
         public TextView address;
@@ -55,13 +65,22 @@ public class RestaurantAdapter {
         public ParseImageView thumbnail;
         public GoogleMap map;
 
-        public RestaurantViewHolder(Fragment fragment, View rootView, ExpandDealListAdapter listAdapter) {
+        public Fragment fragment;
+        public RestaurantAdapter parentAdapter;
+
+        public RestaurantViewHolder(Fragment fragment, View rootView, RestaurantAdapter parentAdapter,ExpandDealListAdapter listAdapter) {
+            this.fragment = fragment;
+            this.parentAdapter = parentAdapter;
             dealTitle = (TextView) rootView.findViewById(R.id.deal_title);
             dealDescription = (TextView) rootView.findViewById(R.id.deal_description);
             dealAvailability = (TextView) rootView.findViewById(R.id.current_deal_avail);
             dealRating = (TextView) rootView.findViewById(R.id.deal_rating);
+            upVote = (ImageButton) rootView.findViewById(R.id.upVote);
+            downVote = (ImageButton) rootView.findViewById(R.id.downVote);
             restaurantName = (TextView) rootView.findViewById(R.id.restaurant_name);
             restaurantDescription = (TextView) rootView.findViewById(R.id.restaurant_description);
+            dialPhone = (ImageView) rootView.findViewById(R.id.phoneButton);
+            visitWebsite = (ImageView) rootView.findViewById(R.id.websiteButton);
             proximity = (TextView) rootView.findViewById(R.id.proximity);
             hoursOfOperation = (TextView) rootView.findViewById(R.id.hours_of_operation);
             address = (TextView) rootView.findViewById(R.id.address);
@@ -74,6 +93,10 @@ public class RestaurantAdapter {
                     .getMap();
             map.getUiSettings().setScrollGesturesEnabled(false);
 
+            upVote.setOnClickListener(this);
+            downVote.setOnClickListener(this);
+            dialPhone.setOnClickListener(this);
+            visitWebsite.setOnClickListener(this);
             dealList.setOnTouchListener(this);
         }
 
@@ -85,6 +108,51 @@ public class RestaurantAdapter {
             map.animateCamera(CameraUpdateFactory.zoomIn());
             // Zoom out to zoom level 10, animating with a duration of 2 seconds.
             map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (v == dialPhone) {
+                String phoneNumber = parentAdapter.getPhoneNumber();
+                if (phoneNumber != null) {
+                    Uri number = Uri.parse("tel:" + parentAdapter.getPhoneNumber());
+                    Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
+                    fragment.startActivity(callIntent);
+                }
+            } else if (v ==  visitWebsite) {
+                String website = parentAdapter.getWebsite();
+                if (website != null) {
+                    if (!website.startsWith("http://") && !website.startsWith("https://"))
+                        website = "http://" + website;
+                    Uri webaddress = Uri.parse(website);
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, webaddress);
+                    fragment.startActivity(browserIntent);
+                }
+            } else if (v == upVote) {
+                //Set the button's appearance
+                v.setSelected(!v.isSelected());
+
+                if (v.isSelected()) {
+                    //Handle upVote
+                    if (downVote.isSelected()) {
+                        downVote.setSelected(false);
+                    }
+                } else {
+                    //Handle undo downVote
+                }
+            } else if (v == downVote) {
+                //Set the button's appearance
+                v.setSelected(!v.isSelected());
+
+                if (v.isSelected()) {
+                    //Handle downVote
+                    if (upVote.isSelected()) {
+                        upVote.setSelected(false);
+                    }
+                } else {
+                    //Handle undo downVote
+                }
+            }
         }
 
         //Disable scrolling in parent scroll view
@@ -169,8 +237,22 @@ public class RestaurantAdapter {
 
     }
 
+    public String getPhoneNumber() {
+        if (restaurantHolder != null && restaurant != null) {
+            return restaurant.getPhoneNumber();
+        }
+        return null;
+    }
+
+    public String getWebsite() {
+        if (restaurantHolder != null && restaurant != null) {
+            return restaurant.getWebsite();
+        }
+        return null;
+    }
+
     public void createViewHolders(View fragmentView) {
-        restaurantHolder = new RestaurantViewHolder(fragment, fragmentView, expandDealListAdapter);
+        restaurantHolder = new RestaurantViewHolder(fragment, fragmentView, this, expandDealListAdapter);
         bindRestaurantViewHolder();
     }
 
