@@ -2,6 +2,7 @@
 <resources>
     <item name="colorPrimary" type="color">#FFC107</item>
     <item name="colorPrimaryDark" type="color">#FFC107</item>
+    <item name="colorWine" type="color">#6B0C2F</item>
     <item name="burrd" type="color">#FFFFFF</item>
 
 </resources>

@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mNavItems.add(new NavItem("Rating", R.drawable.ic_thumb_up));
-        mNavItems.add(new NavItem("Proximity", R.drawable.ic_proximity));
+        mNavItems.add(new NavItem("Nearby", R.drawable.ic_proximity));
         mNavItems.add(new NavItem("SeekBar", R.drawable.ic_drawer));
         mNavItems.add(new NavItem("Days of the Week", R.drawable.ic_calendar));
         mNavItems.add(new NavItem("About Us", R.drawable.ic_aboutus));
