@@ -193,6 +193,12 @@
             android:layout_width="match_parent"
             android:layout_height="180dp" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="More deals:"
+            android:textSize="18sp"/>
+
         <ExpandableListView
             android:id="@+id/deal_list"
             android:layout_width="match_parent"

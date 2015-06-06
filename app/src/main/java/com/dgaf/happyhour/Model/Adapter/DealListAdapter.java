@@ -36,6 +36,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -207,11 +208,59 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     public void applyDayOfWeekForQuery(ParseQuery<DealModel> query) {
         switch (mQueryParams.getWeekDay()) {
             case TODAY:
-                // TODO THIS IS HARDCODED FOR THE PRESNETATION
-                // IMPLEMENT ME!!!
-                int time = 1500;
-                String today = "wednesdayEn";
-                String endDay = "wednesdaySt";
+                Calendar cal = Calendar.getInstance();
+                int time = cal.get(Calendar.HOUR_OF_DAY)*100 + cal.get(Calendar.MINUTE);
+                String today = "";
+                switch (cal.get(Calendar.DAY_OF_WEEK)) {
+                    case Calendar.MONDAY:
+                        today = "mondayEn";
+                        break;
+                    case Calendar.TUESDAY:
+                        today = "tuesdayEn";
+                        break;
+                    case Calendar.WEDNESDAY:
+                        today = "wednesdayEn";
+                        break;
+                    case Calendar.THURSDAY:
+                        today = "thursdayEn";
+                        break;
+                    case Calendar.FRIDAY:
+                        today = "fridayEn";
+                        break;
+                    case Calendar.SATURDAY:
+                        today = "saturdayEn";
+                        break;
+                    case Calendar.SUNDAY:
+                        today = "sundayEn";
+                        break;
+                }
+                if ((time + mQueryParams.TODAY_TIME_RANGE) / 2400 > 1) {
+                    cal.add(Calendar.DAY_OF_YEAR, 1);
+                }
+                String endDay = "";
+                switch (cal.get(Calendar.DAY_OF_WEEK)) {
+                    case Calendar.MONDAY:
+                        endDay = "mondaySt";
+                        break;
+                    case Calendar.TUESDAY:
+                        endDay = "tuesdaySt";
+                        break;
+                    case Calendar.WEDNESDAY:
+                        endDay = "wednesdaySt";
+                        break;
+                    case Calendar.THURSDAY:
+                        endDay = "thursdaySt";
+                        break;
+                    case Calendar.FRIDAY:
+                        endDay = "fridaySt";
+                        break;
+                    case Calendar.SATURDAY:
+                        endDay = "saturdaySt";
+                        break;
+                    case Calendar.SUNDAY:
+                        endDay = "sundaySt";
+                        break;
+                }
                 query.whereGreaterThanOrEqualTo(today, time);
                 query.whereLessThanOrEqualTo(endDay, (time + mQueryParams.TODAY_TIME_RANGE) % 2400);
                 break;
