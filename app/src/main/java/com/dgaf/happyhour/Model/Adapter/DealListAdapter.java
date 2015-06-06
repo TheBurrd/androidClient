@@ -194,9 +194,11 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                     dealItems = deals;
                     if (prevDealItems.size() == 0) {
                         listAdapter.notifyItemRangeInserted(0, dealItems.size());
+                    } else if (prevDealItems.size() > dealItems.size()) {
+                        listAdapter.notifyItemRangeRemoved(dealItems.size(), prevDealItems.size());
                     } else {
                         listAdapter.notifyItemRangeChanged(0, prevDealItems.size());
-                        listAdapter.notifyItemRangeInserted(prevDealItems.size(),dealItems.size());
+                        listAdapter.notifyItemRangeInserted(prevDealItems.size(), dealItems.size());
                     }
                 } else {
                     Log.e("Parse error: ", e.getMessage());

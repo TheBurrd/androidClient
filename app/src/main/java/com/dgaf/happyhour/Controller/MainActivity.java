@@ -168,14 +168,15 @@ public class MainActivity extends AppCompatActivity {
         {
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.main_fragment, fragment).addToBackStack(identifier).commit();
-            if (position == 0)
+
+            if (position == HEADER || position == RATING || position == PROXIMITY)
             {
                 while (fragmentManager.getBackStackEntryCount() > 0) {
                     fragmentManager.popBackStackImmediate();
                 }
             }
+            fragmentManager.beginTransaction()
+                    .replace(R.id.main_fragment, fragment).addToBackStack(identifier).commit();
 
             // update selected item and title, then close the drawer
             mDrawerList.setItemChecked(position, false);
