@@ -10,8 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.dgaf.happyhour.DealListType;
-import com.dgaf.happyhour.Model.DealListAdapter;
+import com.dgaf.happyhour.Model.Adapter.DealListAdapter;
 import com.dgaf.happyhour.R;
+
+import jp.wasabeef.recyclerview.animators.LandingAnimator;
+import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
+import jp.wasabeef.recyclerview.animators.OvershootInRightAnimator;
+import jp.wasabeef.recyclerview.animators.ScaleInRightAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
+import jp.wasabeef.recyclerview.animators.adapters.AlphaInAnimationAdapter;
 
 /*This is the fragment that our page view loads*/
 public class DealListFragment extends Fragment {
@@ -20,12 +27,11 @@ public class DealListFragment extends Fragment {
     private DealListType listType;
     private SwipeRefreshLayout mSwipeRefresh;
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private DealListAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
 
         //section ID acts like ID for the query search as well
     public static DealListFragment newInstance(DealListType listType) {
-
         DealListFragment fragment = new DealListFragment();
         Bundle args = new Bundle();
         args.putInt(DEAL_LIST_TYPE, listType.ordinal());
@@ -56,12 +62,13 @@ public class DealListFragment extends Fragment {
         Bundle args = this.getArguments();
         listType = DealListType.values()[args.getInt(DEAL_LIST_TYPE)];
 
-        mAdapter = new DealListAdapter(getActivity(), listType, mSwipeRefresh);
+        mAdapter = new DealListAdapter(getActivity(), mRecyclerView, mSwipeRefresh, listType);
+
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setHasFixedSize(true);
-
+        mRecyclerView.setItemAnimator(new LandingAnimator());
+        //mRecyclerView.addItemDecoration(new DealListDecoration(getActivity()));
+        //mRecyclerView.setHasFixedSize(true);
 
     }
 }

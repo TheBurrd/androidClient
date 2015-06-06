@@ -50,6 +50,7 @@ public class About extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_about, container, false);
 
+
         // App icon is also a secret button
         burrdIcon = (ImageView) rootView.findViewById(R.id.burrdIcon);
         burrdIcon.setOnClickListener(this);
@@ -67,6 +68,7 @@ public class About extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+
         switch(v.getId()) {
             case R.id.burrdIcon:
                 Uri uri = Uri.parse("https://youtu.be/9Gc4QTqslN4?t=1s");
@@ -88,6 +90,7 @@ public class About extends Fragment implements View.OnClickListener {
                 break;
 
         }
+        
     }
 
 }

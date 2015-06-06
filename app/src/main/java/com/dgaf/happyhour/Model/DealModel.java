@@ -20,6 +20,10 @@ public class DealModel extends ParseObject {
         return getInt("upVotes");
     }
 
+    public int getRating() {
+        return getInt("rating");
+    }
+
     public void addUpVote() {
         increment("upVotes");
     }
@@ -50,7 +54,7 @@ public class DealModel extends ParseObject {
     }
 
     public AvailabilityModel getAvailability() {
-        return new AvailabilityModel(getJSONObject("availability"));
+        return new AvailabilityModel(this);
     }
 
 }
