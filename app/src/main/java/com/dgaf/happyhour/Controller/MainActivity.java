@@ -160,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
             case ABOUT_US:
                 fragment = new AboutFragment();
                 identifier = "about";
+                this.setTitle("Burrd");
                 break;
         }
         if (fragment != null)

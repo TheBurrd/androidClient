@@ -216,7 +216,8 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         switch (mQueryParams.getWeekDay()) {
             case TODAY:
                 Calendar cal = Calendar.getInstance();
-                int time = cal.get(Calendar.HOUR_OF_DAY)*100 + cal.get(Calendar.MINUTE);
+                //int time = cal.get(Calendar.HOUR_OF_DAY)*100 + cal.get(Calendar.MINUTE);
+                int time = 1300;
                 String today = "";
                 switch (cal.get(Calendar.DAY_OF_WEEK)) {
                     case Calendar.MONDAY:
