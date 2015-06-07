@@ -48,7 +48,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.about_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.about, container, false);
 
 
         // App icon is also a secret button

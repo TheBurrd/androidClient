@@ -150,7 +150,7 @@ public class DrawerListAdapter extends BaseAdapter {
             // Seek bar for proximity
             case SEEK:
                 inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                v = inflater.inflate(R.layout.seekbar_item, null);
+                v = inflater.inflate(R.layout.seekbar, null);
 
                 SeekBar seekBar = (SeekBar) v.findViewById(R.id.seek_bar);
                 seekBar.setProgress(queryParameters.getRadiusMi()-1);

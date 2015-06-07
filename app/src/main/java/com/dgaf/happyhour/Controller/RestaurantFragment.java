@@ -44,7 +44,7 @@ public class RestaurantFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.restaurant_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.restaurant, container, false);
 
         Bundle args = this.getArguments();
         if (mAdapter == null) {
