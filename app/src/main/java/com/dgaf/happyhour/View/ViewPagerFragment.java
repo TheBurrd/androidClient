@@ -19,7 +19,6 @@ import java.util.Locale;
 public class ViewPagerFragment extends Fragment {
 
     private SectionsPagerAdapter mPagerAdapter;
-    private QueryParameters mQueryParams;
 
     public static ViewPagerFragment newInstance() {
         ViewPagerFragment fragment = new ViewPagerFragment();

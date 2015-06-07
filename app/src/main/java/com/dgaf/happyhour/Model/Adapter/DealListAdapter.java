@@ -34,6 +34,7 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -122,25 +123,30 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         ParseQuery<RestaurantModel> localRestaurants = ParseQuery.getQuery(RestaurantModel.class);
         localRestaurants.whereWithinMiles("location", parseLocation, mQueryParams.getRadiusMi());
         ParseQuery<DealModel> localDeals = ParseQuery.getQuery(DealModel.class);
+        ParseQuery<DealModel> orLocalDeals = ParseQuery.getQuery(DealModel.class);
         localDeals.whereMatchesQuery("restaurantId", localRestaurants);
+        orLocalDeals.whereMatchesQuery("restaurantId", localRestaurants);
         switch(listType) {
             case DRINK:
                 localDeals.whereEqualTo("tags","drink");
+                orLocalDeals.whereEqualTo("tags","drink");
                 break;
             case FOOD:
                 localDeals.whereEqualTo("tags","food");
+                orLocalDeals.whereEqualTo("tags","food");
                 break;
             case FEATURED:
                 localDeals.whereEqualTo("tags","featured");
+                orLocalDeals.whereEqualTo("tags","featured");
                 break;
         }
-        applyDayOfWeekForQuery(localDeals);
+        localDeals = applyDayOfWeekForQuery(localDeals, orLocalDeals);
         localDeals.include("restaurantId");
         Log.v("Parse info", "Deal list query started" );
         final DealListAdapter listAdapter = this;
         localDeals.findInBackground(new FindCallback<DealModel>() {
             public void done(List<DealModel> deals, ParseException e) {
-                Log.v("Parse info","Deal list query returned");
+                Log.v("Parse info", "Deal list query returned " + String.valueOf(deals.size()));
                 if (e == null) {
                     if (mQueryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
                         Collections.sort(deals, new Comparator<DealModel>() {
@@ -195,6 +201,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                     if (prevDealItems.size() == 0) {
                         listAdapter.notifyItemRangeInserted(0, dealItems.size());
                     } else if (prevDealItems.size() > dealItems.size()) {
+                        listAdapter.notifyItemRangeChanged(0, dealItems.size());
                         listAdapter.notifyItemRangeRemoved(dealItems.size(), prevDealItems.size());
                     } else {
                         listAdapter.notifyItemRangeChanged(0, prevDealItems.size());
@@ -207,7 +214,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         });
     }
 
-    public void applyDayOfWeekForQuery(ParseQuery<DealModel> query) {
+    public ParseQuery<DealModel> applyDayOfWeekForQuery(ParseQuery<DealModel> query, ParseQuery<DealModel> orQuery) {
         switch (mQueryParams.getWeekDay()) {
             case TODAY:
                 Calendar cal = Calendar.getInstance();
@@ -236,7 +243,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                         today = "sundayEn";
                         break;
                 }
-                if ((time + mQueryParams.TODAY_TIME_RANGE) / 2400 > 1) {
+                if ((time + mQueryParams.TODAY_TIME_RANGE) / 2400.0 > 1.0) {
                     cal.add(Calendar.DAY_OF_YEAR, 1);
                 }
                 String endDay = "";
@@ -264,7 +271,15 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                         break;
                 }
                 query.whereGreaterThanOrEqualTo(today, time);
-                query.whereLessThanOrEqualTo(endDay, (time + mQueryParams.TODAY_TIME_RANGE) % 2400);
+                if (today != endDay) {
+                    orQuery.whereLessThanOrEqualTo(endDay, (time + mQueryParams.TODAY_TIME_RANGE) % 2400);
+                    List<ParseQuery<DealModel>> qList = new ArrayList<>();
+                    qList.add(query);
+                    qList.add(orQuery);
+                    query = ParseQuery.or(qList);
+                } else {
+                    query.whereLessThanOrEqualTo(endDay, (time + mQueryParams.TODAY_TIME_RANGE) % 2400);
+                }
                 break;
             case MONDAY:
                 query.whereGreaterThanOrEqualTo("mondayEn", 0);
@@ -296,6 +311,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                 break;
         }
         currentDayFilter = AvailabilityModel.getDayOfWeek( mQueryParams.getWeekDay());
+        return query;
     }
 
     @Override
@@ -354,12 +370,18 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
         holder.description.setText(dealModel.getDescription());
         holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(parseLocation)) + " mi");
-        holder.hours.setText(dealModel.getAvailability().getDayAvailability(currentDayFilter, true));
-        if (AvailabilityModel.getDayOfWeek() != currentDayFilter) {
-            holder.hours.setTextColor(Color.BLACK);
+        String dealAvail = dealModel.getAvailability().getDayAvailability(currentDayFilter, true);;
+        if (AvailabilityModel.getDayOfWeek() == currentDayFilter) {
+            if (dealAvail == "") {
+                dealAvail = dealModel.getAvailability().getDayAvailability(AvailabilityModel.WeekDay.values()[(currentDayFilter.ordinal() + 1)%7], true);
+                holder.hours.setTextColor(Color.BLACK);
+            } else {
+                holder.hours.setTextColor(Color.rgb(0,170,0));
+            }
         } else {
-            holder.hours.setTextColor(Color.rgb(0,170,0));
+            holder.hours.setTextColor(Color.BLACK);
         }
+        holder.hours.setText(dealAvail);
         holder.restaurantId = dealModel.getRestaurantId();
     }
 }

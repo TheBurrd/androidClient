@@ -32,7 +32,7 @@
             android:textSize="18dp"
             android:gravity="center_vertical"
             android:textColor="#000"
-            android:text="Radius"
+            android:text="Explore"
             android:layout_toRightOf="@+id/icon" />
 
         <TextView

@@ -77,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.main_fragment, new ViewPagerFragment()).commit();
         }
 
-        mNavItems.add(new NavItem("Rating", R.drawable.ic_thumb_up));
+        mNavItems.add(new NavItem("Top Rated", R.drawable.ic_thumb_up));
         mNavItems.add(new NavItem("Nearby", R.drawable.ic_proximity));
-        mNavItems.add(new NavItem("SeekBar", R.drawable.ic_drawer));
+        mNavItems.add(new NavItem("Explore", R.drawable.ic_drawer));
         mNavItems.add(new NavItem("Days of the Week", R.drawable.ic_calendar));
         mNavItems.add(new NavItem("About Us", R.drawable.ic_aboutus));
 
@@ -230,14 +230,12 @@ public class MainActivity extends AppCompatActivity {
     private void sortByRating() {
         QueryParameters queryParams = QueryParameters.getInstance();
         queryParams.setQueryType(QueryParameters.QueryType.RATING);
-        queryParams.notifyAllListeners();
     }
 
     // Change the sorting mechanism for deals to sort by proximity
     private void sortByProximity() {
         QueryParameters queryParams = QueryParameters.getInstance();
         queryParams.setQueryType(QueryParameters.QueryType.PROXIMITY);
-        queryParams.notifyAllListeners();
     }
 
 }
