@@ -1,7 +1,6 @@
-package com.dgaf.happyhour.Model.Adapter;
+package com.dgaf.happyhour.Adapter;
 import com.dgaf.happyhour.Controller.LocationService;
 
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,13 +17,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.dgaf.happyhour.DealListType;
+import com.dgaf.happyhour.Model.DealListType;
 import com.dgaf.happyhour.Model.AvailabilityModel;
 import com.dgaf.happyhour.Model.DealModel;
 import com.dgaf.happyhour.Model.QueryParameters;
 import com.dgaf.happyhour.Model.RestaurantModel;
 import com.dgaf.happyhour.R;
-import com.dgaf.happyhour.View.RestaurantFragment;
+import com.dgaf.happyhour.Controller.RestaurantFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
@@ -34,7 +33,6 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseQueryAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;

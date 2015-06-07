@@ -9,22 +9,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.transition.Fade;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.dgaf.happyhour.Model.Adapter.DrawerListAdapter;
-import com.dgaf.happyhour.Model.Adapter.NavItem;
+import com.dgaf.happyhour.Adapter.DrawerListAdapter;
+import com.dgaf.happyhour.Adapter.NavItem;
 import com.dgaf.happyhour.Model.QueryParameters;
 import com.dgaf.happyhour.R;
-import com.dgaf.happyhour.View.About;
-import com.dgaf.happyhour.View.ViewPagerFragment;
 
 import java.util.ArrayList;
-import java.util.TooManyListenersException;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -162,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case ABOUT_US:
-                fragment = new About();
+                fragment = new AboutFragment();
                 identifier = "about";
                 break;
         }

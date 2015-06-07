@@ -1,4 +1,4 @@
-package com.dgaf.happyhour.View;
+package com.dgaf.happyhour.Controller;
 
 /**
  * Created by trentonrobison on 4/26/15.
@@ -19,9 +19,9 @@ import android.widget.TextView;
 import com.dgaf.happyhour.R;
 
 
-/* Fragment displayed when the user clicks About Us in the Navigation Drawer
+/* Fragment displayed when the user clicks AboutFragment Us in the Navigation Drawer
  */
-public class About extends Fragment implements View.OnClickListener {
+public class AboutFragment extends Fragment implements View.OnClickListener {
 
     private ScrollView scrollView;
     private ImageView burrdIcon;
@@ -33,8 +33,8 @@ public class About extends Fragment implements View.OnClickListener {
      * number.
      */
     //section ID acts like ID for the query search as well
-    public static About newInstance(int sectionNumber) {
-        About fragment = new About();
+    public static AboutFragment newInstance(int sectionNumber) {
+        AboutFragment fragment = new AboutFragment();
         Bundle args = new Bundle();
         //args.putInt(QUERY_DECISION, query);
         //fragment.setArguments(args);
@@ -42,13 +42,13 @@ public class About extends Fragment implements View.OnClickListener {
         return fragment;
     }
 
-    public About() {
+    public AboutFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_about, container, false);
+        View rootView = inflater.inflate(R.layout.about_fragment, container, false);
 
 
         // App icon is also a secret button
@@ -59,7 +59,7 @@ public class About extends Fragment implements View.OnClickListener {
         // The scroll view to set the background for
         scrollView = (ScrollView) rootView.findViewById(R.id.aboutScrollView);
 
-        // About Text is the secret button
+        // AboutFragment Text is the secret button
         aboutText = (TextView) rootView.findViewById(R.id.aboutText);
         aboutText.setOnClickListener(this);
 

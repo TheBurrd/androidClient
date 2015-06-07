@@ -1,4 +1,4 @@
-package com.dgaf.happyhour.View;
+package com.dgaf.happyhour.Controller;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.dgaf.happyhour.DealListType;
+import com.dgaf.happyhour.Model.DealListType;
 import com.dgaf.happyhour.Model.QueryParameters;
 import com.dgaf.happyhour.R;
 

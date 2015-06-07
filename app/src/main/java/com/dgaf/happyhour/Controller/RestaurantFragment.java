@@ -1,13 +1,12 @@
-package com.dgaf.happyhour.View;
+package com.dgaf.happyhour.Controller;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
 
-import com.dgaf.happyhour.Model.Adapter.RestaurantAdapter;
+import com.dgaf.happyhour.Adapter.RestaurantAdapter;
 import com.dgaf.happyhour.R;
 
 /**

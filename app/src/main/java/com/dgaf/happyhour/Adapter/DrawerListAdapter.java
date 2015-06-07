@@ -1,4 +1,4 @@
-package com.dgaf.happyhour.Model.Adapter;
+package com.dgaf.happyhour.Adapter;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;

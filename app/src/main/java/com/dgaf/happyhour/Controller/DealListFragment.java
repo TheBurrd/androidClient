@@ -1,24 +1,18 @@
-package com.dgaf.happyhour.View;
+package com.dgaf.happyhour.Controller;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.dgaf.happyhour.DealListType;
-import com.dgaf.happyhour.Model.Adapter.DealListAdapter;
+import com.dgaf.happyhour.Model.DealListType;
+import com.dgaf.happyhour.Adapter.DealListAdapter;
 import com.dgaf.happyhour.R;
 
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
-import jp.wasabeef.recyclerview.animators.OvershootInLeftAnimator;
-import jp.wasabeef.recyclerview.animators.OvershootInRightAnimator;
-import jp.wasabeef.recyclerview.animators.ScaleInRightAnimator;
-import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
-import jp.wasabeef.recyclerview.animators.adapters.AlphaInAnimationAdapter;
 
 /*This is the fragment that our page view loads*/
 public class DealListFragment extends Fragment {

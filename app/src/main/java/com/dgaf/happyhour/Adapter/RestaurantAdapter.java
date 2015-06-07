@@ -1,11 +1,9 @@
-package com.dgaf.happyhour.Model.Adapter;
+package com.dgaf.happyhour.Adapter;
 
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MotionEvent;

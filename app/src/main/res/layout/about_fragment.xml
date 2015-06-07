@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="5dp"
-    tools:context="com.dgaf.happyhour.View.About">
+    tools:context="com.dgaf.happyhour.Controller.AboutFragment">
 
     <ScrollView
         android:id="@+id/aboutScrollView"
