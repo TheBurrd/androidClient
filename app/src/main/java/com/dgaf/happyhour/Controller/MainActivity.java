@@ -56,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Sets up the Navigation Drawer and load the DealListFragment
+     * with RATING as the default Query.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,12 +90,14 @@ public class MainActivity extends AppCompatActivity {
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setCacheColorHint(0);//avoids changing list color when scrolling
 
+
         DrawerListAdapter adapter = new DrawerListAdapter(this, mNavItems, mDrawerLayout);
         View header = getLayoutInflater().inflate(R.layout.header_nav, null);//inflate header view
         header.setEnabled(false);
         header.setOnClickListener(null);
 
-        mDrawerList.addHeaderView(header);//add header to
+        //add a header to our navigation drawer
+        mDrawerList.addHeaderView(header);
         mDrawerList.setSelectionAfterHeaderView();
 
         mDrawerList.setAdapter(adapter);
@@ -112,13 +119,10 @@ public class MainActivity extends AppCompatActivity {
 
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                // invalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                //getSupportActionBar().setTitle("Options");
-                // invalidateOptionsMenu();
             }
         };
 
@@ -129,14 +133,19 @@ public class MainActivity extends AppCompatActivity {
         selectItem(RATING);
     }
 
-    /** Swaps fragments in the main content view */
+    /**Swaps fragments in the main content view.
+     * Handles all of the Nav Drawer navigation*/
     private void selectItem(int position) {
 
         Fragment fragment = null;
         String identifier = null;
+        boolean addToBackStack = false;
+
         /*we will open all the various fragments from the sliding drawer here*/
         switch(position){
-            // List of deals
+
+            //this is currently not used
+            //we need to figure out if we want to implement clicking the header
             case HEADER:
                 fragment = viewPagerFragment;
                 identifier = "viewPager";
@@ -148,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
                 identifier = "viewPager";
                 sortByRating();
                 mDrawerLayout.closeDrawers();
+                addToBackStack = false;
                 break;
 
             case PROXIMITY:
@@ -155,25 +165,40 @@ public class MainActivity extends AppCompatActivity {
                 identifier = "viewPager";
                 sortByProximity();
                 mDrawerLayout.closeDrawers();
+                addToBackStack = false;
                 break;
 
             case ABOUT_US:
                 fragment = new AboutFragment();
                 identifier = "about";
                 this.setTitle("Burrd");
+                addToBackStack = true;
                 break;
         }
-        if (fragment != null)
-        {
+        if (fragment != null ){
 
             FragmentManager fragmentManager = getSupportFragmentManager();
 
+            //If you inflate a fragment from the drawer everything on the back stack should
+            //be emptied.
+            //special case - User is on the Restaurant Page and clicks about us. In that case we
+            //may want to go back to the Restaurant Page and therefore not empty the entire backstack
+            //depends and what the group wants
             while (fragmentManager.getBackStackEntryCount() > 0) {
                 fragmentManager.popBackStackImmediate();
             }
 
-            fragmentManager.beginTransaction()
-                    .replace(R.id.main_fragment, fragment).addToBackStack(identifier).commit();
+            //Only certain fragments should be added to the backstack as mentioned in the
+            //design guidelines. The only pages that should be added to the backstack are the
+            //About Us and when you click on a deal in the deal list. Filtering items should not
+            //be added. http://developer.android.com/training/implementing-navigation/temporal.html
+            if(addToBackStack == true) {
+                fragmentManager.beginTransaction()
+                        .replace(R.id.main_fragment, fragment).addToBackStack(identifier).commit();
+            }else{
+                fragmentManager.beginTransaction()
+                        .replace(R.id.main_fragment, fragment).commit();
+            }
 
             // update selected item and title, then close the drawer
             mDrawerList.setItemChecked(position, false);

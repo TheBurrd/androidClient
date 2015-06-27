@@ -87,6 +87,7 @@ public class RestaurantAdapter {
             dealList.setAdapter(listAdapter);
             thumbnail = (ParseImageView) rootView.findViewById(R.id.picture);
             thumbnail.setPlaceholder(ContextCompat.getDrawable(rootView.getContext(), R.drawable.ic_food_placeholder));
+
             map = ((SupportMapFragment) fragment.getChildFragmentManager().findFragmentById(R.id.map))
                     .getMap();
             map.getUiSettings().setScrollGesturesEnabled(false);
