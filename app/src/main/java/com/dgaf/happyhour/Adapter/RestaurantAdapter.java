@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dgaf.happyhour.Controller.LocationService;
 import com.dgaf.happyhour.Model.AvailabilityModel;
@@ -25,12 +26,17 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.parse.FunctionCallback;
 import com.parse.GetCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
 import com.parse.ParseQuery;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -108,6 +114,54 @@ public class RestaurantAdapter {
             map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
         }
 
+        public void upVote() {
+            Map<String,String> params = new HashMap<>();
+            // params.insert("objectId","id");
+            ParseCloud.callFunctionInBackground("UpVote", params, new FunctionCallback< Map<String, Object> >() {
+                public void done(Map<String, Object> results, ParseException e) {
+                    if (e == null){
+                        Toast.makeText(fragment.getActivity(), results.get("result").toString(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+
+        public void downVote() {
+            Map<String,String> params = new HashMap<>();
+            // params.insert("objectId","id");
+            ParseCloud.callFunctionInBackground("DownVote", params, new FunctionCallback< Map<String, Object> >() {
+                public void done(Map<String, Object> results, ParseException e) {
+                    if (e == null){
+                        Toast.makeText(fragment.getActivity(), results.get("result").toString(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+
+        public void undoUpVote() {
+            Map<String,String> params = new HashMap<>();
+            // params.insert("objectId","id");
+            ParseCloud.callFunctionInBackground("UndoUpVote", params, new FunctionCallback< Map<String, Object> >() {
+                public void done(Map<String, Object> results, ParseException e) {
+                    if (e == null){
+                        Toast.makeText(fragment.getActivity(), results.get("result").toString(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+
+        public void undoDownVote() {
+            Map<String,String> params = new HashMap<>();
+            // params.insert("objectId","id");
+            ParseCloud.callFunctionInBackground("UndoDownVote", params, new FunctionCallback< Map<String, Object> >() {
+                public void done(Map<String, Object> results, ParseException e) {
+                    if (e == null){
+                        Toast.makeText(fragment.getActivity(), results.get("result").toString(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+
         @Override
         public void onClick(View v) {
             if (v == dialPhone) {
@@ -134,9 +188,12 @@ public class RestaurantAdapter {
                     //Handle upVote
                     if (downVote.isSelected()) {
                         downVote.setSelected(false);
+                        undoDownVote();
                     }
+                    upVote();
                 } else {
-                    //Handle undo downVote
+                    //Handle undo upVote
+                    undoUpVote();
                 }
             } else if (v == downVote) {
                 //Set the button's appearance
@@ -146,9 +203,12 @@ public class RestaurantAdapter {
                     //Handle downVote
                     if (upVote.isSelected()) {
                         upVote.setSelected(false);
+                        undoUpVote();
                     }
+                    downVote();
                 } else {
                     //Handle undo downVote
+                    undoDownVote();
                 }
             }
         }
