@@ -1,5 +1,6 @@
 package com.dgaf.happyhour.Controller;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -169,10 +170,13 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case ABOUT_US:
-                fragment = new AboutFragment();
+                //fragment = new AboutFragment();
                 identifier = "about";
                 this.setTitle("Burrd");
-                addToBackStack = true;
+                Intent intent = new Intent(this, AboutUs.class);
+                startActivity(intent);
+
+                //addToBackStack = true;
                 break;
         }
         if (fragment != null ){

@@ -62,5 +62,9 @@
         secret weapon.</string>
     <string name="about_brenton"><b>Brenton, Database Guru</b>\nDallas Mavericks. Dallas Mavericks.
         Dallas Mavericks. Dallas Mavericks. </string>
+    <string name="title_activity_restaurant">Restaurant</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_about_us">AboutUs</string>
 
 </resources>
