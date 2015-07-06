@@ -144,8 +144,8 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         final DealListAdapter listAdapter = this;
         localDeals.findInBackground(new FindCallback<DealModel>() {
             public void done(List<DealModel> deals, ParseException e) {
-                Log.v("Parse info", "Deal list query returned " + String.valueOf(deals.size()));
                 if (e == null) {
+                    Log.v("Parse info", "Deal list query returned " + String.valueOf(deals.size()));
                     if (mQueryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
                         Collections.sort(deals, new Comparator<DealModel>() {
                             @Override
