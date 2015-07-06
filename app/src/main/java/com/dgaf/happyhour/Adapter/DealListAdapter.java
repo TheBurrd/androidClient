@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dgaf.happyhour.Model.DealListType;
 import com.dgaf.happyhour.Model.AvailabilityModel;
@@ -207,6 +208,9 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                     }
                 } else {
                     Log.e("Parse error: ", e.getMessage());
+                    Toast.makeText(activity, "Unable to process request: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    // Update refresh indicator
+                    swipeRefresh.setRefreshing(false);
                 }
             }
         });
