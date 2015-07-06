@@ -39,7 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by trentonrobison on 4/28/15.
+ * Created by adam on 4/28/15.
  */
 public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder> implements SwipeRefreshLayout.OnRefreshListener, QueryParameters.Listener, View.OnClickListener {
 

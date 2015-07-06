@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -94,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
 
         DrawerListAdapter adapter = new DrawerListAdapter(this, mNavItems, mDrawerLayout);
         View header = getLayoutInflater().inflate(R.layout.header_nav, null);//inflate header view
+
+        //header is not clickable
         header.setEnabled(false);
         header.setOnClickListener(null);
 
@@ -108,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectItem(position);
+                Log.i("", "onItemClick Called");
             }
         });
 
@@ -131,7 +135,11 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+        // update selected item and title, then close the drawer
         selectItem(RATING);
+        Log.i("", "selectItem Called");
+        Log.i("","checked: "+mDrawerList.isItemChecked(RATING));
+
     }
 
     /**Swaps fragments in the main content view.
@@ -139,8 +147,9 @@ public class MainActivity extends AppCompatActivity {
     private void selectItem(int position) {
 
         Fragment fragment = null;
-        String identifier = null;
-        boolean addToBackStack = false;
+        boolean createFragment = true;
+        //String identifier = null;//only used for backstack, not necessary
+        //boolean addToBackStack = false;
 
         /*we will open all the various fragments from the sliding drawer here*/
         switch(position){
@@ -149,29 +158,30 @@ public class MainActivity extends AppCompatActivity {
             //we need to figure out if we want to implement clicking the header
             case HEADER:
                 fragment = viewPagerFragment;
-                identifier = "viewPager";
+                //identifier = "viewPager";
                 mDrawerLayout.closeDrawers();
                 break;
 
             case RATING:
                 fragment = viewPagerFragment;
-                identifier = "viewPager";
+                //identifier = "viewPager";
                 sortByRating();
                 mDrawerLayout.closeDrawers();
-                addToBackStack = false;
+                //addToBackStack = false;
                 break;
 
             case PROXIMITY:
                 fragment = viewPagerFragment;
-                identifier = "viewPager";
+                //identifier = "viewPager";
                 sortByProximity();
                 mDrawerLayout.closeDrawers();
-                addToBackStack = false;
+                //addToBackStack = false;
                 break;
 
             case ABOUT_US:
                 //fragment = new AboutFragment();
-                identifier = "about";
+                //identifier = "about";
+                createFragment = false;
                 this.setTitle("Burrd");
                 Intent intent = new Intent(this, AboutUs.class);
                 startActivity(intent);
@@ -179,10 +189,15 @@ public class MainActivity extends AppCompatActivity {
                 //addToBackStack = true;
                 break;
         }
-        if (fragment != null ){
+        if (fragment != null && createFragment == true ){
+
 
             FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.main_fragment, fragment).commit();
 
+            //Not necessary anymore since we switched to activities
+            //everything is not going on the backstack
+            /*
             //If you inflate a fragment from the drawer everything on the back stack should
             //be emptied.
             //special case - User is on the Restaurant Page and clicks about us. In that case we
@@ -202,10 +217,11 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 fragmentManager.beginTransaction()
                         .replace(R.id.main_fragment, fragment).commit();
-            }
+            }*/
 
             // update selected item and title, then close the drawer
-            mDrawerList.setItemChecked(position, false);
+            //mDrawerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            mDrawerList.setItemChecked(position, true);
             mDrawerList.setSelection(position);
 
             mDrawerLayout.closeDrawers();//adds animation
