@@ -1,4 +1,4 @@
-package com.dgaf.happyhour.Model;
+package com.dgaf.happyhour.Adapter;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,7 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-import com.dgaf.happyhour.Controller.MainActivity;
+import com.dgaf.happyhour.Model.DealModel;
+import com.dgaf.happyhour.Model.RestaurantModel;
 import com.dgaf.happyhour.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;

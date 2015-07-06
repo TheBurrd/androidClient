@@ -1,68 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/custom_view"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
-    android:background="@android:color/darker_gray"
-
+    android:background="@android:color/white"
     android:gravity="center"
     >
 
-    <Button
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="10dp"
+        >
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_calendar"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:gravity="center_vertical"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:textSize="18dp"
+            android:gravity="center_vertical"
+            android:textColor="#000"
+            android:text="Day of the Week"
+            android:layout_toRightOf="@+id/icon" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:gravity="center">
+
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:id="@+id/sunday"
+        android:src="@drawable/ic_sunday"
         android:text = "Su"
         android:tag="sunday"
+        android:cropToPadding="false" />
 
-        />
-    <Button
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:text = "M"
         android:tag="monday"
         android:id="@+id/monday"
+        android:src="@drawable/ic_monday"
+        android:cropToPadding="false"
         />
-    <Button
+
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:text = "T"
         android:tag="tuesday"
         android:id="@+id/tuesday"
+        android:src="@drawable/ic_tuesday"
         />
-    <Button
+
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:id="@+id/wednesday"
         android:tag="wednesday"
         android:text = "W"
-
+        android:src="@drawable/ic_wednesday"
         />
-    <Button
+
+
+
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:id="@+id/thursday"
         android:text = "Th"
         android:tag="thursday"
-
+        android:src="@drawable/ic_thursday"
         />
-    <Button
+
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:text = "F"
         android:tag="friday"
         android:id="@+id/friday"
+        android:src="@drawable/ic_friday"
         />
 
 
-    <Button
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:text = "saturday"
         android:id="@+id/saturday"
         android:tag="saturday"
+        android:src="@drawable/ic_saturday"
         />
 
+    </LinearLayout>
 
 </LinearLayout>

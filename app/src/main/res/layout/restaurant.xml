@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/scrollView">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.parse.ParseImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:padding="5dp"
+                android:src="@drawable/ic_drinks_placeholder"
+                android:id="@+id/picture" />
+
+            <RelativeLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="100dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:id="@+id/deal_hero">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#000"
+                    android:id="@+id/deal_title"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/current_deal_avail"
+                    android:textSize="15sp"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentLeft="true" />
+
+                <RelativeLayout
+                    android:id="@+id/ratingInfo"
+                    android:layout_width="96dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/deal_title"
+                    android:layout_centerVertical="true">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/deal_rating"
+                        android:textSize="15sp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerInParent="true" />
+
+                    <ImageButton
+                        android:id="@+id/downVote"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/downvote_button_selector"
+                        android:layout_below="@id/deal_rating"
+                        android:layout_alignParentRight="true"
+                        android:padding="5dp"
+                        android:background="@null"
+                        android:scaleType="fitCenter"/>
+
+                    <ImageButton
+                        android:id="@+id/upVote"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/upvote_button_selector"
+                        android:layout_below="@+id/deal_rating"
+                        android:layout_toLeftOf="@+id/downVote"
+                        android:padding="5dp"
+                        android:background="@null"
+                        android:scaleType="fitCenter"/>
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/deal_description"
+            android:textSize="15sp"
+            android:padding="5dp"/>
+
+        <View
+            android:layout_height="1dp"
+            android:layout_width="fill_parent"
+            android:background="#d3d3d3" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/restaurant_name"
+                android:textSize="18sp"
+                android:textColor="#000"
+                android:padding="5dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/proximityIcon"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/restaurant_description"
+                android:textSize="15sp"
+                android:padding="5dp"
+                android:layout_below="@id/restaurant_name"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/websiteButton"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/hours_of_operation"
+                android:textSize="15sp"
+                android:padding="5dp"
+                android:layout_below="@id/restaurant_description"/>
+
+            <ImageView
+                android:id="@+id/proximityIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_location"
+                android:layout_alignTop="@+id/proximity"
+                android:layout_toLeftOf="@+id/proximity"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/proximity"
+                android:textSize="15sp"
+                android:padding="5dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"/>
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_phone_number"
+                android:id="@+id/phoneButton"
+                android:clickable="true"
+                android:padding="5dp"
+                android:layout_below="@+id/proximity"
+                android:layout_alignParentRight="true" />
+            
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_restaurant_website"
+                android:id="@+id/websiteButton"
+                android:clickable="true"
+                android:padding="5dp"
+                android:layout_below="@+id/proximity"
+                android:layout_toLeftOf="@+id/phoneButton" />
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textIsSelectable="true"
+                android:id="@+id/address"
+                android:textSize="15sp"
+                android:padding="5dp"
+                android:layout_below="@id/hours_of_operation"
+                android:layout_alignParentBottom="true"/>
+        </RelativeLayout>
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="180dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="More deals:"
+            android:textSize="18sp"/>
+
+        <ExpandableListView
+            android:id="@+id/deal_list"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:smoothScrollbar="true" />
+
+    </LinearLayout>
+</ScrollView>

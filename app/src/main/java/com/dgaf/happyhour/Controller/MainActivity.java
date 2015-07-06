@@ -4,11 +4,11 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -19,11 +19,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.dgaf.happyhour.Model.DrawerListAdapter;
-import com.dgaf.happyhour.Model.NavItem;
+import com.dgaf.happyhour.Adapter.DrawerListAdapter;
+import com.dgaf.happyhour.Adapter.NavItem;
+import com.dgaf.happyhour.Model.QueryParameters;
 import com.dgaf.happyhour.R;
-import com.dgaf.happyhour.View.About;
-import com.dgaf.happyhour.View.ViewPagerFragment;
 
 import java.util.ArrayList;
 
@@ -40,9 +39,18 @@ public class MainActivity extends AppCompatActivity  {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
 
+    private static final int HEADER = 0;
+    private static final int RATING = 1;
+    private static final int PROXIMITY = 2;
+    private static final int ABOUT_US = 5;
+
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
+    private ViewPagerFragment viewPagerFragment;
+    private Toolbar toolbar;
+
+
 
     ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
 
@@ -56,29 +64,24 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
 
+        this.setTitle("Today's Deals");
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
+
         }
 
         if(getSupportFragmentManager().findFragmentById(R.id.main_fragment) == null){
             getSupportFragmentManager().beginTransaction().add(R.id.main_fragment, new ViewPagerFragment()).commit();
         }
 
-
-        mNavItems.add(new NavItem("Deals", R.drawable.ic_launcher));
-        mNavItems.add(new NavItem("divider", R.drawable.ic_drawer));
-        mNavItems.add(new NavItem("Rating", R.drawable.ic_drawer));
-        mNavItems.add(new NavItem("Proximity", R.drawable.ic_proximity));
-        mNavItems.add(new NavItem("SeekBar", R.drawable.ic_drawer));
+        mNavItems.add(new NavItem("Top Rated", R.drawable.ic_thumb_up));
+        mNavItems.add(new NavItem("Nearby", R.drawable.ic_proximity));
+        mNavItems.add(new NavItem("Explore", R.drawable.ic_drawer));
         mNavItems.add(new NavItem("Days of the Week", R.drawable.ic_calendar));
-        mNavItems.add(new NavItem("week days", R.drawable.ic_drawer));
-        mNavItems.add(new NavItem("divider", R.drawable.ic_drawer));
-        mNavItems.add(new NavItem("Favorites", R.drawable.llama));
-        mNavItems.add(new NavItem("divider", R.drawable.ic_drawer));
         mNavItems.add(new NavItem("About Us", R.drawable.ic_aboutus));
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -86,7 +89,15 @@ public class MainActivity extends AppCompatActivity  {
         // Populate the Navigation Drawer with options
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setCacheColorHint(0);//avoids changing list color when scrolling
-        DrawerListAdapter adapter = new DrawerListAdapter(this, mNavItems);
+
+        DrawerListAdapter adapter = new DrawerListAdapter(this, mNavItems, mDrawerLayout);
+        View header = getLayoutInflater().inflate(R.layout.header_nav, null);//inflate header view
+        header.setEnabled(false);
+        header.setOnClickListener(null);
+
+        mDrawerList.addHeaderView(header);//add header to
+        mDrawerList.setSelectionAfterHeaderView();
+
         mDrawerList.setAdapter(adapter);
 
         // Drawer Item click listeners
@@ -106,8 +117,6 @@ public class MainActivity extends AppCompatActivity  {
 
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                toolbar.setTitle("Burrd");
-
                 // invalidateOptionsMenu();
             }
 
@@ -118,11 +127,11 @@ public class MainActivity extends AppCompatActivity  {
             }
         };
 
+        viewPagerFragment = ViewPagerFragment.newInstance();
+
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setHomeButtonEnabled(true);
-        //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
+        selectItem(RATING);
     }
 
     /** Swaps fragments in the main content view */
@@ -133,67 +142,43 @@ public class MainActivity extends AppCompatActivity  {
         /*we will open all the various fragments from the sliding drawer here*/
         switch(position){
             // List of deals
-            case 0:
-                fragment = new ViewPagerFragment();
+            case HEADER:
+                fragment = viewPagerFragment;
+                identifier = "viewPager";
+                mDrawerLayout.closeDrawers();
                 break;
 
-            // divider
-            case 1:
-                break;
-
-            // rating
-            case 2:
+            case RATING:
+                fragment = viewPagerFragment;
+                identifier = "viewPager";
                 sortByRating();
+                mDrawerLayout.closeDrawers();
                 break;
 
-            //proximity
-            case 3:
-
+            case PROXIMITY:
+                fragment = viewPagerFragment;
+                identifier = "viewPager";
+                sortByProximity();
+                mDrawerLayout.closeDrawers();
                 break;
 
-            //seek
-            case 4:
-                break;
-
-            //days of the week
-            case 5:
-                break;
-
-            //days
-            case 6:
-                break;
-
-            //bar
-            case 7:
-                break;
-
-            //favorites
-            case 8:
-                displayFavorites();
-                break;
-
-            //bar
-            case 9:
-                break;
-
-            // About Us
-            case 10:
-                fragment = new About();
+            case ABOUT_US:
+                fragment = new AboutFragment();
                 identifier = "about";
+                this.setTitle("Burrd");
                 break;
         }
         if (fragment != null)
         {
 
             FragmentManager fragmentManager = getSupportFragmentManager();
+
+            while (fragmentManager.getBackStackEntryCount() > 0) {
+                fragmentManager.popBackStackImmediate();
+            }
+
             fragmentManager.beginTransaction()
                     .replace(R.id.main_fragment, fragment).addToBackStack(identifier).commit();
-            if (position == 0)
-            {
-                while (fragmentManager.getBackStackEntryCount() > 0) {
-                    fragmentManager.popBackStackImmediate();
-                }
-            }
 
             // update selected item and title, then close the drawer
             mDrawerList.setItemChecked(position, false);
@@ -260,7 +245,6 @@ public class MainActivity extends AppCompatActivity  {
         // true, then it has handled the app icon touch event
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
-
         }
 
         return super.onOptionsItemSelected(item);
@@ -287,12 +271,14 @@ public class MainActivity extends AppCompatActivity  {
 
     // Change the sorting mechanism for deals to sort by rating
     private void sortByRating() {
-
+        QueryParameters queryParams = QueryParameters.getInstance();
+        queryParams.setQueryType(QueryParameters.QueryType.RATING);
     }
 
     // Change the sorting mechanism for deals to sort by proximity
     private void sortByProximity() {
-
+        QueryParameters queryParams = QueryParameters.getInstance();
+        queryParams.setQueryType(QueryParameters.QueryType.PROXIMITY);
     }
 
 

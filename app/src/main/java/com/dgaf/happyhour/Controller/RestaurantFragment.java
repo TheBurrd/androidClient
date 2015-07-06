@@ -1,20 +1,13 @@
-package com.dgaf.happyhour.View;
+package com.dgaf.happyhour.Controller;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.dgaf.happyhour.Model.RestaurantAdapter;
+import com.dgaf.happyhour.Adapter.RestaurantAdapter;
 import com.dgaf.happyhour.R;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * Created by trentonrobison on 4/26/15.
@@ -23,6 +16,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 /*This is the fragment that our page view loads*/
 public class RestaurantFragment extends Fragment {
     private static final String RESTAURANT_ID = "resId";
+    private static final String DEAL_ID = "dealId";
     private RestaurantAdapter mAdapter;
     /**
      * The fragment argument representing the section number for this
@@ -34,10 +28,11 @@ public class RestaurantFragment extends Fragment {
      */
 
 
-    public static RestaurantFragment newInstance(String restaurantId) {
+    public static RestaurantFragment newInstance(String restaurantId, String dealId) {
         RestaurantFragment fragment = new RestaurantFragment();
         Bundle args = new Bundle();
         args.putString(RESTAURANT_ID, restaurantId);
+        args.putString(DEAL_ID, dealId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,13 +44,13 @@ public class RestaurantFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.restaurant_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.restaurant, container, false);
 
         Bundle args = this.getArguments();
         if (mAdapter == null) {
-            mAdapter = new RestaurantAdapter(this, args.getString(RESTAURANT_ID), rootView);
+            mAdapter = new RestaurantAdapter(this, rootView, args.getString(RESTAURANT_ID), args.getString(DEAL_ID));
         } else {
-            mAdapter.loadRestaurantDetails(args.getString(RESTAURANT_ID));
+            mAdapter.loadRestaurantDetails(args.getString(RESTAURANT_ID), args.getString(DEAL_ID));
             mAdapter.createViewHolders(container);
         }
 

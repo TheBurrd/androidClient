@@ -1,4 +1,4 @@
-package com.dgaf.happyhour;
+package com.dgaf.happyhour.Model;
 
 /**
  * Created by Adam on 5/12/2015.
