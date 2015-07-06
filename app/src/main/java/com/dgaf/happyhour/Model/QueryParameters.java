@@ -12,8 +12,10 @@ public class QueryParameters {
     private static QueryParameters ourInstance = new QueryParameters();
     private QueryType mQueryType;
     private WeekDay mWeekDay;
+    private QuerySearch mQuerySearch;
     private int mRadiusMi;
     private List<Listener> listeners = new ArrayList<>();
+    private static String search;
 
     public interface Listener {
         public void onUpdate();
@@ -35,6 +37,14 @@ public class QueryParameters {
         TODAY
     }
 
+    public enum QuerySearch {
+        SEARCH
+    }
+
+    public static QueryParameters getInstance(String word) {
+        search = word;
+        return ourInstance;
+    }
     public static QueryParameters getInstance() {
         return ourInstance;
     }
@@ -44,6 +54,7 @@ public class QueryParameters {
         mQueryType = QueryType.RATING;
         mWeekDay = WeekDay.TODAY;
         mRadiusMi = 5;
+        mQuerySearch = QuerySearch.SEARCH;
     }
 
     public void notifyAllListeners() {
@@ -82,6 +93,14 @@ public class QueryParameters {
 
     public void setRadiusMi(int mRadiusMi) {
         this.mRadiusMi = mRadiusMi;
+    }
+
+    public QuerySearch getQuerySearch() {
+        return mQuerySearch;
+    }
+
+    public void setQuerySearch(QuerySearch mQuerySearch) {
+        this.mQuerySearch = mQuerySearch;
     }
 
 }

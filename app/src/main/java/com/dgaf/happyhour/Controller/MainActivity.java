@@ -224,6 +224,7 @@ public class MainActivity extends AppCompatActivity  {
 
                 Toast toast = Toast.makeText(context, query, duration);
                 toast.show();
+                sortBySearch(query);
                 return false;
             }
         });
@@ -281,6 +282,10 @@ public class MainActivity extends AppCompatActivity  {
         queryParams.setQueryType(QueryParameters.QueryType.PROXIMITY);
     }
 
+    private void sortBySearch(String word) {
+        QueryParameters queryParams = QueryParameters.getInstance(word);
+        queryParams.setQuerySearch(QueryParameters.QuerySearch.SEARCH);
+    }
 
 }
 
