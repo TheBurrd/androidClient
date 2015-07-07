@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -134,11 +135,12 @@ public class MainActivity extends AppCompatActivity {
         viewPagerFragment = ViewPagerFragment.newInstance();
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
 
         // update selected item and title, then close the drawer
         selectItem(RATING);
         Log.i("", "selectItem Called");
-        Log.i("","checked: "+mDrawerList.isItemChecked(RATING));
+        Log.i("", "checked: " + mDrawerList.isItemChecked(RATING));
 
     }
 
@@ -195,30 +197,6 @@ public class MainActivity extends AppCompatActivity {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, fragment).commit();
 
-            //Not necessary anymore since we switched to activities
-            //everything is not going on the backstack
-            /*
-            //If you inflate a fragment from the drawer everything on the back stack should
-            //be emptied.
-            //special case - User is on the Restaurant Page and clicks about us. In that case we
-            //may want to go back to the Restaurant Page and therefore not empty the entire backstack
-            //depends and what the group wants
-            while (fragmentManager.getBackStackEntryCount() > 0) {
-                fragmentManager.popBackStackImmediate();
-            }
-
-            //Only certain fragments should be added to the backstack as mentioned in the
-            //design guidelines. The only pages that should be added to the backstack are the
-            //About Us and when you click on a deal in the deal list. Filtering items should not
-            //be added. http://developer.android.com/training/implementing-navigation/temporal.html
-            if(addToBackStack == true) {
-                fragmentManager.beginTransaction()
-                        .replace(R.id.main_fragment, fragment).addToBackStack(identifier).commit();
-            }else{
-                fragmentManager.beginTransaction()
-                        .replace(R.id.main_fragment, fragment).commit();
-            }*/
-
             // update selected item and title, then close the drawer
             //mDrawerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             mDrawerList.setItemChecked(position, true);
@@ -236,17 +214,11 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    /*This is were all the action events happen*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        // Pass the event to ActionBarDrawerToggle, if it returns
-        // true, then it has handled the app icon touch event
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -267,6 +239,14 @@ public class MainActivity extends AppCompatActivity {
     private void displayFavorites() {
 
     }
+    @Override
+    public void onBackPressed() {
+        if(mDrawerLayout.isDrawerOpen(Gravity.START|Gravity.LEFT)){
+            mDrawerLayout.closeDrawers();
+            return;
+        }
+        super.onBackPressed();
+    }
 
     // Change the sorting mechanism for deals to sort by rating
     private void sortByRating() {
@@ -279,6 +259,7 @@ public class MainActivity extends AppCompatActivity {
         QueryParameters queryParams = QueryParameters.getInstance();
         queryParams.setQueryType(QueryParameters.QueryType.PROXIMITY);
     }
+
 
 }
 

@@ -1,8 +1,6 @@
 package com.dgaf.happyhour.Controller;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -30,19 +28,6 @@ public class Restaurant extends AppCompatActivity {
             setSupportActionBar(toolbar);
 
         }
-        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(
-                this,  mDrawerLayout, toolbar,
-                R.string.title_activity_about, R.string.title_activity_restaurant
-        );
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        mDrawerToggle.syncState();
-
-
-
-
 
         View rootView = findViewById(android.R.id.content);//gets root view
         String restaurantArg = getIntent().getExtras().getString(RESTAURANT_ID);
