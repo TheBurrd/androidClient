@@ -239,6 +239,7 @@ public class MainActivity extends AppCompatActivity {
     private void displayFavorites() {
 
     }
+
     @Override
     public void onBackPressed() {
         if(mDrawerLayout.isDrawerOpen(Gravity.START|Gravity.LEFT)){
