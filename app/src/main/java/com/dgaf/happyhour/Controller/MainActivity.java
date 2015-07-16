@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.dgaf.happyhour.Adapter.DrawerListAdapter;
 import com.dgaf.happyhour.Adapter.NavItem;
+import com.dgaf.happyhour.Model.DealListType;
 import com.dgaf.happyhour.Model.QueryParameters;
 import com.dgaf.happyhour.R;
 
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity  {
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private ViewPagerFragment viewPagerFragment;
+    private SearchListFragment searchListFragment;
     private Toolbar toolbar;
 
 
@@ -128,7 +130,6 @@ public class MainActivity extends AppCompatActivity  {
         };
 
         viewPagerFragment = ViewPagerFragment.newInstance();
-
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         selectItem(RATING);
@@ -193,7 +194,6 @@ public class MainActivity extends AppCompatActivity  {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
         MenuItem searchItem = menu.findItem(R.id.action_settings);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -224,7 +224,16 @@ public class MainActivity extends AppCompatActivity  {
 
                 Toast toast = Toast.makeText(context, query, duration);
                 toast.show();
-                sortBySearch(query);
+                sortBySearch();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+
+                while (fragmentManager.getBackStackEntryCount() > 0) {
+                    fragmentManager.popBackStackImmediate();
+                }
+                searchListFragment = SearchListFragment.newInstance(DealListType.SEARCH,query);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.main_fragment, searchListFragment).addToBackStack("search").commit();
+                //getActionBar().setTitle("Burrd");
                 return false;
             }
         });
@@ -282,8 +291,8 @@ public class MainActivity extends AppCompatActivity  {
         queryParams.setQueryType(QueryParameters.QueryType.PROXIMITY);
     }
 
-    private void sortBySearch(String word) {
-        QueryParameters queryParams = QueryParameters.getInstance(word);
+    private void sortBySearch() {
+        QueryParameters queryParams = QueryParameters.getInstance();
         queryParams.setQuerySearch(QueryParameters.QuerySearch.SEARCH);
     }
 

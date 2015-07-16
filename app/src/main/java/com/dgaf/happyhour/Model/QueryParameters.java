@@ -15,7 +15,6 @@ public class QueryParameters {
     private QuerySearch mQuerySearch;
     private int mRadiusMi;
     private List<Listener> listeners = new ArrayList<>();
-    private static String search;
 
     public interface Listener {
         public void onUpdate();
@@ -41,10 +40,6 @@ public class QueryParameters {
         SEARCH
     }
 
-    public static QueryParameters getInstance(String word) {
-        search = word;
-        return ourInstance;
-    }
     public static QueryParameters getInstance() {
         return ourInstance;
     }

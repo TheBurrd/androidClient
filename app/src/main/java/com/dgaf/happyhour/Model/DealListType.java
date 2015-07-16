@@ -6,5 +6,6 @@ package com.dgaf.happyhour.Model;
 public enum DealListType {
     FOOD,
     DRINK,
-    FEATURED
+    FEATURED,
+    SEARCH
 }

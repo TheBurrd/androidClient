@@ -15,7 +15,11 @@ import com.dgaf.happyhour.R;
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
 /*This is the fragment that our page view loads*/
-public class DealListFragment extends Fragment {
+
+/**
+ * Created by sojataki on 7/15/2015.
+ */
+public class SearchListFragment extends Fragment {
 
     private static final String DEAL_LIST_TYPE = "listType";
     private DealListType listType;
@@ -23,13 +27,15 @@ public class DealListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private DealListAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
+    private static String query;
 
-        //section ID acts like ID for the query search as well
-    public static DealListFragment newInstance(DealListType listType) {
-        DealListFragment fragment = new DealListFragment();
+    //section ID acts like ID for the query search as well
+    public static SearchListFragment newInstance(DealListType listType, String wurrd) {
+        SearchListFragment fragment = new SearchListFragment();
         Bundle args = new Bundle();
         args.putInt(DEAL_LIST_TYPE, listType.ordinal());
         fragment.setArguments(args);
+        query = wurrd;
 
         return fragment;
     }
@@ -56,7 +62,7 @@ public class DealListFragment extends Fragment {
         Bundle args = this.getArguments();
         listType = DealListType.values()[args.getInt(DEAL_LIST_TYPE)];
 
-        mAdapter = new DealListAdapter(getActivity(), mRecyclerView, mSwipeRefresh, listType,"");
+        mAdapter = new DealListAdapter(getActivity(), mRecyclerView, mSwipeRefresh, listType,query);
 
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -66,3 +72,4 @@ public class DealListFragment extends Fragment {
 
     }
 }
+

@@ -27,6 +27,7 @@ import com.dgaf.happyhour.Controller.RestaurantFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -50,6 +51,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private ImageLoader imageLoader;
     private List<DealModel> dealItems;
     private ParseGeoPoint parseLocation;
+    private ParseQuery parseSearch;
     private DealListType listType;
     private LocationService userLocation;
     private SwipeRefreshLayout swipeRefresh;
@@ -84,7 +86,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
     }
 
-    public DealListAdapter(FragmentActivity activity, RecyclerView recyclerView, SwipeRefreshLayout swipeRefresh, DealListType dealListType) {
+    public DealListAdapter(FragmentActivity activity, RecyclerView recyclerView, SwipeRefreshLayout swipeRefresh, DealListType dealListType, String wurrd) {
         this.activity = activity;
         this.mRecyclerView = recyclerView;
         this.imageLoader = ImageLoader.getInstance();
@@ -94,7 +96,22 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         swipeRefresh.setOnRefreshListener(this);
         listType = dealListType;
         parseLocation = getLocation();
-        mQueryParams = QueryParameters.getInstance();
+        parseSearch = getParseSearch(wurrd);
+
+        parseSearch.whereEqualTo(wurrd,wurrd);
+        parseSearch.getInBackground(wurrd,new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+
+                    String myObject =  object.toString();
+                    Log.d("Brand", "Retrieved " + myObject + " Brands");
+                } else {
+                    Log.d("Brand", "Error: " + e.getMessage());
+                }
+            }
+        });
+
+                mQueryParams = QueryParameters.getInstance();
         mQueryParams.addListener(this);
         onRefresh();
     }
@@ -114,6 +131,11 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
             }
         }
         return new ParseGeoPoint(latitude,longitude);
+    }
+
+    public ParseQuery getParseSearch(String wurrd){
+
+        return new ParseQuery(wurrd);
     }
 
     public void loadDeals() {
