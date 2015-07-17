@@ -1,10 +1,12 @@
 package com.dgaf.happyhour.Adapter;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,6 +39,7 @@ import com.parse.ParseQuery;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 
 /**
@@ -47,11 +50,13 @@ public class RestaurantAdapter {
     private ImageLoader imageLoader;
     private RestaurantModel restaurant;
     private DealModel deal;
+    private String dealId;
     private ParseGeoPoint parseLocation;
     private RestaurantViewHolder restaurantHolder;
     private ExpandDealListAdapter expandDealListAdapter;
 
     public static class RestaurantViewHolder implements ListView.OnTouchListener, View.OnClickListener {
+        public String objectId;
         public TextView dealTitle;
         public TextView dealDescription;
         public TextView dealAvailability;
@@ -104,6 +109,10 @@ public class RestaurantAdapter {
             dealList.setOnTouchListener(this);
         }
 
+        public void setObjectId(String objectId) {
+            this.objectId = objectId;
+        }
+
         public void updateMap(LatLng location, String markerText)
         {
             map.addMarker(new MarkerOptions().position(location).title(markerText));
@@ -116,11 +125,14 @@ public class RestaurantAdapter {
 
         public void upVote() {
             Map<String,String> params = new HashMap<>();
-            // params.insert("objectId","id");
-            ParseCloud.callFunctionInBackground("UpVote", params, new FunctionCallback< Map<String, Object> >() {
-                public void done(Map<String, Object> results, ParseException e) {
-                    if (e == null){
-                        Toast.makeText(fragment.getActivity(), results.get("result").toString(), Toast.LENGTH_LONG).show();
+            params.put("objectId", this.objectId);
+            params.put("deviceId", getDeviceId());
+            ParseCloud.callFunctionInBackground("upVote", params, new FunctionCallback<String>() {
+                public void done(String results, ParseException e) {
+                    if (results != null) {
+                        Toast.makeText(fragment.getActivity(), results, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(fragment.getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -128,11 +140,14 @@ public class RestaurantAdapter {
 
         public void downVote() {
             Map<String,String> params = new HashMap<>();
-            // params.insert("objectId","id");
-            ParseCloud.callFunctionInBackground("DownVote", params, new FunctionCallback< Map<String, Object> >() {
-                public void done(Map<String, Object> results, ParseException e) {
-                    if (e == null){
-                        Toast.makeText(fragment.getActivity(), results.get("result").toString(), Toast.LENGTH_LONG).show();
+            params.put("objectId", this.objectId);
+            params.put("deviceId", getDeviceId());
+            ParseCloud.callFunctionInBackground("downVote", params, new FunctionCallback<String>() {
+                public void done(String results, ParseException e) {
+                    if (results != null) {
+                        Toast.makeText(fragment.getActivity(), results, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(fragment.getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -140,11 +155,14 @@ public class RestaurantAdapter {
 
         public void undoUpVote() {
             Map<String,String> params = new HashMap<>();
-            // params.insert("objectId","id");
-            ParseCloud.callFunctionInBackground("UndoUpVote", params, new FunctionCallback< Map<String, Object> >() {
-                public void done(Map<String, Object> results, ParseException e) {
-                    if (e == null){
-                        Toast.makeText(fragment.getActivity(), results.get("result").toString(), Toast.LENGTH_LONG).show();
+            params.put("objectId", this.objectId);
+            params.put("deviceId", getDeviceId());
+            ParseCloud.callFunctionInBackground("undoUpVote", params, new FunctionCallback<String>() {
+                public void done(String results, ParseException e) {
+                    if (results != null) {
+                        Toast.makeText(fragment.getActivity(), results, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(fragment.getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -152,14 +170,30 @@ public class RestaurantAdapter {
 
         public void undoDownVote() {
             Map<String,String> params = new HashMap<>();
-            // params.insert("objectId","id");
-            ParseCloud.callFunctionInBackground("UndoDownVote", params, new FunctionCallback< Map<String, Object> >() {
-                public void done(Map<String, Object> results, ParseException e) {
-                    if (e == null){
-                        Toast.makeText(fragment.getActivity(), results.get("result").toString(), Toast.LENGTH_LONG).show();
+            params.put("objectId", this.objectId);
+            params.put("deviceId", getDeviceId());
+            ParseCloud.callFunctionInBackground("undoDownVote", params, new FunctionCallback<String>() {
+                public void done(String results, ParseException e) {
+                    if (results != null){
+                        Toast.makeText(fragment.getActivity(), results, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(fragment.getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             });
+        }
+
+        public String getDeviceId() {
+            final TelephonyManager tm = (TelephonyManager) fragment.getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+
+            final String tmDevice, tmSerial, androidId;
+            tmDevice = "" + tm.getDeviceId();
+            tmSerial = "" + tm.getSimSerialNumber();
+            androidId = "" + android.provider.Settings.Secure.getString(fragment.getActivity().getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+            UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+            String deviceId = deviceUuid.toString();
+            return deviceId;
         }
 
         @Override
@@ -241,6 +275,7 @@ public class RestaurantAdapter {
         this.expandDealListAdapter = new ExpandDealListAdapter(fragment.getActivity(), restaurantId);
         this.restaurant = new RestaurantModel();
         this.deal = new DealModel();
+        this.dealId = dealId;
         parseLocation = getLocation();
         createViewHolders(fragmentView);
         loadRestaurantDetails(restaurantId, dealId);
@@ -316,6 +351,7 @@ public class RestaurantAdapter {
 
     public void bindRestaurantViewHolder() {
         if (restaurantHolder != null && restaurant != null) {
+            restaurantHolder.setObjectId(this.dealId);
             ParseFile imageFile = restaurant.getThumbnailFile();
             if (imageFile != null) {
                 imageLoader.displayImage(imageFile.getUrl(), restaurantHolder.thumbnail);

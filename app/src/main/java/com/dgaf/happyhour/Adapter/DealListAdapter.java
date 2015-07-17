@@ -363,10 +363,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
 
         holder.deal.setText(dealModel.getTitle());
-        int rating = dealModel.getRating();
-        if (rating != 0) {
-            holder.rating.setText(String.valueOf(dealModel.getRating()) + "%");
-        }
+        holder.rating.setText(String.valueOf(dealModel.getRating()) + "%");
         holder.description.setText(dealModel.getDescription());
         holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(parseLocation)) + " mi");
         String dealAvail = dealModel.getAvailability().getDayAvailability(currentDayFilter, true);;
