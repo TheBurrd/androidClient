@@ -1,6 +1,5 @@
 package com.dgaf.happyhour.Controller;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -161,14 +160,12 @@ public class MainActivity extends AppCompatActivity {
             case HEADER:
                 fragment = viewPagerFragment;
                 //identifier = "viewPager";
-                mDrawerLayout.closeDrawers();
                 break;
 
             case RATING:
                 fragment = viewPagerFragment;
                 //identifier = "viewPager";
                 sortByRating();
-                mDrawerLayout.closeDrawers();
                 //addToBackStack = false;
                 break;
 
@@ -176,18 +173,12 @@ public class MainActivity extends AppCompatActivity {
                 fragment = viewPagerFragment;
                 //identifier = "viewPager";
                 sortByProximity();
-                mDrawerLayout.closeDrawers();
                 //addToBackStack = false;
                 break;
 
             case ABOUT_US:
-                //fragment = new AboutFragment();
+                fragment = new AboutFragment();
                 //identifier = "about";
-                createFragment = false;
-                this.setTitle("Burrd");
-                Intent intent = new Intent(this, AboutUs.class);
-                startActivity(intent);
-
                 //addToBackStack = true;
                 break;
         }

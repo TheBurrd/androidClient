@@ -29,6 +29,10 @@ public class Restaurant extends AppCompatActivity {
 
         }
 
+        //add arrow
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         View rootView = findViewById(android.R.id.content);//gets root view
         String restaurantArg = getIntent().getExtras().getString(RESTAURANT_ID);
         String aboutArg = getIntent().getExtras().getString(DEAL_ID);

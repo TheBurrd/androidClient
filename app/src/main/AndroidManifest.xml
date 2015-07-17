@@ -47,14 +47,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.dgaf.happyhour.Controller.MainActivity" />
         </activity>
-        <activity
-            android:name=".Controller.AboutUs"
-            android:label="@string/title_activity_about_us"
-            android:parentActivityName="com.dgaf.happyhour.Controller.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.dgaf.happyhour.Controller.MainActivity" />
-        </activity>
     </application>
 
 </manifest>
