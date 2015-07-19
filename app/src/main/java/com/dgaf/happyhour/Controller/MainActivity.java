@@ -56,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Sets up the Navigation Drawer and load the DealListFragment
+     * with RATING as the default Query.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,12 +90,16 @@ public class MainActivity extends AppCompatActivity {
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setCacheColorHint(0);//avoids changing list color when scrolling
 
+
         DrawerListAdapter adapter = new DrawerListAdapter(this, mNavItems, mDrawerLayout);
         View header = getLayoutInflater().inflate(R.layout.header_nav, null);//inflate header view
+
+        //header is not clickable
         header.setEnabled(false);
         header.setOnClickListener(null);
 
-        mDrawerList.addHeaderView(header);//add header to
+        //add a header to our navigation drawer
+        mDrawerList.addHeaderView(header);
         mDrawerList.setSelectionAfterHeaderView();
 
         mDrawerList.setAdapter(adapter);
@@ -112,71 +121,60 @@ public class MainActivity extends AppCompatActivity {
 
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                // invalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                //getSupportActionBar().setTitle("Options");
-                // invalidateOptionsMenu();
             }
         };
 
         viewPagerFragment = ViewPagerFragment.newInstance();
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
 
+        // update selected item and title, then close the drawer
         selectItem(RATING);
     }
 
-    /** Swaps fragments in the main content view */
+    /**Swaps fragments in the main content view.
+     * Handles all of the Nav Drawer navigation*/
     private void selectItem(int position) {
 
         Fragment fragment = null;
-        String identifier = null;
+        boolean createFragment = true;
+
         /*we will open all the various fragments from the sliding drawer here*/
         switch(position){
-            // List of deals
+
+            //this is currently not used
+            //we need to figure out if we want to implement clicking the header
             case HEADER:
                 fragment = viewPagerFragment;
-                identifier = "viewPager";
-                mDrawerLayout.closeDrawers();
                 break;
 
             case RATING:
                 fragment = viewPagerFragment;
-                identifier = "viewPager";
                 sortByRating();
-                mDrawerLayout.closeDrawers();
                 break;
 
             case PROXIMITY:
                 fragment = viewPagerFragment;
-                identifier = "viewPager";
                 sortByProximity();
-                mDrawerLayout.closeDrawers();
                 break;
 
             case ABOUT_US:
                 fragment = new AboutFragment();
-                identifier = "about";
-                this.setTitle("Burrd");
                 break;
         }
-        if (fragment != null)
-        {
+        if (fragment != null && createFragment == true ){
+
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-
-            while (fragmentManager.getBackStackEntryCount() > 0) {
-                fragmentManager.popBackStackImmediate();
-            }
-
-            fragmentManager.beginTransaction()
-                    .replace(R.id.main_fragment, fragment).addToBackStack(identifier).commit();
+            fragmentManager.beginTransaction().replace(R.id.main_fragment, fragment).commit();
 
             // update selected item and title, then close the drawer
-            mDrawerList.setItemChecked(position, false);
+            mDrawerList.setItemChecked(position, true);
             mDrawerList.setSelection(position);
 
             mDrawerLayout.closeDrawers();//adds animation
@@ -191,17 +189,11 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    /*This is were all the action events happen*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        // Pass the event to ActionBarDrawerToggle, if it returns
-        // true, then it has handled the app icon touch event
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -234,6 +226,5 @@ public class MainActivity extends AppCompatActivity {
         QueryParameters queryParams = QueryParameters.getInstance();
         queryParams.setQueryType(QueryParameters.QueryType.PROXIMITY);
     }
-
 }
 

@@ -107,14 +107,6 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/about_ken"
-                android:textSize="15dp"
-                android:layout_margin="5dp"
-                android:padding="10dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:text="@string/about_brenton"
                 android:textSize="15dp"
                 android:layout_margin="5dp"
