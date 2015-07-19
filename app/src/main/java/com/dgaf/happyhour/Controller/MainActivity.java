@@ -9,8 +9,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -111,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectItem(position);
-                Log.i("", "onItemClick Called");
             }
         });
 
@@ -138,9 +135,6 @@ public class MainActivity extends AppCompatActivity {
 
         // update selected item and title, then close the drawer
         selectItem(RATING);
-        Log.i("", "selectItem Called");
-        Log.i("", "checked: " + mDrawerList.isItemChecked(RATING));
-
     }
 
     /**Swaps fragments in the main content view.
@@ -149,8 +143,6 @@ public class MainActivity extends AppCompatActivity {
 
         Fragment fragment = null;
         boolean createFragment = true;
-        //String identifier = null;//only used for backstack, not necessary
-        //boolean addToBackStack = false;
 
         /*we will open all the various fragments from the sliding drawer here*/
         switch(position){
@@ -159,27 +151,20 @@ public class MainActivity extends AppCompatActivity {
             //we need to figure out if we want to implement clicking the header
             case HEADER:
                 fragment = viewPagerFragment;
-                //identifier = "viewPager";
                 break;
 
             case RATING:
                 fragment = viewPagerFragment;
-                //identifier = "viewPager";
                 sortByRating();
-                //addToBackStack = false;
                 break;
 
             case PROXIMITY:
                 fragment = viewPagerFragment;
-                //identifier = "viewPager";
                 sortByProximity();
-                //addToBackStack = false;
                 break;
 
             case ABOUT_US:
                 fragment = new AboutFragment();
-                //identifier = "about";
-                //addToBackStack = true;
                 break;
         }
         if (fragment != null && createFragment == true ){
@@ -189,7 +174,6 @@ public class MainActivity extends AppCompatActivity {
             fragmentManager.beginTransaction().replace(R.id.main_fragment, fragment).commit();
 
             // update selected item and title, then close the drawer
-            //mDrawerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             mDrawerList.setItemChecked(position, true);
             mDrawerList.setSelection(position);
 
@@ -231,15 +215,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        if(mDrawerLayout.isDrawerOpen(Gravity.START|Gravity.LEFT)){
-            mDrawerLayout.closeDrawers();
-            return;
-        }
-        super.onBackPressed();
-    }
-
     // Change the sorting mechanism for deals to sort by rating
     private void sortByRating() {
         QueryParameters queryParams = QueryParameters.getInstance();
@@ -251,7 +226,5 @@ public class MainActivity extends AppCompatActivity {
         QueryParameters queryParams = QueryParameters.getInstance();
         queryParams.setQueryType(QueryParameters.QueryType.PROXIMITY);
     }
-
-
 }
 

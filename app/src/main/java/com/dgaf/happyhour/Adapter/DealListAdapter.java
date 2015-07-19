@@ -338,18 +338,6 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         intent.putExtra("dealId",dealId);
 
         context.startActivity(intent);
-
-        //For loading fragment. Not neccesary for activity
-        /*int position = mRecyclerView.getChildAdapterPosition(v);
-        DealModel dealModel = dealItems.get(position);
-        String restaurantId = dealModel.getRestaurantId();
-        String dealId = dealModel.getId();
-        Fragment restaurant = RestaurantFragment.newInstance(restaurantId, dealId);
-        restaurant.setEnterTransition(new Fade());
-        restaurant.setExitTransition(new Fade());
-        FragmentManager fragmentManager = activity.getSupportFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.replace(R.id.main_fragment, restaurant).addToBackStack(null).commit();*/
     }
 
     @Override

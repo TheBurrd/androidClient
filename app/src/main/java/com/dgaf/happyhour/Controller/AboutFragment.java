@@ -102,6 +102,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         setHasOptionsMenu(true);
     }
 
+    //disable the search icon
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         if (menu != null) {
