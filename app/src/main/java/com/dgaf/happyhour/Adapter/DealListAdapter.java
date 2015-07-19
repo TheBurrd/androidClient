@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dgaf.happyhour.Controller.LocationService;
 import com.dgaf.happyhour.Controller.Restaurant;
@@ -143,8 +144,9 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         final DealListAdapter listAdapter = this;
         localDeals.findInBackground(new FindCallback<DealModel>() {
             public void done(List<DealModel> deals, ParseException e) {
-                Log.v("Parse info", "Deal list query returned " + String.valueOf(deals.size()));
                 if (e == null) {
+                    Log.v("Parse info", "Deal list query returned " + String.valueOf(deals.size()));
+
                     if (mQueryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
                         Collections.sort(deals, new Comparator<DealModel>() {
                             @Override
@@ -206,6 +208,9 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                     }
                 } else {
                     Log.e("Parse error: ", e.getMessage());
+                    Toast.makeText(context, "Unable to process request: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    swipeRefresh.setRefreshing(false);    // Update refresh indicator
+
                 }
             }
         });
