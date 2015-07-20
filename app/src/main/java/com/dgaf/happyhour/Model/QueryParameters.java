@@ -22,7 +22,8 @@ public class QueryParameters {
 
     public enum QueryType {
         RATING,
-        PROXIMITY
+        PROXIMITY,
+        SEARCH
     }
 
     public enum WeekDay {

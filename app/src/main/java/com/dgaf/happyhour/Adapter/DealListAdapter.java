@@ -34,6 +34,7 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -59,6 +60,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private AvailabilityModel.WeekDay currentDayFilter;
     private static final String DEAL_LIST_CACHE = "dealList";
     private static HashMap queryHashes = new HashMap<>();
+    private String wurrd;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -92,24 +94,12 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         this.imageLoader = ImageLoader.getInstance();
         this.swipeRefresh = swipeRefresh;
         this.dealItems = new ArrayList<>();
+        this.wurrd = wurrd;
 
         swipeRefresh.setOnRefreshListener(this);
         listType = dealListType;
         parseLocation = getLocation();
         parseSearch = getParseSearch(wurrd);
-
-        parseSearch.whereEqualTo(wurrd,wurrd);
-        parseSearch.getInBackground(wurrd,new GetCallback<ParseObject>() {
-            public void done(ParseObject object, ParseException e) {
-                if (e == null) {
-
-                    String myObject =  object.toString();
-                    Log.d("Brand", "Retrieved " + myObject + " Brands");
-                } else {
-                    Log.d("Brand", "Error: " + e.getMessage());
-                }
-            }
-        });
 
                 mQueryParams = QueryParameters.getInstance();
         mQueryParams.addListener(this);
@@ -159,6 +149,10 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                 localDeals.whereEqualTo("tags","featured");
                 orLocalDeals.whereEqualTo("tags","featured");
                 break;
+            case SEARCH:
+                localDeals.whereMatches("tags", "(" + wurrd + ")", "food");
+                orLocalDeals.whereMatches("tags", "(" + wurrd + ")", "food");
+                break;
         }
         localDeals = applyDayOfWeekForQuery(localDeals, orLocalDeals);
         localDeals.include("restaurantId");
@@ -166,7 +160,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         final DealListAdapter listAdapter = this;
         localDeals.findInBackground(new FindCallback<DealModel>() {
             public void done(List<DealModel> deals, ParseException e) {
-                Log.v("Parse info", "Deal list query returned " + String.valueOf(deals.size()));
+                //Log.v("Parse info", "Deal list query returned " + String.valueOf(deals.size()));
                 if (e == null) {
                     if (mQueryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
                         Collections.sort(deals, new Comparator<DealModel>() {
@@ -198,6 +192,22 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                                     }
                                 }
                                 return (int) (diff);
+                            }
+                        });
+                    }else if (mQueryParams.getQueryType() == QueryParameters.QueryType.SEARCH){
+                        parseSearch.findInBackground(new FindCallback<ParseObject>() {
+                            @Override
+                            public void done(List<ParseObject> objects,
+                                             ParseException e) {
+                                if (e == null) {
+                                    Log.d("Brand", "Retrieved " + objects.size() + " Brands");
+                                    for (ParseObject dealsObject : objects) {
+                                        // use dealsObject.get('columnName') to access the properties of the Deals object.
+                                    }
+                                } else {
+                                    Log.d("Brand", "Error: " + e.getMessage());
+                                }
+
                             }
                         });
                     }
