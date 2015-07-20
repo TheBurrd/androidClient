@@ -218,12 +218,11 @@ public class MainActivity extends AppCompatActivity  {
             public boolean onQueryTextSubmit(String query) {
                 // TODO Auto-generated method stub
                 //Output the new list with the query results
-
                 Context context = getApplicationContext();
                 int duration = Toast.LENGTH_SHORT;
 
-                Toast toast = Toast.makeText(context, query, duration);
-                toast.show();
+                //Toast toast = Toast.makeText(context, query, duration);
+                //toast.show();
                 sortBySearch();
                 FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -232,8 +231,8 @@ public class MainActivity extends AppCompatActivity  {
                 }
                 searchListFragment = SearchListFragment.newInstance(DealListType.SEARCH,query);
                 fragmentManager.beginTransaction()
-                        .replace(R.id.main_fragment, searchListFragment).addToBackStack("search").commit();
-                //getActionBar().setTitle("Burrd");
+                        .replace(R.id.main_fragment, searchListFragment).addToBackStack(query).commit();
+                toolbar.setTitle(query);
                 return false;
             }
         });

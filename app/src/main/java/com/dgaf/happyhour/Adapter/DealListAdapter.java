@@ -34,7 +34,6 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseQueryAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -101,7 +100,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         parseLocation = getLocation();
         parseSearch = getParseSearch(wurrd);
 
-                mQueryParams = QueryParameters.getInstance();
+        mQueryParams = QueryParameters.getInstance();
         mQueryParams.addListener(this);
         onRefresh();
     }
@@ -124,7 +123,6 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     }
 
     public ParseQuery getParseSearch(String wurrd){
-
         return new ParseQuery(wurrd);
     }
 
@@ -150,8 +148,10 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                 orLocalDeals.whereEqualTo("tags","featured");
                 break;
             case SEARCH:
-                localDeals.whereMatches("tags", "(" + wurrd + ")", "food");
-                orLocalDeals.whereMatches("tags", "(" + wurrd + ")", "food");
+                //localDeals.whereEqualTo("tags", wurrd);
+                //orLocalDeals.whereEqualTo("tags",wurrd);
+                localDeals.whereMatches("description", wurrd );
+                orLocalDeals.whereMatches("description", wurrd );
                 break;
         }
         localDeals = applyDayOfWeekForQuery(localDeals, orLocalDeals);
@@ -160,7 +160,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         final DealListAdapter listAdapter = this;
         localDeals.findInBackground(new FindCallback<DealModel>() {
             public void done(List<DealModel> deals, ParseException e) {
-                //Log.v("Parse info", "Deal list query returned " + String.valueOf(deals.size()));
+                Log.v("Parse info", "Deal list query returned " + String.valueOf(deals.size()));
                 if (e == null) {
                     if (mQueryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
                         Collections.sort(deals, new Comparator<DealModel>() {
@@ -200,12 +200,12 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                             public void done(List<ParseObject> objects,
                                              ParseException e) {
                                 if (e == null) {
-                                    Log.d("Brand", "Retrieved " + objects.size() + " Brands");
+                                    Log.d("description", "Retrieved " + objects.size() + " "+ wurrd);
                                     for (ParseObject dealsObject : objects) {
                                         // use dealsObject.get('columnName') to access the properties of the Deals object.
                                     }
                                 } else {
-                                    Log.d("Brand", "Error: " + e.getMessage());
+                                    Log.d("description", "Error: " + e.getMessage());
                                 }
 
                             }
