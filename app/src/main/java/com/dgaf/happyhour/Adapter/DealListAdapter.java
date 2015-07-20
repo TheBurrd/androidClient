@@ -207,7 +207,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                     }
                 } else {
                     Log.e("Parse error: ", e.getMessage());
-                    Toast.makeText(activity, "Unable to process request: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(activity, "Unable to process request: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     // Update refresh indicator
                     swipeRefresh.setRefreshing(false);
                 }

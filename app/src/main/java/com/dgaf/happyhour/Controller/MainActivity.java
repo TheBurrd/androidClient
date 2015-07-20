@@ -2,6 +2,7 @@ package com.dgaf.happyhour.Controller;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -19,6 +20,7 @@ import com.dgaf.happyhour.Adapter.DrawerListAdapter;
 import com.dgaf.happyhour.Adapter.NavItem;
 import com.dgaf.happyhour.Model.QueryParameters;
 import com.dgaf.happyhour.R;
+
 
 import java.util.ArrayList;
 
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private ViewPagerFragment viewPagerFragment;
     private Toolbar toolbar;
+    private TabLayout tabs;
 
 
 
@@ -65,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-
+        tabs = (TabLayout) findViewById(R.id.tabs);
         this.setTitle("Today's Deals");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);

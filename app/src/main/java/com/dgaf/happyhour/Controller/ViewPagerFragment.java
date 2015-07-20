@@ -1,6 +1,7 @@
 package com.dgaf.happyhour.Controller;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableLayout;
 
 import com.dgaf.happyhour.Model.DealListType;
 import com.dgaf.happyhour.Model.QueryParameters;
@@ -19,6 +21,7 @@ import java.util.Locale;
 public class ViewPagerFragment extends Fragment {
 
     private SectionsPagerAdapter mPagerAdapter;
+    private static TabLayout tabLayout;
 
     public static ViewPagerFragment newInstance() {
         ViewPagerFragment fragment = new ViewPagerFragment();
@@ -30,7 +33,6 @@ public class ViewPagerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View result = inflater.inflate(R.layout.view_pager,container,false);
         ViewPager vp = (ViewPager) result.findViewById(R.id.pager);
-
         // We only have 3 tabs. Setting this limit to 3 prevents the fragments from being recreated
         // constantly at the expense of a little bit more memory usage.
         vp.setOffscreenPageLimit(2);
@@ -39,6 +41,8 @@ public class ViewPagerFragment extends Fragment {
         vp.setAdapter(mPagerAdapter);
         vp.setCurrentItem(1);
 
+        tabLayout = (TabLayout) result.findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(vp);
 
         return result;
     }
