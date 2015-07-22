@@ -38,14 +38,6 @@ public class DrawerListAdapter extends BaseAdapter {
     private static final int SEEK = 2;
     private QueryParameters queryParameters;
 
-    private static boolean monSelected = false;
-    private static boolean tueSelected = false;
-    private static boolean wedSelected = false;
-    private static boolean thuSelected = false;
-    private static boolean friSelected = false;
-    private static boolean satSelected = false;
-    private static boolean sunSelected = false;
-
     private ImageView monday;
     private ImageView tuesday;
     private ImageView wednesday;
@@ -115,25 +107,28 @@ public class DrawerListAdapter extends BaseAdapter {
 
                 // Remember what button was selected from the last time
                 // the nav drawer was opened.
-                if (monSelected) {
+
+                byte dayOfWeekMask = queryParameters.getDayOfWeekMask();
+
+                if ((dayOfWeekMask & QueryParameters.MONDAY) != 0) {
                     monday.setImageResource(R.drawable.ic_monday_active);
                 }
-                else if (tueSelected) {
+                if ((dayOfWeekMask & QueryParameters.TUESDAY) != 0) {
                     tuesday.setImageResource(R.drawable.ic_tuesday_active);
                 }
-                else if (wedSelected) {
+                if ((dayOfWeekMask & QueryParameters.WEDNESDAY) != 0) {
                     wednesday.setImageResource(R.drawable.ic_wednesday_active);
                 }
-                else if (thuSelected) {
+                if ((dayOfWeekMask & QueryParameters.THURSDAY) != 0) {
                     thursday.setImageResource(R.drawable.ic_thursday_active);
                 }
-                else if (friSelected) {
+                if ((dayOfWeekMask & QueryParameters.FRIDAY) != 0) {
                     friday.setImageResource(R.drawable.ic_friday_active);
                 }
-                else if (satSelected) {
+                if ((dayOfWeekMask & QueryParameters.SATURDAY) != 0) {
                     saturday.setImageResource(R.drawable.ic_saturday_active);
                 }
-                else if (sunSelected) {
+                if ((dayOfWeekMask & QueryParameters.SUNDAY) != 0) {
                     sunday.setImageResource(R.drawable.ic_sunday_active);
                 }
 
@@ -257,121 +252,102 @@ public class DrawerListAdapter extends BaseAdapter {
      * time.  The selected button will be highlighted.  When another button is
      * selected, the original button should be unhighlighted.  When a selected
      * button is clicked again, it should no longer be selected*/
+    // TODO Remove string literals and add to strings.xml
     private View.OnClickListener weekDayListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
             int id = v.getId();
+            byte dayOfWeekMask = queryParameters.getDayOfWeekMask();
             switch(id) {
                 case R.id.monday:
-                    if (!monSelected) {
-                        unselectButtons();
+                    if ((dayOfWeekMask & QueryParameters.MONDAY) == 0) {
                         ((ImageView) v).setImageResource(R.drawable.ic_monday_active);
-                        monSelected = true;
+                        queryParameters.setDayOfWeekMask((byte) (dayOfWeekMask | QueryParameters.MONDAY));
                         ((AppCompatActivity) mContext).setTitle("Monday's Deals");
-                        queryParameters.setWeekDay(QueryParameters.WeekDay.MONDAY);
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_monday);
-                        monSelected = false;
+                        queryParameters.setDayOfWeekMask((byte) (dayOfWeekMask & ~QueryParameters.MONDAY));
                         ((AppCompatActivity) mContext).setTitle("Today's Deals");
-                        queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
                     }
                     break;
 
                 case R.id.tuesday:
-                    if (!tueSelected) {
-                        unselectButtons();
+                    if ((dayOfWeekMask & QueryParameters.TUESDAY) == 0) {
                         ((ImageView) v).setImageResource(R.drawable.ic_tuesday_active);
-                        tueSelected = true;
+                        queryParameters.setDayOfWeekMask((byte) (dayOfWeekMask | QueryParameters.TUESDAY));
                         ((AppCompatActivity) mContext).setTitle("Tuesday's Deals");
-                        queryParameters.setWeekDay(QueryParameters.WeekDay.TUESDAY);
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_tuesday);
-                        tueSelected = false;
+                        queryParameters.setDayOfWeekMask((byte) (dayOfWeekMask & ~QueryParameters.TUESDAY));
                         ((AppCompatActivity) mContext).setTitle("Today's Deals");
-                        queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
                     }
                     break;
 
                 case R.id.wednesday:
-                    if (!wedSelected) {
-                        unselectButtons();
+                    if ((dayOfWeekMask & QueryParameters.WEDNESDAY) == 0) {
                         ((ImageView) v).setImageResource(R.drawable.ic_wednesday_active);
-                        wedSelected = true;
+                        queryParameters.setDayOfWeekMask((byte) (dayOfWeekMask | QueryParameters.WEDNESDAY));
                         ((AppCompatActivity) mContext).setTitle("Wednesday's Deals");
-                        queryParameters.setWeekDay(QueryParameters.WeekDay.WEDNESDAY);
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_wednesday);
-                        wedSelected = false;
+                        queryParameters.setDayOfWeekMask((byte) (dayOfWeekMask & ~QueryParameters.WEDNESDAY));
                         ((AppCompatActivity) mContext).setTitle("Today's Deals");
-                        queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
                     }
                     break;
 
                 case R.id.thursday:
-                    if (!thuSelected) {
-                        unselectButtons();
+                    if ((dayOfWeekMask & QueryParameters.THURSDAY) == 0) {
                         ((ImageView) v).setImageResource(R.drawable.ic_thursday_active);
-                        thuSelected = true;
+                        queryParameters.setDayOfWeekMask((byte) (dayOfWeekMask | QueryParameters.THURSDAY));
                         ((AppCompatActivity) mContext).setTitle("Thursday's Deals");
-                        queryParameters.setWeekDay(QueryParameters.WeekDay.THURSDAY);
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_thursday);
-                        thuSelected = false;
+                        queryParameters.setDayOfWeekMask((byte) (dayOfWeekMask & ~QueryParameters.THURSDAY));
                         ((AppCompatActivity) mContext).setTitle("Today's Deals");
-                        queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
                     }
                     break;
 
                 case R.id.friday:
-                    if (!friSelected) {
-                        unselectButtons();
+                    if ((dayOfWeekMask & QueryParameters.FRIDAY) == 0) {
                         ((ImageView) v).setImageResource(R.drawable.ic_friday_active);
-                        friSelected = true;
+                        queryParameters.setDayOfWeekMask((byte) (dayOfWeekMask | QueryParameters.FRIDAY));
                         ((AppCompatActivity) mContext).setTitle("Friday's Deals");
-                        queryParameters.setWeekDay(QueryParameters.WeekDay.FRIDAY);
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_friday);
-                        friSelected = false;
+                        queryParameters.setDayOfWeekMask((byte) (dayOfWeekMask & ~QueryParameters.FRIDAY));
                         ((AppCompatActivity) mContext).setTitle("Today's Deals");
-                        queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
                     }
                     break;
 
                 case R.id.saturday:
-                    if (!satSelected) {
-                        unselectButtons();
+                    if ((dayOfWeekMask & QueryParameters.SATURDAY) == 0) {
                         ((ImageView) v).setImageResource(R.drawable.ic_saturday_active);
-                        satSelected = true;
+                        queryParameters.setDayOfWeekMask((byte) (dayOfWeekMask | QueryParameters.SATURDAY));
                         ((AppCompatActivity) mContext).setTitle("Saturday's Deals");
-                        queryParameters.setWeekDay(QueryParameters.WeekDay.SATURDAY);
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_saturday);
-                        satSelected = false;
+                        queryParameters.setDayOfWeekMask((byte) (dayOfWeekMask & ~QueryParameters.SATURDAY));
                         ((AppCompatActivity) mContext).setTitle("Today's Deals");
-                        queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
                     }
                     break;
 
                 case R.id.sunday:
-                    if (!sunSelected) {
-                        unselectButtons();
+                    if ((dayOfWeekMask & QueryParameters.SUNDAY) == 0) {
                         ((ImageView) v).setImageResource(R.drawable.ic_sunday_active);
-                        sunSelected = true;
-                        ((AppCompatActivity) mContext).setTitle("Sunday's Deals");
-                        queryParameters.setWeekDay(QueryParameters.WeekDay.SUNDAY);
+                        queryParameters.setDayOfWeekMask((byte) (dayOfWeekMask | QueryParameters.SUNDAY));
+                        ((AppCompatActivity) mContext).setTitle("Monday's Deals");
                     }
                     else {
                         ((ImageView) v).setImageResource(R.drawable.ic_sunday);
-                        sunSelected = false;
+                        queryParameters.setDayOfWeekMask((byte) (dayOfWeekMask & ~QueryParameters.SUNDAY));
                         ((AppCompatActivity) mContext).setTitle("Today's Deals");
-                        queryParameters.setWeekDay(QueryParameters.WeekDay.TODAY);
                     }
                     break;
             }
