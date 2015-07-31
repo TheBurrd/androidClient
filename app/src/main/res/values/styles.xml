@@ -24,4 +24,10 @@
         <item name="android:background">@android:color/white</item>
         <item name="android:textColor">#ff34</item>
     </style>
+
+    <style name="Theme.Splash" parent="android:Theme">
+        <item name="android:windowBackground">@drawable/burrd_splashscreen</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
 </resources>
