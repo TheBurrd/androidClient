@@ -1,0 +1,330 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="300dp"
+    android:layout_height="match_parent"
+    tools:context="com.dgaf.happyhour.Controller.DrawerFragment">
+
+    <!--HEADER START-->
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="left|top">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/burrd_nav_header"
+            android:id="@+id/imageView" />
+
+    </RelativeLayout>
+<!--HEADER END-->
+
+        <!--TOP RATED START-->
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/topRatedLayout"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <ImageView
+            android:id="@+id/topRated"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_thumb_up"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:gravity="center_vertical"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp" />
+
+        <TextView
+            android:id="@+id/topRatedText"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:textSize="18dp"
+            android:gravity="center_vertical"
+            android:textColor="#000"
+            android:text="Top Rated"
+            android:layout_toRightOf="@+id/topRated" />
+
+<!--TOP RATED END-->
+
+        <!--NEARBY LAYOUT-->
+    </RelativeLayout>
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="10dp"
+            android:id="@+id/nearbyLayout"
+            android:paddingBottom="10dp">
+
+            <ImageView
+                android:id="@+id/proximity"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_proximity"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:gravity="center_vertical"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:id="@+id/proximityText"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:textSize="18dp"
+                android:gravity="center_vertical"
+                android:textColor="#000"
+                android:text="Nearby"
+                android:layout_toRightOf="@+id/proximity" />
+
+
+
+        </RelativeLayout>
+
+        <!--NEARBY END-->
+        <!--Seekbar starts-->
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:id="@+id/exploreLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="10dp"
+                >
+
+                <ImageView
+                    android:id="@+id/explore"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_location"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp" />
+
+                <TextView
+                    android:id="@+id/dontcare1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:textSize="18dp"
+                    android:gravity="center_vertical"
+                    android:textColor="#000"
+                    android:text="Explore"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toEndOf="@+id/explore" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="5 mi"
+                    android:id="@+id/exploreText"
+                    android:layout_marginRight="15dp"
+                    android:layout_alignBaseline="@+id/dontcare1"
+                    android:layout_alignBottom="@+id/dontcare1"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:id="@+id/layout_root">
+
+                <SeekBar
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/seek_bar"
+                    android:max="24"
+                    android:paddingBottom="5dp"
+                    android:indeterminate="false" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <!--SEEKBAR ENDS-->
+
+<!--WEEKDAY STUFF-->
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:layout_width="300dp"
+            android:id="@+id/weekdayLayout"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:gravity="center"
+            >
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="10dp"
+                >
+
+                <ImageView
+                    android:id="@+id/icon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_calendar"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp" />
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:textSize="18dp"
+                    android:gravity="center_vertical"
+                    android:textColor="#000"
+                    android:text="Day of the Week"
+                    android:layout_toRightOf="@+id/icon" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/sunday"
+                    android:src="@drawable/ic_sunday"
+                    android:text = "Su"
+                    android:tag="sunday"
+                    android:cropToPadding="false" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text = "M"
+                    android:tag="monday"
+                    android:id="@+id/monday"
+                    android:src="@drawable/ic_monday"
+                    android:cropToPadding="false"
+                    />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text = "T"
+                    android:tag="tuesday"
+                    android:id="@+id/tuesday"
+                    android:src="@drawable/ic_tuesday"
+                    />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/wednesday"
+                    android:tag="wednesday"
+                    android:text = "W"
+                    android:src="@drawable/ic_wednesday"
+                    />
+
+
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/thursday"
+                    android:text = "Th"
+                    android:tag="thursday"
+                    android:src="@drawable/ic_thursday"
+                    />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text = "F"
+                    android:tag="friday"
+                    android:id="@+id/friday"
+                    android:src="@drawable/ic_friday"
+                    />
+
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text = "saturday"
+                    android:id="@+id/saturday"
+                    android:tag="saturday"
+                    android:src="@drawable/ic_saturday"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <!-- WEEKDAY END-->
+
+        <!-- ABOUT US START-->
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/aboutUsLayout"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+
+            <ImageView
+                android:id="@+id/aboutUs"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_aboutus"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:gravity="center_vertical"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:id="@+id/aboutUsText"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:textSize="18dp"
+                android:gravity="center_vertical"
+                android:textColor="#000"
+                android:text="About Us"
+                android:layout_toRightOf="@+id/aboutUs" />
+
+
+
+        </RelativeLayout>
+        <!-- ABOUT US END-->
+
+    </LinearLayout>
+
+
+
+</ScrollView>

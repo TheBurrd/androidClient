@@ -27,17 +27,12 @@
 
     </LinearLayout>
 
-
-    <ListView
-        android:id="@+id/left_drawer"
+    <FrameLayout
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:id="@+id/drawerItems"
         android:layout_below="@+id/top_bar"
-        android:background="@android:color/white"
-        android:choiceMode="singleChoice"
-        android:divider="#d3d3d3"
-        android:listSelector="@color/colorPrimary"
-        android:dividerHeight="1dp" />
+        android:background="@android:color/white"/>
 
 </android.support.v4.widget.DrawerLayout>
