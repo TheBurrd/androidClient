@@ -153,6 +153,8 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                     //add place holder to empty deal
                     if(deals.size() == 0){
                         notifier.notifyEmpty();
+                    }else{
+                        notifier.notifyNotEmpty();
                     }
 
                     if (mQueryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {

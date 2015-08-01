@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.dgaf.happyhour.Adapter.DrawerListAdapter;
 import com.dgaf.happyhour.Adapter.NavItem;
@@ -179,7 +178,6 @@ public class MainActivity extends AppCompatActivity {
 
             // update selected item and title, then close the drawer
             mDrawerList.setItemChecked(position, true);
-            Toast.makeText(this, "SetITemChecked",Toast.LENGTH_SHORT).show();
             mDrawerList.setSelection(position);
             mDrawerLayout.closeDrawers();//adds animation
         }

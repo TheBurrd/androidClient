@@ -5,4 +5,5 @@ package com.dgaf.happyhour.Controller;
  */
 public interface DealListEmptyNotifier {
     void notifyEmpty();
+    void notifyNotEmpty();
 }

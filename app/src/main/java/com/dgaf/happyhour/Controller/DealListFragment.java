@@ -75,4 +75,9 @@ public class DealListFragment extends Fragment implements DealListEmptyNotifier{
     public void notifyEmpty() {
         placeHolderImage.setVisibility(View.VISIBLE);
     }
+
+    @Override
+    public void notifyNotEmpty() {
+        placeHolderImage.setVisibility(View.GONE);
+    }
 }
