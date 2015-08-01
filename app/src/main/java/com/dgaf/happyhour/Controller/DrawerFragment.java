@@ -27,6 +27,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
 
     private View topRated,nearby,aboutUs;
     private ToggleButton monday,tuesday,wednesday,thursday,friday,saturday,sunday,today;
+    private QueryParameters queryParameters;
 
     private OnFragmentInteractionListener mListener;
 
@@ -71,6 +72,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        queryParameters = QueryParameters.getInstance();
     }
 
     @Override
@@ -109,9 +111,9 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
 
         //seekbar stuff
         SeekBar seekBar = (SeekBar) v.findViewById(R.id.seek_bar);
-        //seekBar.setProgress(queryParameters.getRadiusMi() - 1);
+        seekBar.setProgress(queryParameters.getRadiusMi() - 1);
         final TextView seekBarText = (TextView) v.findViewById(R.id.seekbarText);
-        //seekBarText.setText(queryParameters.getRadiusMi() + " mi");
+        seekBarText.setText(queryParameters.getRadiusMi() + " mi");
         seekBarText.setOnTouchListener(navLockListener);
         seekBar.setOnTouchListener(navLockListener);
 
@@ -119,8 +121,8 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                //queryParameters.setRadiusMi(seekBar.getProgress() + 1);
-                //queryParameters.notifyAllListeners();
+                queryParameters.setRadiusMi(seekBar.getProgress() + 1);
+                queryParameters.notifyAllListeners();
             }
 
             @Override
@@ -157,6 +159,14 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
         friday.setChecked(false);
         saturday.setChecked(false);
         sunday.setChecked(false);
+
+        queryParameters.unselectMonday();
+        queryParameters.unselectTuesday();
+        queryParameters.unselectWednesday();
+        queryParameters.unselectThursday();
+        queryParameters.unselectFriday();
+        queryParameters.unselectSaturday();
+        queryParameters.unselectSunday();
     }
 
     @Override
@@ -207,70 +217,89 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
                 case R.id.monday:
                     compoundButton.setBackgroundResource(R.drawable.ic_monday_active);
                     disableTodayToggle();
+                    queryParameters.selectMonday();
                     break;
                 case R.id.tuesday:
                     compoundButton.setBackgroundResource(R.drawable.ic_tuesday_active);
                     disableTodayToggle();
+                    queryParameters.selectTuesday();
                     break;
                 case R.id.wednesday:
                     compoundButton.setBackgroundResource(R.drawable.ic_wednesday_active);
                     disableTodayToggle();
+                    queryParameters.selectWednesday();
                     break;
                 case R.id.thursday:
                     compoundButton.setBackgroundResource(R.drawable.ic_thursday_active);
                     disableTodayToggle();
+                    queryParameters.selectThursday();
                     break;
                 case R.id.friday:
                     compoundButton.setBackgroundResource(R.drawable.ic_friday_active);
                     disableTodayToggle();
+                    queryParameters.selectFriday();
                     break;
                 case R.id.saturday:
                     compoundButton.setBackgroundResource(R.drawable.ic_saturday_active);
                     disableTodayToggle();
+                    queryParameters.selectSaturday();
                     break;
                 case R.id.sunday:
                     compoundButton.setBackgroundResource(R.drawable.ic_sunday_active);
                     disableTodayToggle();
+                    queryParameters.selectSunday();
                     break;
                 case R.id.today:
                     compoundButton.setBackgroundResource(R.drawable.ic_thursday_active);
                     uncheckWeekdayToggle();
+                    queryParameters.selectToday();
                     break;
             }
         }else{
             switch(compoundButton.getId()){
                 case R.id.monday:
                     compoundButton.setBackgroundResource(R.drawable.ic_monday);
+                    queryParameters.unselectMonday();
                     break;
                 case R.id.tuesday:
                     compoundButton.setBackgroundResource(R.drawable.ic_tuesday);
+                    queryParameters.unselectTuesday();
                     break;
                 case R.id.wednesday:
                     compoundButton.setBackgroundResource(R.drawable.ic_wednesday);
+                    queryParameters.unselectWednesday();
                     break;
                 case R.id.thursday:
                     compoundButton.setBackgroundResource(R.drawable.ic_thursday);
+                    queryParameters.unselectThursday();
                     break;
                 case R.id.friday:
                     compoundButton.setBackgroundResource(R.drawable.ic_friday);
+                    queryParameters.unselectFriday();
                     break;
                 case R.id.saturday:
                     compoundButton.setBackgroundResource(R.drawable.ic_saturday);
+                    queryParameters.unselectSaturday();
                     break;
                 case R.id.sunday:
                     compoundButton.setBackgroundResource(R.drawable.ic_sunday);
+                    queryParameters.unselectSunday();
                     break;
                 case R.id.today:
                     compoundButton.setBackgroundResource(R.drawable.ic_thursday);
+                    queryParameters.unselectToday();
                     break;
 
             }
         }
+        queryParameters.notifyAllListeners();
     }
 
-    private void disableTodayToggle(){
+    private void disableTodayToggle() {
         today.setChecked(false);
         today.setBackgroundResource(R.drawable.ic_thursday);
+
+        queryParameters.unselectToday();
     }
 
     /**
