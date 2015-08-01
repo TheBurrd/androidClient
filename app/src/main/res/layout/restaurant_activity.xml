@@ -81,13 +81,13 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="0.2 mi"
             android:id="@+id/distance"
-            android:layout_alignTop="@+id/textView2"
-            android:layout_toStartOf="@+id/imageView4" />
+            android:layout_above="@+id/finePrint"
+            android:layout_alignEnd="@+id/imageView3" />
 
         <ImageView
             android:layout_marginRight="10dp"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:id="@+id/imageView3"
             android:src="@drawable/ic_thumb_down"
             android:layout_alignTop="@+id/finePrint"
@@ -95,8 +95,8 @@
 
         <ImageView
             android:layout_marginRight="5dp"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:id="@+id/imageView4"
             android:src="@drawable/ic_thumb_up"
             android:layout_alignTop="@+id/imageView3"
@@ -108,8 +108,9 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="98%"
             android:id="@+id/rating"
-            android:layout_alignBottom="@+id/imageView4"
-            android:layout_toStartOf="@+id/imageView4" />
+            android:layout_marginRight="6dp"
+            android:layout_alignBottom="@+id/dealItem"
+            android:layout_alignEnd="@+id/distance" />
 
         <TextView
             android:layout_marginTop="15dp"
@@ -143,6 +144,22 @@
             android:layout_below="@+id/imageView5"
             android:layout_alignParentStart="true" />
 
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imageView2"
+            android:src="@drawable/ic_restaurant_website"
+            android:layout_alignTop="@+id/imageView5"
+            android:layout_alignStart="@+id/imageView4" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imageView6"
+            android:src="@drawable/ic_phone_number"
+            android:layout_alignTop="@+id/imageView2"
+            android:layout_alignStart="@+id/rating" />
+
 
     </RelativeLayout>
 
@@ -152,22 +169,29 @@
         android:layout_width="fill_parent"
         android:layout_height="153dp" />-->
 
-    <ImageView
-        android:layout_width="fill_parent"
-        android:background="@drawable/map"
-        android:layout_height="153dp"
-        android:layout_gravity="center"
-        android:id="@+id/imageView6" />
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="180dp" />
 
     <TextView
         android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="More Deals"
         android:id="@+id/moreDeals"
         android:layout_gravity="left"
     />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:background="#000000" />
 
 
 
@@ -227,21 +251,6 @@
                 android:layout_alignTop="@+id/textView9"
                 android:layout_alignParentEnd="true" />
 
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:id="@+id/imageView8"
-                android:src="@drawable/ic_thumb_down"
-                android:layout_below="@+id/textView11"
-                android:layout_alignStart="@+id/textView11" />
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@drawable/ic_thumb_up"
-                android:id="@+id/imageView9"
-                android:layout_alignTop="@+id/imageView8"
-                android:layout_toEndOf="@+id/imageView8" />
         </RelativeLayout>
     </LinearLayout>
 

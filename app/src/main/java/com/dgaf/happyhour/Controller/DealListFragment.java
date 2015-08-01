@@ -8,14 +8,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.dgaf.happyhour.Model.DealListType;
+import android.widget.ImageView;
+
 import com.dgaf.happyhour.Adapter.DealListAdapter;
+import com.dgaf.happyhour.Model.DealListType;
 import com.dgaf.happyhour.R;
 
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
 /*This is the fragment that our page view loads*/
-public class DealListFragment extends Fragment {
+public class DealListFragment extends Fragment implements DealListEmptyNotifier{
 
     private static final String DEAL_LIST_TYPE = "listType";
     private DealListType listType;
@@ -23,6 +25,7 @@ public class DealListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private DealListAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
+    private ImageView placeHolderImage;
 
         //section ID acts like ID for the query search as well
     public static DealListFragment newInstance(DealListType listType) {
@@ -41,6 +44,7 @@ public class DealListFragment extends Fragment {
 
         mSwipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        placeHolderImage = (ImageView) rootView.findViewById(R.id.placeHolder);
 
         return rootView;
     }
@@ -56,13 +60,19 @@ public class DealListFragment extends Fragment {
         Bundle args = this.getArguments();
         listType = DealListType.values()[args.getInt(DEAL_LIST_TYPE)];
 
-        mAdapter = new DealListAdapter(getActivity(), mRecyclerView, mSwipeRefresh, listType);
+        mAdapter = new DealListAdapter(getActivity(), mRecyclerView, mSwipeRefresh, listType,this);
 
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new LandingAnimator());
+
         //mRecyclerView.addItemDecoration(new DealListDecoration(getActivity()));
         //mRecyclerView.setHasFixedSize(true);
 
+    }
+
+    @Override
+    public void notifyEmpty() {
+        placeHolderImage.setVisibility(View.VISIBLE);
     }
 }

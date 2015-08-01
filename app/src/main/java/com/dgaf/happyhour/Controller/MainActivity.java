@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.dgaf.happyhour.Adapter.DrawerListAdapter;
 import com.dgaf.happyhour.Adapter.NavItem;
@@ -71,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-
         }
 
         if(getSupportFragmentManager().findFragmentById(R.id.main_fragment) == null){
@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
         //add a header to our navigation drawer
         mDrawerList.addHeaderView(header);
         mDrawerList.setSelectionAfterHeaderView();
+
 
         mDrawerList.setAdapter(adapter);
 
@@ -133,8 +134,11 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
-        // update selected item and title, then close the drawer
-        selectItem(RATING);
+        selectItem(RATING);// update selected item and title, then close the drawer
+        //adapter.setSelectedPosition(0);
+        //mDrawerList.setItemChecked(RATING, true);
+        //adapter.notifyDataSetChanged();
+
     }
 
     /**Swaps fragments in the main content view.
@@ -175,10 +179,9 @@ public class MainActivity extends AppCompatActivity {
 
             // update selected item and title, then close the drawer
             mDrawerList.setItemChecked(position, true);
+            Toast.makeText(this, "SetITemChecked",Toast.LENGTH_SHORT).show();
             mDrawerList.setSelection(position);
-
             mDrawerLayout.closeDrawers();//adds animation
-
         }
     }
 

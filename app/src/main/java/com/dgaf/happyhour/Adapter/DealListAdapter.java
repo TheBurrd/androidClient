@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dgaf.happyhour.Controller.DealListEmptyNotifier;
 import com.dgaf.happyhour.Controller.LocationService;
 import com.dgaf.happyhour.Controller.Restaurant;
 import com.dgaf.happyhour.Model.AvailabilityModel;
@@ -57,6 +58,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private AvailabilityModel.WeekDay currentDayFilter;
     private static final String DEAL_LIST_CACHE = "dealList";
     private static HashMap queryHashes = new HashMap<>();
+    private DealListEmptyNotifier notifier;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -84,12 +86,13 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
     }
 
-    public DealListAdapter(Context context, RecyclerView recyclerView, SwipeRefreshLayout swipeRefresh, DealListType dealListType) {
+    public DealListAdapter(Context context, RecyclerView recyclerView, SwipeRefreshLayout swipeRefresh, DealListType dealListType, DealListEmptyNotifier notifier) {
         this.context = context;
         this.mRecyclerView = recyclerView;
         this.imageLoader = ImageLoader.getInstance();
         this.swipeRefresh = swipeRefresh;
         this.dealItems = new ArrayList<>();
+        this.notifier = notifier;
 
         swipeRefresh.setOnRefreshListener(this);
         listType = dealListType;
@@ -146,6 +149,11 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
             public void done(List<DealModel> deals, ParseException e) {
                 if (e == null) {
                     Log.v("Parse info", "Deal list query returned " + String.valueOf(deals.size()));
+
+                    //add place holder to empty deal
+                    if(deals.size() == 0){
+                        notifier.notifyEmpty();
+                    }
 
                     if (mQueryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
                         Collections.sort(deals, new Comparator<DealModel>() {

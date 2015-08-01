@@ -97,7 +97,8 @@ public class DrawerListAdapter extends BaseAdapter {
                 text.setText(mNavItems.get(position).mTitle);
                 icon.setImageResource(mNavItems.get(position).mIcon);
 
-                break;
+
+                    break;
 
             // Row containing the days of the week
             case DAYS:
@@ -217,13 +218,8 @@ public class DrawerListAdapter extends BaseAdapter {
         sunday.setImageResource(R.drawable.ic_sunday);
 
         // Unselect all buttons
-        monSelected = false;
-        tueSelected = false;
-        wedSelected = false;
-        thuSelected = false;
-        friSelected = false;
-        satSelected = false;
-        sunSelected = false;
+        monSelected = tueSelected = wedSelected = thuSelected = false;
+        friSelected = satSelected = sunSelected = false;
     }
 
     /* Lock the navigation drawer from closing when the user is
