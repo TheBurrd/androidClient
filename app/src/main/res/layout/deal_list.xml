@@ -22,7 +22,7 @@
             android:visibility="gone"
             android:id="@+id/placeHolder"
             android:layout_gravity="center_vertical|center_horizontal"
-            android:src="@drawable/ic_drinks_placeholder"
+            android:src="@drawable/burrd_error_message"
             />
 
     </FrameLayout>

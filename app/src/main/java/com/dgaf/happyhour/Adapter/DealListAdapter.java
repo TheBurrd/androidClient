@@ -33,7 +33,6 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -66,12 +65,12 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
 
         public ViewHolder(View itemView, DealListType listType) {
             super(itemView);
-            deal = (TextView) itemView.findViewById(R.id.deal);
+            //deal = (TextView) itemView.findViewById(R.id.deal);
             fineprint = (TextView) itemView.findViewById(R.id.finePrint);
             distance = (TextView) itemView.findViewById(R.id.distance);
             rating = (TextView) itemView.findViewById(R.id.rating);
             hours = (TextView) itemView.findViewById(R.id.hours);
-            thumbnail = (ParseImageView) itemView.findViewById(R.id.thumb_nal);
+            //thumbnail = (ParseImageView) itemView.findViewById(R.id.thumb_nal);
             if (listType == DealListType.FOOD) {
                 thumbnail.setPlaceholder(ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_food_placeholder));
             } else {
