@@ -70,7 +70,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
             distance = (TextView) itemView.findViewById(R.id.distance);
             rating = (TextView) itemView.findViewById(R.id.rating);
             hours = (TextView) itemView.findViewById(R.id.hours);
-            //thumbnail = (ParseImageView) itemView.findViewById(R.id.thumb_nal);
+            //thumbnail = (ParseImageView) itemView.findViewById(R.id.icon);
             if (listType == DealListType.FOOD) {
                 thumbnail.setPlaceholder(ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_food_placeholder));
             } else {
