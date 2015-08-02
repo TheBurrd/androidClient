@@ -208,17 +208,18 @@
                     android:layout_toRightOf="@+id/icon" />
 
                 <ToggleButton
-                    android:layout_width="40dp"
+                    android:layout_width="70dp"
                     android:layout_height="40dp"
                     android:layout_marginRight="10dp"
                     android:id="@+id/today"
-                    android:background="@drawable/ic_thursday"
-                    android:layout_alignTop="@+id/icon"
-                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/ic_today"
                     android:textOff=""
                     android:textOn=""
                     android:text=""
-                    android:checked="false" />
+                    android:checked="false"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="17dp" />
 
             </RelativeLayout>
 
