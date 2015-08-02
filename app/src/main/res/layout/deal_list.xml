@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/swipeRefreshLayout"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <!--Frame layout is neccessary because Swipe refresh can only have one child-->
-    <FrameLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
@@ -16,16 +16,40 @@
             android:divider="#d3d3d3"
             android:id="@+id/recyclerView" />
 
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/error"
+        android:layout_gravity="center_vertical|center_horizontal">
+
         <ImageView
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:visibility="gone"
             android:id="@+id/placeHolder"
+<<<<<<< HEAD
             android:layout_gravity="center_vertical|center_horizontal"
             android:src="@drawable/burrd_error_message"
             />
+=======
+>>>>>>> 9ef4059e1c74bd29396012c3aac543827128b403
 
-    </FrameLayout>
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/burrd_error_message" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/error_message"
+            android:layout_below="@id/placeHolder"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="20dp"
+            android:textSize="20sp"
+            android:text="@string/error_message"/>
+
+    </RelativeLayout>
 
 
-</android.support.v4.widget.SwipeRefreshLayout>
+
+</FrameLayout>

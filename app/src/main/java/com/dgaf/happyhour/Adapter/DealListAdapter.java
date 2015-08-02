@@ -3,20 +3,20 @@ package com.dgaf.happyhour.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dgaf.happyhour.Controller.DealListEmptyNotifier;
 import com.dgaf.happyhour.Controller.LocationService;
 import com.dgaf.happyhour.Controller.Restaurant;
-import com.dgaf.happyhour.Model.AvailabilityModel;
+import com.dgaf.happyhour.Model.DealIcon;
 import com.dgaf.happyhour.Model.DealListType;
 import com.dgaf.happyhour.Model.DealModel;
 import com.dgaf.happyhour.Model.QueryParameters;
@@ -26,7 +26,6 @@ import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseImageView;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
@@ -49,32 +48,40 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private LocationService userLocation;
     private SwipeRefreshLayout swipeRefresh;
     private QueryParameters mQueryParams;
-    private AvailabilityModel.WeekDay currentDayFilter;
     private static final String DEAL_LIST_CACHE = "dealList";
     private DealListEmptyNotifier notifier;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView deal;
-        public TextView fineprint;
+        public TextView dealTitle;
+        public TextView restaurantName;
         public TextView distance;
         public TextView rating;
-        public TextView hours;
-        public ParseImageView thumbnail;
+        public TextView availability;
+        public ImageView icon;
         public String restaurantId;
 
         public ViewHolder(View itemView, DealListType listType) {
             super(itemView);
+<<<<<<< HEAD
             //deal = (TextView) itemView.findViewById(R.id.deal);
             fineprint = (TextView) itemView.findViewById(R.id.finePrint);
             distance = (TextView) itemView.findViewById(R.id.distance);
             rating = (TextView) itemView.findViewById(R.id.rating);
             hours = (TextView) itemView.findViewById(R.id.hours);
             //thumbnail = (ParseImageView) itemView.findViewById(R.id.icon);
+=======
+            dealTitle = (TextView) itemView.findViewById(R.id.deal_title);
+            restaurantName = (TextView) itemView.findViewById(R.id.restaurant_name);
+            distance = (TextView) itemView.findViewById(R.id.deal_distance);
+            rating = (TextView) itemView.findViewById(R.id.deal_rating);
+            availability = (TextView) itemView.findViewById(R.id.deal_availability);
+            icon = (ImageView) itemView.findViewById(R.id.deal_icon);
+>>>>>>> 9ef4059e1c74bd29396012c3aac543827128b403
             if (listType == DealListType.FOOD) {
-                thumbnail.setPlaceholder(ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_food_placeholder));
+                icon.setImageResource(R.drawable.ic_food_placeholder);
             } else {
-                thumbnail.setPlaceholder(ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_drinks_placeholder));
+                icon.setImageResource(R.drawable.ic_drinks_placeholder);
             }
         }
     }
@@ -221,6 +228,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     }
 
     public ParseQuery<DealModel> applyDayOfWeekForQuery(ParseQuery<DealModel> query, ParseQuery<DealModel> orQuery) {
+        //TODO implement query based on new availability model
         return query;
     }
 
@@ -270,20 +278,52 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         DealModel dealModel = dealItems.get(position);
 
-        holder.deal.setText(this.getDealTitle(dealModel));
-        int rating = dealModel.getRating();
-        if (rating != 0) {
-            holder.rating.setText(String.valueOf(dealModel.getRating()) + "%");
-        }
-        holder.fineprint.setText(dealModel.getDescription());
+        holder.dealTitle.setText(this.getDealTitle(dealModel));
+        holder.rating.setText(String.valueOf(dealModel.getRating()) + "%");
+        holder.restaurantName.setText(dealModel.getRestaurant());
+        // Comment this out till all deals in database have new availability model
+        // AvailabilityModel availability = new AvailabilityModel(dealModel);
+        // holder.availability.setText(availability.getDayAvailability(DayOfWeekMask.TODAY, true));
+        holder.availability.setText("Mon: 10a - 8p");
         holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(parseLocation)) + " mi");
 
+        DealIcon.setImageToDealCategory(holder.icon, dealModel);
 
         holder.restaurantId = dealModel.getRestaurantId();
     }
 
     public String getDealTitle(DealModel deal) {
-        //TODO make nice title
-        return String.valueOf(deal.getAmountOff()) + " " + deal.getItem();
+        String value;
+        double amountOff = deal.getAmountOff();
+        double percentOff = deal.getPercentOff();
+        double reducedPrice = deal.getReducedPrice();
+        if (amountOff != 0) {
+            if (amountOff == (long) amountOff) {
+                value = String.format("%d", (long) amountOff);
+            } else {
+                value = String.format("%.2f", amountOff);
+            }
+            value = "$" + value + " off";
+        } else if (percentOff != 0) {
+            value = String.format("%d", (long)percentOff) + "% off";
+        } else {
+            if (reducedPrice == (long) reducedPrice) {
+                value = String.format("%d", (long) reducedPrice);
+            } else {
+                value = String.format("%.2f", reducedPrice);
+            }
+            value = "$" + value;
+        }
+
+        String content = "";
+        String item = deal.getItem();
+        String category = deal.getCategory();
+        if (item != null && item.length() > 0) {
+            content = item;
+        } else if (category != null &&  category.length() > 0) {
+            content = category;
+        }
+
+        return value + " " + content;
     }
 }

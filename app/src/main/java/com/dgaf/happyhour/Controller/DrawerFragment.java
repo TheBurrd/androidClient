@@ -12,6 +12,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.dgaf.happyhour.Model.DayOfWeekMask;
 import com.dgaf.happyhour.Model.QueryParameters;
 import com.dgaf.happyhour.R;
 
@@ -137,7 +138,37 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
             }
         });
 
-        topRated.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        if (queryParameters.getQueryType() == QueryParameters.QueryType.RATING) {
+            topRated.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        } else if (queryParameters.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
+            nearby.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        }
+
+        DayOfWeekMask dayOfWeek = queryParameters.getDayOfWeekMask();
+        if (dayOfWeek.isMondaySelected()) {
+            monday.setBackgroundResource(R.drawable.ic_monday_active);
+        }
+        if (dayOfWeek.isTuesdaySelected()) {
+            tuesday.setBackgroundResource(R.drawable.ic_tuesday_active);
+        }
+        if (dayOfWeek.isWednesdaySelected()) {
+            wednesday.setBackgroundResource(R.drawable.ic_wednesday_active);
+        }
+        if (dayOfWeek.isThursdaySelected()) {
+            thursday.setBackgroundResource(R.drawable.ic_thursday_active);
+        }
+        if (dayOfWeek.isFridaySelected()) {
+            friday.setBackgroundResource(R.drawable.ic_friday_active);
+        }
+        if (dayOfWeek.isSaturdaySelected()) {
+            saturday.setBackgroundResource(R.drawable.ic_saturday_active);
+        }
+        if (dayOfWeek.isSundaySelected()) {
+            sunday.setBackgroundResource(R.drawable.ic_sunday_active);
+        }
+        if (dayOfWeek.isTodaySelected()) {
+            today.setBackgroundResource(R.drawable.ic_today_active);
+        }
 
         // Inflate the layout for this fragment
         return v;
@@ -160,13 +191,13 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
         saturday.setChecked(false);
         sunday.setChecked(false);
 
-        queryParameters.unselectMonday();
-        queryParameters.unselectTuesday();
-        queryParameters.unselectWednesday();
-        queryParameters.unselectThursday();
-        queryParameters.unselectFriday();
-        queryParameters.unselectSaturday();
-        queryParameters.unselectSunday();
+        queryParameters.getDayOfWeekMask().unselectMonday();
+        queryParameters.getDayOfWeekMask().unselectTuesday();
+        queryParameters.getDayOfWeekMask().unselectWednesday();
+        queryParameters.getDayOfWeekMask().unselectThursday();
+        queryParameters.getDayOfWeekMask().unselectFriday();
+        queryParameters.getDayOfWeekMask().unselectSaturday();
+        queryParameters.getDayOfWeekMask().unselectSunday();
     }
 
     @Override
@@ -217,77 +248,77 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
                 case R.id.monday:
                     compoundButton.setBackgroundResource(R.drawable.ic_monday_active);
                     disableTodayToggle();
-                    queryParameters.selectMonday();
+                    queryParameters.getDayOfWeekMask().selectMonday();
                     break;
                 case R.id.tuesday:
                     compoundButton.setBackgroundResource(R.drawable.ic_tuesday_active);
                     disableTodayToggle();
-                    queryParameters.selectTuesday();
+                    queryParameters.getDayOfWeekMask().selectTuesday();
                     break;
                 case R.id.wednesday:
                     compoundButton.setBackgroundResource(R.drawable.ic_wednesday_active);
                     disableTodayToggle();
-                    queryParameters.selectWednesday();
+                    queryParameters.getDayOfWeekMask().selectWednesday();
                     break;
                 case R.id.thursday:
                     compoundButton.setBackgroundResource(R.drawable.ic_thursday_active);
                     disableTodayToggle();
-                    queryParameters.selectThursday();
+                    queryParameters.getDayOfWeekMask().selectThursday();
                     break;
                 case R.id.friday:
                     compoundButton.setBackgroundResource(R.drawable.ic_friday_active);
                     disableTodayToggle();
-                    queryParameters.selectFriday();
+                    queryParameters.getDayOfWeekMask().selectFriday();
                     break;
                 case R.id.saturday:
                     compoundButton.setBackgroundResource(R.drawable.ic_saturday_active);
                     disableTodayToggle();
-                    queryParameters.selectSaturday();
+                    queryParameters.getDayOfWeekMask().selectSaturday();
                     break;
                 case R.id.sunday:
                     compoundButton.setBackgroundResource(R.drawable.ic_sunday_active);
                     disableTodayToggle();
-                    queryParameters.selectSunday();
+                    queryParameters.getDayOfWeekMask().selectSunday();
                     break;
                 case R.id.today:
                     compoundButton.setBackgroundResource(R.drawable.ic_today_active);
                     uncheckWeekdayToggle();
-                    queryParameters.selectToday();
+                    queryParameters.getDayOfWeekMask().selectToday();
                     break;
             }
         }else{
             switch(compoundButton.getId()){
                 case R.id.monday:
                     compoundButton.setBackgroundResource(R.drawable.ic_monday);
-                    queryParameters.unselectMonday();
+                    queryParameters.getDayOfWeekMask().unselectMonday();
                     break;
                 case R.id.tuesday:
                     compoundButton.setBackgroundResource(R.drawable.ic_tuesday);
-                    queryParameters.unselectTuesday();
+                    queryParameters.getDayOfWeekMask().unselectTuesday();
                     break;
                 case R.id.wednesday:
                     compoundButton.setBackgroundResource(R.drawable.ic_wednesday);
-                    queryParameters.unselectWednesday();
+                    queryParameters.getDayOfWeekMask().unselectWednesday();
                     break;
                 case R.id.thursday:
                     compoundButton.setBackgroundResource(R.drawable.ic_thursday);
-                    queryParameters.unselectThursday();
+                    queryParameters.getDayOfWeekMask().unselectThursday();
                     break;
                 case R.id.friday:
                     compoundButton.setBackgroundResource(R.drawable.ic_friday);
-                    queryParameters.unselectFriday();
+                    queryParameters.getDayOfWeekMask().unselectFriday();
                     break;
                 case R.id.saturday:
                     compoundButton.setBackgroundResource(R.drawable.ic_saturday);
-                    queryParameters.unselectSaturday();
+                    queryParameters.getDayOfWeekMask().unselectSaturday();
                     break;
                 case R.id.sunday:
                     compoundButton.setBackgroundResource(R.drawable.ic_sunday);
-                    queryParameters.unselectSunday();
+                    queryParameters.getDayOfWeekMask().unselectSunday();
                     break;
                 case R.id.today:
                     compoundButton.setBackgroundResource(R.drawable.ic_today);
-                    queryParameters.unselectToday();
+                    queryParameters.getDayOfWeekMask().unselectToday();
                     break;
 
             }
@@ -298,7 +329,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
     private void disableTodayToggle() {
         today.setChecked(false);
         today.setBackgroundResource(R.drawable.ic_today);
-        queryParameters.unselectToday();
+        queryParameters.getDayOfWeekMask().unselectToday();
 
     }
 
