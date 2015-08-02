@@ -13,11 +13,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.dgaf.happyhour.Model.QueryParameters;
 import com.dgaf.happyhour.R;
 
 
-public class MainActivity extends AppCompatActivity implements DrawerFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements DrawerFragment.OnFragmentInteractionListener, QueryParameters.Listener{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
     private DrawerLayout mDrawerLayout;
     private Toolbar toolbar;
     private ViewPagerFragment viewPager;
+    private Toast toastFeedBack;
 
     @Override
     public boolean onSupportNavigateUp(){
@@ -58,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
         }
 
 
-        //TODO possible performance issue
+        //Load the viewpager. It will inflate the viewpager fragment into the main_fragment in main
         if(getSupportFragmentManager().findFragmentById(R.id.main_fragment) == null){
             getSupportFragmentManager().beginTransaction().add(R.id.main_fragment, new ViewPagerFragment()).commit();
         }
@@ -81,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
 
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
+                ((DrawerFragment)getSupportFragmentManager().findFragmentById(R.id.drawerItems)).giveFeedBack();
             }
 
             public void onDrawerOpened(View drawerView) {
@@ -123,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
 
     @Override
     public void onFragmentInteraction(Fragment fragment,String identifier) {
-        launchFragment(fragment,identifier);
+        launchFragment(fragment, identifier);
         mDrawerLayout.closeDrawers();//adds animation
     }
 
@@ -148,5 +152,13 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
         }
     }
 
+    @Override
+    public void onUpdate() {
+        updateToastFeedBack();
+    }
+
+    private void updateToastFeedBack(){
+
+    }
 }
 

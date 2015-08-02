@@ -63,7 +63,6 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
 
         public ViewHolder(View itemView, DealListType listType) {
             super(itemView);
-
             dealTitle = (TextView) itemView.findViewById(R.id.deal_title);
             restaurantName = (TextView) itemView.findViewById(R.id.restaurant_name);
             distance = (TextView) itemView.findViewById(R.id.deal_distance);

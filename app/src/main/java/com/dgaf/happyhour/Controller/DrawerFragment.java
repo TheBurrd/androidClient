@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.dgaf.happyhour.Model.DayOfWeekMask;
@@ -360,6 +361,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
         mListener.loadViewPager();
     }
 
+
     //this will unselect normal items. this doesn't include days of the week.
     private void unSelectOtherNormalNavItems(){
         topRated.setBackground(null);
@@ -379,4 +381,28 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
         queryParams.setQueryType(QueryParameters.QueryType.PROXIMITY);
     }
 
+    //this will be called when the drawer is closed to give the user feedback
+    //of what sorting they have applied
+    public void giveFeedBack(){
+
+        //we dont want feedback for about us
+        if(aboutUs.getBackground() != null)
+            return;
+
+        QueryParameters queryParams = QueryParameters.getInstance();
+
+        String sortType = "Sorting by "+queryParams.getQueryType().name()+" for ";
+
+        DayOfWeekMask days = queryParams.getDayOfWeekMask();
+        String sortDays = (days.isTodaySelected()?"Today":"")+
+                (days.isMondaySelected()?"Mo ":"")+
+                (days.isTuesdaySelected()?"Tu ":"")+
+                (days.isWednesdaySelected()?"We ":"")+
+                (days.isThursdaySelected()?"Th ":"")+
+                (days.isFridaySelected()?"Fr ":"")+
+                (days.isSaturdaySelected()?"Sa ":"")+
+                (days.isSundaySelected()?"Su ":"");
+
+        Toast.makeText(getActivity(),sortType + sortDays,Toast.LENGTH_SHORT).show();
+    }
 }
