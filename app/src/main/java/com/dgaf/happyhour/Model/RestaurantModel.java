@@ -61,4 +61,16 @@ public class RestaurantModel extends ParseObject {
         }
         return location.distanceInMilesTo(restaurant);
     }
+
+    public String getRecurrence1() { return getString("recurrence1");}
+
+    public long getOpenTime1() { return getLong("openTime1");}
+
+    public long getCloseTime1() { return getLong("closeTime1"); }
+
+    public String getRecurrence2() { return getString("recurrence2");}
+
+    public long getOpenTime2() { return getLong("openTime2");}
+
+    public long getCloseTime2() { return getLong("closeTime2");}
 }
