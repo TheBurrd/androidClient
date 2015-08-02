@@ -30,7 +30,6 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
-                android:background="#000000"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="0.22"
@@ -91,23 +90,29 @@
                     android:layout_above="@+id/finePrint"
                     android:layout_alignEnd="@+id/downVote" />
 
-                <ImageView
+                <ToggleButton
                     android:layout_marginRight="10dp"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:textOn=""
+                    android:textOff=""
                     android:id="@+id/downVote"
-                    android:src="@drawable/ic_thumb_down"
+                    android:background="@drawable/ic_thumb_down"
                     android:layout_alignTop="@+id/finePrint"
-                    android:layout_alignParentEnd="true" />
+                    android:layout_alignParentEnd="true"
+                    android:checked="false" />
 
-                <ImageView
+                <ToggleButton
                     android:layout_marginRight="5dp"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:textOn=""
+                    android:textOff=""
                     android:id="@+id/upVote"
-                    android:src="@drawable/ic_thumb_up"
+                    android:background="@drawable/ic_thumb_up"
                     android:layout_alignTop="@+id/downVote"
-                    android:layout_toStartOf="@+id/downVote" />
+                    android:layout_toStartOf="@+id/downVote"
+                    android:checked="false" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -170,12 +175,6 @@
 
             </RelativeLayout>
 
-            <!--<fragment
-                android:id="@+id/map"
-                android:name="com.google.android.gms.maps.MapFragment"
-                android:layout_width="fill_parent"
-                android:layout_height="153dp" />-->
-
             <fragment
                 android:id="@+id/map"
                 android:name="com.google.android.gms.maps.MapFragment"
@@ -200,12 +199,6 @@
                 android:layout_marginLeft="15dp"
                 android:background="#000000" />
 
-
-
-            <!--<ListView
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/listView" />-->
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:orientation="vertical" android:layout_width="match_parent"

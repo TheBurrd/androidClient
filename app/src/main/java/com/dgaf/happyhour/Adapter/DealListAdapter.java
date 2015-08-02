@@ -63,21 +63,13 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
 
         public ViewHolder(View itemView, DealListType listType) {
             super(itemView);
-<<<<<<< HEAD
-            //deal = (TextView) itemView.findViewById(R.id.deal);
-            fineprint = (TextView) itemView.findViewById(R.id.finePrint);
-            distance = (TextView) itemView.findViewById(R.id.distance);
-            rating = (TextView) itemView.findViewById(R.id.rating);
-            hours = (TextView) itemView.findViewById(R.id.hours);
-            //thumbnail = (ParseImageView) itemView.findViewById(R.id.icon);
-=======
+
             dealTitle = (TextView) itemView.findViewById(R.id.deal_title);
             restaurantName = (TextView) itemView.findViewById(R.id.restaurant_name);
             distance = (TextView) itemView.findViewById(R.id.deal_distance);
             rating = (TextView) itemView.findViewById(R.id.deal_rating);
             availability = (TextView) itemView.findViewById(R.id.deal_availability);
             icon = (ImageView) itemView.findViewById(R.id.deal_icon);
->>>>>>> 9ef4059e1c74bd29396012c3aac543827128b403
             if (listType == DealListType.FOOD) {
                 icon.setImageResource(R.drawable.ic_food_placeholder);
             } else {

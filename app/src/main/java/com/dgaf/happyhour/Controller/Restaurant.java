@@ -45,7 +45,7 @@ public class Restaurant extends AppCompatActivity {
         ImageView phoneNumber = (ImageView) findViewById(R.id.phone);
         ImageView website = (ImageView) findViewById(R.id.website);
         final ToggleButton thumbsUp = (ToggleButton) findViewById(R.id.upVote);
-        final ToggleButton thumbsDown = (ToggleButton) findViewById(R.id.down);
+        final ToggleButton thumbsDown = (ToggleButton) findViewById(R.id.downVote);
 
         //load a phone number
         phoneNumber.setOnClickListener(new View.OnClickListener() {

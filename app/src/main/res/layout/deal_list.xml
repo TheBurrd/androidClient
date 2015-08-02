@@ -29,13 +29,7 @@
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:id="@+id/placeHolder"
-<<<<<<< HEAD
             android:layout_gravity="center_vertical|center_horizontal"
-            android:src="@drawable/burrd_error_message"
-            />
-=======
->>>>>>> 9ef4059e1c74bd29396012c3aac543827128b403
-
             android:layout_centerHorizontal="true"
             android:src="@drawable/burrd_error_message" />
         <TextView
