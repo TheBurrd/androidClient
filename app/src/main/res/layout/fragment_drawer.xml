@@ -138,7 +138,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="5 mi"
-                    android:id="@+id/exploreText"
+                    android:id="@+id/seekbarText"
                     android:layout_marginRight="15dp"
                     android:layout_alignBaseline="@+id/dontcare1"
                     android:layout_alignBottom="@+id/dontcare1"
@@ -207,6 +207,19 @@
                     android:text="Day of the Week"
                     android:layout_toRightOf="@+id/icon" />
 
+                <ToggleButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/today"
+                    android:background="@drawable/ic_thursday"
+                    android:layout_alignTop="@+id/icon"
+                    android:layout_alignParentEnd="true"
+                    android:textOff=""
+                    android:textOn=""
+                    android:text=""
+                    android:checked="false" />
+
             </RelativeLayout>
 
             <LinearLayout
@@ -216,71 +229,92 @@
                 android:paddingBottom="10dp"
                 android:gravity="center">
 
-                <ImageView
+                <ToggleButton
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:id="@+id/sunday"
-                    android:src="@drawable/ic_sunday"
-                    android:text = "Su"
+                    android:background="@drawable/ic_sunday"
+                    android:textOff=""
+                    android:textOn=""
+                    android:text=""
+                    android:checked="false"
                     android:tag="sunday"
                     android:cropToPadding="false" />
 
-                <ImageView
+                <ToggleButton
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:text = "M"
+                    android:textOff=""
+                    android:textOn=""
+                    android:text=""
                     android:tag="monday"
+                    android:checked="false"
                     android:id="@+id/monday"
-                    android:src="@drawable/ic_monday"
+                    android:background="@drawable/ic_monday"
                     android:cropToPadding="false"
                     />
 
-                <ImageView
+                <ToggleButton
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:text = "T"
+                    android:textOff=""
+                    android:textOn=""
+                    android:text=""
                     android:tag="tuesday"
+                    android:checked="false"
                     android:id="@+id/tuesday"
-                    android:src="@drawable/ic_tuesday"
+                    android:background="@drawable/ic_tuesday"
                     />
 
-                <ImageView
+                <ToggleButton
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:id="@+id/wednesday"
                     android:tag="wednesday"
-                    android:text = "W"
-                    android:src="@drawable/ic_wednesday"
+                    android:textOff=""
+                    android:textOn=""
+                    android:checked="false"
+                    android:text=""
+                    android:background="@drawable/ic_wednesday"
                     />
 
 
 
-                <ImageView
+                <ToggleButton
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:id="@+id/thursday"
-                    android:text = "Th"
+                    android:textOff=""
+                    android:checked="false"
+                    android:textOn=""
+                    android:text=""
                     android:tag="thursday"
-                    android:src="@drawable/ic_thursday"
+                    android:background="@drawable/ic_thursday"
                     />
 
-                <ImageView
+                <ToggleButton
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:text = "F"
+                    android:textOff=""
+                    android:textOn=""
+                    android:text=""
                     android:tag="friday"
+                    android:checked="false"
                     android:id="@+id/friday"
-                    android:src="@drawable/ic_friday"
+                    android:background="@drawable/ic_friday"
                     />
 
 
-                <ImageView
+                <ToggleButton
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:text = "saturday"
+                    android:textOff=""
+                    android:textOn=""
+                    android:text=""
                     android:id="@+id/saturday"
+                    android:checked="false"
                     android:tag="saturday"
-                    android:src="@drawable/ic_saturday"
+                    android:background="@drawable/ic_saturday"
                     />
 
             </LinearLayout>

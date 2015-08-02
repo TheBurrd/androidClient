@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private Toolbar toolbar;
+    private ViewPagerFragment viewPager;
 
 
     @Override
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
             }
         };
 
+        viewPager = ViewPagerFragment.newInstance();
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
     }
@@ -134,6 +136,12 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
         mDrawerLayout.closeDrawers();//adds animation
     }
 
+    @Override
+    public void loadViewPager(String identifier) {
+        launchFragment(viewPager,identifier);
+        mDrawerLayout.closeDrawers();//adds animation
+    }
+
     public void launchFragment(Fragment fragment,String identifier){
         if (fragment != null) {
 
@@ -145,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
 
             fragmentManager.beginTransaction()
                     .replace(R.id.main_fragment, fragment).addToBackStack(identifier).commit();
+
         }
     }
 
