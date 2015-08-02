@@ -250,7 +250,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
                     queryParameters.selectSunday();
                     break;
                 case R.id.today:
-                    compoundButton.setBackgroundResource(R.drawable.ic_thursday_active);
+                    compoundButton.setBackgroundResource(R.drawable.ic_today_active);
                     uncheckWeekdayToggle();
                     queryParameters.selectToday();
                     break;
@@ -286,7 +286,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
                     queryParameters.unselectSunday();
                     break;
                 case R.id.today:
-                    compoundButton.setBackgroundResource(R.drawable.ic_thursday);
+                    compoundButton.setBackgroundResource(R.drawable.ic_today);
                     queryParameters.unselectToday();
                     break;
 
@@ -297,9 +297,9 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
 
     private void disableTodayToggle() {
         today.setChecked(false);
-        today.setBackgroundResource(R.drawable.ic_thursday);
-
+        today.setBackgroundResource(R.drawable.ic_today);
         queryParameters.unselectToday();
+
     }
 
     /**
