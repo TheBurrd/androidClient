@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.dgaf.happyhour.Controller.DealListEmptyNotifier;
 import com.dgaf.happyhour.Controller.LocationService;
 import com.dgaf.happyhour.Controller.Restaurant;
-import com.dgaf.happyhour.Model.DealIcon;
+import com.dgaf.happyhour.Model.DealIconTest;
 import com.dgaf.happyhour.Model.DealListType;
 import com.dgaf.happyhour.Model.DealModel;
 import com.dgaf.happyhour.Model.QueryParameters;
@@ -278,7 +278,9 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         holder.availability.setText("Mon: 10a - 8p");
         holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(parseLocation)) + " mi");
 
-        DealIcon.setImageToDealCategory(holder.icon, dealModel);
+
+        //DealIcon.setImageToDealCategory(holder.icon, dealModel);
+        DealIconTest.setImageToDealCategory(holder.icon, dealModel);
 
         holder.restaurantId = dealModel.getRestaurantId();
     }
