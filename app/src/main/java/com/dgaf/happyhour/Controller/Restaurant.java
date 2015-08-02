@@ -39,15 +39,15 @@ public class Restaurant extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         View rootView = findViewById(android.R.id.content);//gets root view
-        String restaurantArg = getIntent().getExtras().getString(RESTAURANT_ID);
-        String aboutArg = getIntent().getExtras().getString(DEAL_ID);
+        //String restaurantArg = getIntent().getExtras().getString(RESTAURANT_ID);
+        //String aboutArg = getIntent().getExtras().getString(DEAL_ID);
 
-        if (mAdapter == null) {
+        /*if (mAdapter == null) {
             mAdapter = new RestaurantAdapter(this, rootView, restaurantArg, aboutArg);
         } else {
             mAdapter.loadRestaurantDetails(restaurantArg, aboutArg);
             mAdapter.createViewHolders(rootView);
-        }
+        }*/
 
         ImageView phoneNumber = (ImageView) findViewById(R.id.phone);
         ImageView website = (ImageView) findViewById(R.id.website);
@@ -58,8 +58,8 @@ public class Restaurant extends AppCompatActivity {
         phoneNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:09498736666t"));
+                Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                callIntent.setData(Uri.parse("tel:9498736666"));
                 startActivity(callIntent);
             }
         });
@@ -80,6 +80,8 @@ public class Restaurant extends AppCompatActivity {
                 if (enabled) {
                     thumbsUp.setChecked(false);
                     thumbsDown.setBackgroundResource(R.drawable.ic_thumb_down_selected);
+                }else{
+                    thumbsDown.setBackgroundResource(R.drawable.ic_thumb_down);
                 }
             }
         });
@@ -91,6 +93,8 @@ public class Restaurant extends AppCompatActivity {
                 if(enabled){
                     thumbsDown.setChecked(false);
                     thumbsUp.setBackgroundResource(R.drawable.ic_thumb_up_selected);
+                }else{
+                    thumbsUp.setBackgroundResource(R.drawable.ic_thumb_up);
                 }
             }
         });

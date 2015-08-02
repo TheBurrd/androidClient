@@ -17,12 +17,12 @@
             android:id="@+id/recyclerView" />
 
         <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:visibility="gone"
             android:id="@+id/placeHolder"
             android:layout_gravity="center_vertical|center_horizontal"
-            android:src="@drawable/ic_drinks_placeholder"
+            android:src="@drawable/burrd_error_message"
             />
 
     </FrameLayout>
