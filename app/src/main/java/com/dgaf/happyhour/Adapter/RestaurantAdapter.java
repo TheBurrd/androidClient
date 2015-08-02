@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -73,7 +72,9 @@ public class RestaurantAdapter {
             this.parentAdapter = parentAdapter;
             dealTitle = (TextView) rootView.findViewById(R.id.deal_title);
             dealDescription = (TextView) rootView.findViewById(R.id.deal_description);
-            dealAvailability = (TextView) rootView.findViewById(R.id.current_deal_avail);
+
+            //commented this out because this is linked to Anjalis restaurant
+            /*dealAvailability = (TextView) rootView.findViewById(R.id.current_deal_avail);
             dealRating = (TextView) rootView.findViewById(R.id.deal_rating);
             upVote = (ImageButton) rootView.findViewById(R.id.upVote);
             downVote = (ImageButton) rootView.findViewById(R.id.downVote);
@@ -89,7 +90,7 @@ public class RestaurantAdapter {
             dealList.setAdapter(listAdapter);
             thumbnail = (ParseImageView) rootView.findViewById(R.id.picture);
             thumbnail.setPlaceholder(ContextCompat.getDrawable(rootView.getContext(), R.drawable.ic_food_placeholder));
-
+*/
             map = ((MapFragment) activity.getFragmentManager().findFragmentById(R.id.map))
                     .getMap();
 
