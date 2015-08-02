@@ -6,14 +6,12 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        >
+        android:layout_gravity="center_horizontal">
 
         <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:paddingLeft="16dp"
-            android:paddingTop="16dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:padding="16dp"
             android:id="@+id/deal_icon"
             android:src="@drawable/ic_drinks_placeholder"
             android:layout_alignParentStart="true" />
@@ -26,10 +24,9 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:paddingTop="16dp"
-            android:layout_marginStart="22dp"
             android:id="@+id/deal_title"
             android:layout_toEndOf="@+id/deal_icon"
-            android:layout_alignParentTop="true" />
+            android:layout_alignTop="@id/deal_icon" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -38,7 +35,6 @@
             android:text="Trent&apos;s House of Bacon"
             android:id="@+id/restaurant_name"
             android:textSize="14sp"
-            android:layout_marginStart="22dp"
             android:layout_below="@+id/deal_title"
             android:layout_toEndOf="@+id/deal_icon" />
 
@@ -50,7 +46,7 @@
             android:id="@+id/deal_rating"
             android:paddingRight="16dp"
             android:textSize="14sp"
-            android:layout_above="@+id/restaurant_name"
+            android:layout_alignBaseline="@id/restaurant_name"
             android:layout_alignParentEnd="true" />
 
         <TextView
@@ -60,9 +56,10 @@
             android:text="2.3 mi"
             android:textSize="14sp"
             android:paddingRight="16dp"
+            android:paddingBottom="20dp"
             android:id="@+id/deal_distance"
-            android:layout_below="@+id/restaurant_name"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignBottom="@+id/deal_icon"
+            android:layout_alignParentEnd="true"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -72,8 +69,8 @@
             android:textSize="14sp"
             android:paddingBottom="20dp"
             android:id="@+id/deal_availability"
-            android:layout_below="@+id/restaurant_name"
-            android:layout_alignStart="@+id/restaurant_name" />
+            android:layout_toEndOf="@+id/deal_icon"
+            android:layout_alignBottom="@+id/deal_icon" />
 
 
     </RelativeLayout>

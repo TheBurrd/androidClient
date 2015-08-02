@@ -12,6 +12,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.dgaf.happyhour.Model.DayOfWeekMask;
 import com.dgaf.happyhour.Model.QueryParameters;
 import com.dgaf.happyhour.R;
 
@@ -137,7 +138,37 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
             }
         });
 
-        topRated.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        if (queryParameters.getQueryType() == QueryParameters.QueryType.RATING) {
+            topRated.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        } else if (queryParameters.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
+            nearby.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        }
+
+        DayOfWeekMask dayOfWeek = queryParameters.getDayOfWeekMask();
+        if (dayOfWeek.isMondaySelected()) {
+            monday.setBackgroundResource(R.drawable.ic_monday_active);
+        }
+        if (dayOfWeek.isTuesdaySelected()) {
+            tuesday.setBackgroundResource(R.drawable.ic_tuesday_active);
+        }
+        if (dayOfWeek.isWednesdaySelected()) {
+            wednesday.setBackgroundResource(R.drawable.ic_wednesday_active);
+        }
+        if (dayOfWeek.isThursdaySelected()) {
+            thursday.setBackgroundResource(R.drawable.ic_thursday_active);
+        }
+        if (dayOfWeek.isFridaySelected()) {
+            friday.setBackgroundResource(R.drawable.ic_friday_active);
+        }
+        if (dayOfWeek.isSaturdaySelected()) {
+            saturday.setBackgroundResource(R.drawable.ic_saturday_active);
+        }
+        if (dayOfWeek.isSundaySelected()) {
+            sunday.setBackgroundResource(R.drawable.ic_sunday_active);
+        }
+        if (dayOfWeek.isTodaySelected()) {
+            today.setBackgroundResource(R.drawable.ic_today_active);
+        }
 
         // Inflate the layout for this fragment
         return v;

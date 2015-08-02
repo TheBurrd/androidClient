@@ -8,7 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.dgaf.happyhour.Adapter.DealListAdapter;
 import com.dgaf.happyhour.Model.DealListType;
@@ -26,7 +29,7 @@ public class DealListFragment extends Fragment implements DealListEmptyNotifier{
     private RecyclerView mRecyclerView;
     private DealListAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
-    private ImageView placeHolderImage;
+    private RelativeLayout errorLayout;
 
         //section ID acts like ID for the query search as well
     public static DealListFragment newInstance(DealListType listType) {
@@ -46,7 +49,7 @@ public class DealListFragment extends Fragment implements DealListEmptyNotifier{
         mSwipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefresh.setColorSchemeResources(R.color.colorWine, R.color.colorPrimaryDark, R.color.colorPrimary);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-        placeHolderImage = (ImageView) rootView.findViewById(R.id.placeHolder);
+        errorLayout = (RelativeLayout) rootView.findViewById(R.id.error);
 
         return rootView;
     }
@@ -74,11 +77,11 @@ public class DealListFragment extends Fragment implements DealListEmptyNotifier{
 
     @Override
     public void notifyEmpty() {
-        placeHolderImage.setVisibility(View.VISIBLE);
+        errorLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void notifyNotEmpty() {
-        placeHolderImage.setVisibility(View.GONE);
+        errorLayout.setVisibility(View.GONE);
     }
 }
