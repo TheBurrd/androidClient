@@ -56,7 +56,7 @@
                     android:layout_marginTop="15dp"
                     android:layout_marginLeft="15dp"
                     android:text="$3 Fish Tacos"
-                    android:id="@+id/dealItem"
+                    android:id="@+id/deal_title"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentStart="true" />
 
@@ -66,7 +66,7 @@
                     android:layout_marginLeft="15dp"
                     android:text="3PM - 9PM"
                     android:id="@+id/deal_availability"
-                    android:layout_below="@+id/dealItem"
+                    android:layout_below="@+id/deal_title"
                     android:layout_alignParentStart="true" />
 
                 <TextView
@@ -75,11 +75,11 @@
                     android:layout_marginTop="15dp"
                     android:layout_marginLeft="15dp"
                     android:text="Fine Print\nUp to 5 tacos can be purchased."
-                    android:id="@+id/finePrint"
+                    android:id="@+id/deal_fineprint"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/deal_availability"
-                    android:layout_alignEnd="@+id/dealItem" />
+                    android:layout_alignEnd="@+id/deal_title" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -87,7 +87,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="0.2 mi"
                     android:id="@+id/distance"
-                    android:layout_above="@+id/finePrint"
+                    android:layout_above="@+id/deal_fineprint"
                     android:layout_alignEnd="@+id/downVote" />
 
                 <ToggleButton
@@ -98,9 +98,10 @@
                     android:textOff=""
                     android:id="@+id/downVote"
                     android:background="@drawable/ic_thumb_down"
-                    android:layout_alignTop="@+id/finePrint"
+                    android:layout_alignTop="@+id/deal_fineprint"
                     android:layout_alignParentEnd="true"
                     android:checked="false" />
+
 
                 <ToggleButton
                     android:layout_marginRight="5dp"
@@ -121,7 +122,7 @@
                     android:text="98%"
                     android:id="@+id/rating"
                     android:layout_marginRight="6dp"
-                    android:layout_alignBottom="@+id/dealItem"
+                    android:layout_alignBottom="@+id/deal_title"
                     android:layout_alignEnd="@+id/distance" />
 
                 <TextView
@@ -132,7 +133,7 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Tuesday 10AM - 9PM"
                     android:id="@+id/hours"
-                    android:layout_below="@+id/finePrint"
+                    android:layout_below="@+id/deal_fineprint"
                     android:layout_alignParentStart="true" />
 
                 <ImageView
@@ -200,59 +201,12 @@
                 android:background="#000000" />
 
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="vertical" android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    >
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/listView" />
 
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:id="@+id/imageView7"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginLeft="15dp"
-                        android:src="@drawable/ic_drinks_placeholder"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentStart="true" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Deal #1"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginBottom="10dp"
-                        android:id="@+id/textView9"
-                        android:layout_toEndOf="@+id/imageView7"
-                        android:layout_alignParentTop="true" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Hours of Deal"
-                        android:id="@+id/textView10"
-                        android:layout_below="@+id/textView9"
-                        android:layout_alignStart="@+id/textView9" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Rating"
-                        android:layout_marginRight="15dp"
-                        android:id="@+id/textView11"
-                        android:layout_alignTop="@+id/textView9"
-                        android:layout_alignParentEnd="true" />
-
-                </RelativeLayout>
-            </LinearLayout>
 
         </LinearLayout>
 

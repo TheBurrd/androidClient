@@ -1,13 +1,8 @@
 package com.dgaf.happyhour.Model;
 
 import com.parse.ParseClassName;
-import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by Adam on 5/12/2015.
@@ -61,4 +56,16 @@ public class RestaurantModel extends ParseObject {
         }
         return location.distanceInMilesTo(restaurant);
     }
+
+    public String getRecurrence1() { return getString("recurrence1");}
+
+    public long getOpenTime1() { return getLong("openTime1");}
+
+    public long getCloseTime1() { return getLong("closeTime1"); }
+
+    public String getRecurrence2() { return getString("recurrence2");}
+
+    public long getOpenTime2() { return getLong("openTime2");}
+
+    public long getCloseTime2() { return getLong("closeTime2");}
 }
