@@ -271,7 +271,7 @@ public class RestaurantAdapter {
             }
             restaurantHolder.restaurantName.setText(restaurant.getName());
             restaurantHolder.dealTitle.setText(deal.getItem());
-            restaurantHolder.dealDescription.setText(deal.getDescription());
+            restaurantHolder.dealDescription.setText(deal.getFineprint());
             restaurantHolder.dealRating.setText(String.valueOf(deal.getRating()) + "%");
             restaurantHolder.proximity.setText(String.format("%.1f", restaurant.getDistanceFrom(parseLocation)) + " mi");
             restaurantHolder.address.setText(restaurant.getStreetNumber() + " " + restaurant.getStreetAddress() + ", " + restaurant.getCity() + ", " + restaurant.getState()+ ", " + restaurant.getZipcode());

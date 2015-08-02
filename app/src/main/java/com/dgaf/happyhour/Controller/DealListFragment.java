@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import com.dgaf.happyhour.Adapter.DealListAdapter;
 import com.dgaf.happyhour.Model.DealListType;
 import com.dgaf.happyhour.R;
+import com.dgaf.happyhour.View.DealListDecoration;
 
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
@@ -43,6 +44,7 @@ public class DealListFragment extends Fragment implements DealListEmptyNotifier{
         View rootView = inflater.inflate(R.layout.deal_list, container, false);
 
         mSwipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefresh.setColorSchemeResources(R.color.colorWine, R.color.colorPrimaryDark, R.color.colorPrimary);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         placeHolderImage = (ImageView) rootView.findViewById(R.id.placeHolder);
 
@@ -66,8 +68,7 @@ public class DealListFragment extends Fragment implements DealListEmptyNotifier{
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new LandingAnimator());
 
-        //mRecyclerView.addItemDecoration(new DealListDecoration(getActivity()));
-        //mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.addItemDecoration(new DealListDecoration(getActivity()));
 
     }
 
