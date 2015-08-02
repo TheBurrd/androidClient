@@ -2,7 +2,6 @@ package com.dgaf.happyhour.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -23,18 +22,15 @@ import com.dgaf.happyhour.Model.DealModel;
 import com.dgaf.happyhour.Model.QueryParameters;
 import com.dgaf.happyhour.Model.RestaurantModel;
 import com.dgaf.happyhour.R;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -48,7 +44,6 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     //private FragmentActivity activity; not needed we will change to context
     private Context context;
     private RecyclerView mRecyclerView;
-    private ImageLoader imageLoader;
     private List<DealModel> dealItems;
     private ParseGeoPoint parseLocation;
     private DealListType listType;
@@ -57,13 +52,12 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private QueryParameters mQueryParams;
     private AvailabilityModel.WeekDay currentDayFilter;
     private static final String DEAL_LIST_CACHE = "dealList";
-    private static HashMap queryHashes = new HashMap<>();
     private DealListEmptyNotifier notifier;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView deal;
-        public TextView description;
+        public TextView fineprint;
         public TextView distance;
         public TextView rating;
         public TextView hours;
@@ -73,7 +67,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         public ViewHolder(View itemView, DealListType listType) {
             super(itemView);
             deal = (TextView) itemView.findViewById(R.id.deal);
-            description = (TextView) itemView.findViewById(R.id.description);
+            fineprint = (TextView) itemView.findViewById(R.id.finePrint);
             distance = (TextView) itemView.findViewById(R.id.distance);
             rating = (TextView) itemView.findViewById(R.id.rating);
             hours = (TextView) itemView.findViewById(R.id.hours);
@@ -89,7 +83,6 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     public DealListAdapter(Context context, RecyclerView recyclerView, SwipeRefreshLayout swipeRefresh, DealListType dealListType, DealListEmptyNotifier notifier) {
         this.context = context;
         this.mRecyclerView = recyclerView;
-        this.imageLoader = ImageLoader.getInstance();
         this.swipeRefresh = swipeRefresh;
         this.dealItems = new ArrayList<>();
         this.notifier = notifier;
@@ -127,6 +120,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         ParseQuery<DealModel> orLocalDeals = ParseQuery.getQuery(DealModel.class);
         localDeals.whereMatchesQuery("restaurantId", localRestaurants);
         orLocalDeals.whereMatchesQuery("restaurantId", localRestaurants);
+        //TODO remove hardcoded tag search
         switch(listType) {
             case DRINK:
                 localDeals.whereEqualTo("tags","drink");
@@ -143,11 +137,13 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
         localDeals = applyDayOfWeekForQuery(localDeals, orLocalDeals);
         localDeals.include("restaurantId");
+        //TODO remove logging
         Log.v("Parse info", "Deal list query started" );
         final DealListAdapter listAdapter = this;
         localDeals.findInBackground(new FindCallback<DealModel>() {
             public void done(List<DealModel> deals, ParseException e) {
                 if (e == null) {
+                    //TODO remove logging
                     Log.v("Parse info", "Deal list query returned " + String.valueOf(deals.size()));
 
                     //add place holder to empty deal
@@ -190,11 +186,11 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                             }
                         });
                     }
-                    queryHashes.put(mQueryParams.hashCode(), true);
                     // Release any objects previously pinned for this query.
                     ParseObject.unpinAllInBackground(DEAL_LIST_CACHE, dealItems, new DeleteCallback() {
                         public void done(ParseException e) {
                             if (e != null) {
+                                //TODO remove logging
                                 Log.e("Parse error: ", e.getMessage());
                                 return;
                             }
@@ -204,7 +200,6 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                             ParseObject.pinAllInBackground(DEAL_LIST_CACHE, dealItems);
                         }
                     });
-                    int i = 0;
                     List<DealModel> prevDealItems = dealItems;
                     dealItems = deals;
                     if (prevDealItems.size() == 0) {
@@ -217,10 +212,10 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                         listAdapter.notifyItemRangeInserted(prevDealItems.size(), dealItems.size());
                     }
                 } else {
+                    //TODO remove logging
                     Log.e("Parse error: ", e.getMessage());
                     Toast.makeText(context, "Unable to process request: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     swipeRefresh.setRefreshing(false);    // Update refresh indicator
-
                 }
             }
         });
@@ -276,14 +271,20 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         DealModel dealModel = dealItems.get(position);
 
-        holder.deal.setText(dealModel.getItem());
+        holder.deal.setText(this.getDealTitle(dealModel));
         int rating = dealModel.getRating();
         if (rating != 0) {
             holder.rating.setText(String.valueOf(dealModel.getRating()) + "%");
         }
-        holder.description.setText(dealModel.getDescription());
+        holder.fineprint.setText(dealModel.getDescription());
         holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(parseLocation)) + " mi");
 
+
         holder.restaurantId = dealModel.getRestaurantId();
+    }
+
+    public String getDealTitle(DealModel deal) {
+        //TODO make nice title
+        return String.valueOf(deal.getAmountOff()) + " " + deal.getItem();
     }
 }

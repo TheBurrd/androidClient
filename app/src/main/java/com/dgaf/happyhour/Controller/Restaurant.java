@@ -1,11 +1,16 @@
 package com.dgaf.happyhour.Controller;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.ToggleButton;
 
 import com.dgaf.happyhour.Adapter.RestaurantAdapter;
 import com.dgaf.happyhour.R;
@@ -21,7 +26,7 @@ public class Restaurant extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.restaurant);
+        setContentView(R.layout.restaurant_activity);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
@@ -34,15 +39,65 @@ public class Restaurant extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         View rootView = findViewById(android.R.id.content);//gets root view
-        String restaurantArg = getIntent().getExtras().getString(RESTAURANT_ID);
-        String aboutArg = getIntent().getExtras().getString(DEAL_ID);
+        //String restaurantArg = getIntent().getExtras().getString(RESTAURANT_ID);
+        //String aboutArg = getIntent().getExtras().getString(DEAL_ID);
 
-        if (mAdapter == null) {
+        /*if (mAdapter == null) {
             mAdapter = new RestaurantAdapter(this, rootView, restaurantArg, aboutArg);
         } else {
             mAdapter.loadRestaurantDetails(restaurantArg, aboutArg);
             mAdapter.createViewHolders(rootView);
-        }
+        }*/
+
+        ImageView phoneNumber = (ImageView) findViewById(R.id.phone);
+        ImageView website = (ImageView) findViewById(R.id.website);
+        final ToggleButton thumbsUp = (ToggleButton) findViewById(R.id.up);
+        final ToggleButton thumbsDown = (ToggleButton) findViewById(R.id.down);
+
+        //load a phone number
+        phoneNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                callIntent.setData(Uri.parse("tel:9498736666"));
+                startActivity(callIntent);
+            }
+        });
+
+        //go to a website
+        website.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent websiteIntent = new Intent(Intent.ACTION_VIEW);
+                websiteIntent.setData(Uri.parse("http://www.trentshouseofbacon.com"));
+                startActivity(websiteIntent);
+            }
+        });
+
+        thumbsDown.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean enabled) {
+                if (enabled) {
+                    thumbsUp.setChecked(false);
+                    thumbsDown.setBackgroundResource(R.drawable.ic_thumb_down_selected);
+                }else{
+                    thumbsDown.setBackgroundResource(R.drawable.ic_thumb_down);
+                }
+            }
+        });
+
+
+        thumbsUp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean enabled) {
+                if(enabled){
+                    thumbsDown.setChecked(false);
+                    thumbsUp.setBackgroundResource(R.drawable.ic_thumb_up_selected);
+                }else{
+                    thumbsUp.setBackgroundResource(R.drawable.ic_thumb_up);
+                }
+            }
+        });
 
     }
 

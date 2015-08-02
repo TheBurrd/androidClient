@@ -60,7 +60,7 @@ public class DealListFragment extends Fragment implements DealListEmptyNotifier{
         Bundle args = this.getArguments();
         listType = DealListType.values()[args.getInt(DEAL_LIST_TYPE)];
 
-        mAdapter = new DealListAdapter(getActivity(), mRecyclerView, mSwipeRefresh, listType,this);
+        mAdapter = new DealListAdapter(getActivity(), mRecyclerView, mSwipeRefresh, listType, this);
 
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);

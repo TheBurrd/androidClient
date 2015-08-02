@@ -71,6 +71,7 @@ public class RestaurantAdapter {
         public RestaurantViewHolder(Activity activity, View rootView, RestaurantAdapter parentAdapter,ExpandDealListAdapter listAdapter) {
             this.activity = activity;
             this.parentAdapter = parentAdapter;
+            /*
             dealTitle = (TextView) rootView.findViewById(R.id.deal_title);
             dealDescription = (TextView) rootView.findViewById(R.id.deal_description);
             dealAvailability = (TextView) rootView.findViewById(R.id.current_deal_avail);
@@ -85,9 +86,10 @@ public class RestaurantAdapter {
             hoursOfOperation = (TextView) rootView.findViewById(R.id.hours_of_operation);
             address = (TextView) rootView.findViewById(R.id.address);
             dealList = (ExpandableListView) rootView.findViewById(R.id.deal_list);
+            */
             dealList.setFocusable(false);
             dealList.setAdapter(listAdapter);
-            thumbnail = (ParseImageView) rootView.findViewById(R.id.picture);
+            //thumbnail = (ParseImageView) rootView.findViewById(R.id.picture);
             thumbnail.setPlaceholder(ContextCompat.getDrawable(rootView.getContext(), R.drawable.ic_food_placeholder));
 
             map = ((MapFragment) activity.getFragmentManager().findFragmentById(R.id.map))
