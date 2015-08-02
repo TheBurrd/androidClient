@@ -260,10 +260,6 @@ public class RestaurantAdapter {
 
     public void bindRestaurantViewHolder() {
         if (restaurantHolder != null && restaurant != null) {
-            ParseFile imageFile = restaurant.getThumbnailFile();
-            if (imageFile != null) {
-                imageLoader.displayImage(imageFile.getUrl(), restaurantHolder.thumbnail);
-            }
             ParseGeoPoint parsePoint = restaurant.getLocation();
             if (parsePoint != null) {
                 restaurantHolder.updateMap(new LatLng(parsePoint.getLatitude(), parsePoint.getLongitude()), restaurant.getName());
@@ -272,13 +268,10 @@ public class RestaurantAdapter {
                 restaurantHolder.updateMap(new LatLng(32.881122,-117.237631),"UCSD - Geisel Library");
             }
             restaurantHolder.restaurantName.setText(restaurant.getName());
-            restaurantHolder.restaurantDescription.setText(restaurant.getDescription());
-            restaurantHolder.dealAvailability.setText(deal.getAvailability().getDayAvailability(AvailabilityModel.getDayOfWeek(), true));
-            restaurantHolder.dealTitle.setText(deal.getTitle());
+            restaurantHolder.dealTitle.setText(deal.getItem());
             restaurantHolder.dealDescription.setText(deal.getDescription());
             restaurantHolder.dealRating.setText(String.valueOf(deal.getRating()) + "%");
             restaurantHolder.proximity.setText(String.format("%.1f", restaurant.getDistanceFrom(parseLocation)) + " mi");
-            restaurantHolder.hoursOfOperation.setText(restaurant.getAvailability().getEntireAvailability());
             restaurantHolder.address.setText(restaurant.getStreetNumber() + " " + restaurant.getStreetAddress() + ", " + restaurant.getCity() + ", " + restaurant.getState()+ ", " + restaurant.getZipcode());
 
         }

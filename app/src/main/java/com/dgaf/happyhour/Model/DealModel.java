@@ -36,8 +36,44 @@ public class DealModel extends ParseObject {
         increment("downVotes");
     }
 
-    public String getTitle() {
-        return getString("title");
+    public String getItem() {
+        return getString("item");
+    }
+
+    public String getCategory() {
+        return getString("category");
+    }
+
+    public double getAmountOff() {
+        return getDouble("amountOff");
+    }
+
+    public double getPercentOff() {
+        return getDouble("percentOff");
+    }
+
+    public String getFineprint() {
+        return getString("fineprint");
+    }
+
+    public String getPrimaryTag() {
+        return getString("primaryTag");
+    }
+
+    public double getReducedPrice() {
+        return getDouble("reducedPrice");
+    }
+
+    public boolean getGlutenFree() {
+        return getBoolean("gluttenFree");
+    }
+
+    public boolean getVegan() {
+        return getBoolean("vegan");
+    }
+
+    public boolean getVegetarian() {
+        return getBoolean("vegetarian");
     }
 
     public String getDescription() {
@@ -48,13 +84,7 @@ public class DealModel extends ParseObject {
 
     public String getRestaurantId() { return getParseObject("restaurantId").getObjectId();}
 
-    public ParseFile getThumbnailFile() { return getParseObject("restaurantId").getParseFile("picture"); }
-
     public double getDistanceFrom(ParseGeoPoint location) { return location.distanceInMilesTo(getParseObject("restaurantId").getParseGeoPoint("location"));
-    }
-
-    public AvailabilityModel getAvailability() {
-        return new AvailabilityModel(this);
     }
 
 }

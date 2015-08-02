@@ -92,7 +92,7 @@ public class ExpandDealListAdapter extends BaseExpandableListAdapter {
         }
 
         DealModel deal = getGroup(groupPosition);
-        header.title.setText(deal.getTitle());
+        header.title.setText(deal.getItem());
 
         return convertView;
     }

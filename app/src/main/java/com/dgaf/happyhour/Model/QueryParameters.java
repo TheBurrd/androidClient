@@ -16,7 +16,7 @@ public class QueryParameters {
     private List<Listener> listeners = new ArrayList<>();
 
     public interface Listener {
-        public void onUpdate();
+        void onUpdate();
     }
 
     public enum QueryType {

@@ -23,23 +23,6 @@ public class RestaurantModel extends ParseObject {
         return getString("name");
     }
 
-    public String getDescription() {
-        JSONArray description = getJSONArray("description");
-        String result = "";
-        if (description == null) {
-            return result;
-        }
-        for (int i = 0; i < description.length(); i++) {
-            try {
-                result += description.getString(i) + ", ";
-            } catch (JSONException e) {
-
-            }
-        }
-        return result;
-
-    }
-
     public String getStreetNumber() {
         return getString("streetNumber");
     }
@@ -64,8 +47,6 @@ public class RestaurantModel extends ParseObject {
         return getString("phoneNumber");
     }
 
-    public ParseFile getThumbnailFile() { return getParseFile("picture"); }
-
     public ParseGeoPoint getLocation() { return getParseGeoPoint("location"); }
 
     public String getWebsite() {
@@ -79,16 +60,5 @@ public class RestaurantModel extends ParseObject {
             return 0.0;
         }
         return location.distanceInMilesTo(restaurant);
-    }
-
-    public AvailabilityModel getAvailability() {
-        JSONObject avail = getJSONObject("availability");
-
-        if (avail == null) {
-            return new AvailabilityModel();
-        }
-
-        return new AvailabilityModel(getJSONObject("availability"));
-
     }
 }

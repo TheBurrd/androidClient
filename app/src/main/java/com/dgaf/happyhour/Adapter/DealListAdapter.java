@@ -227,103 +227,6 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     }
 
     public ParseQuery<DealModel> applyDayOfWeekForQuery(ParseQuery<DealModel> query, ParseQuery<DealModel> orQuery) {
-        switch (mQueryParams.getWeekDay()) {
-            case TODAY:
-                Calendar cal = Calendar.getInstance();
-                //int time = cal.get(Calendar.HOUR_OF_DAY)*100 + cal.get(Calendar.MINUTE);
-                int time = 1300;
-                String today = "";
-                switch (cal.get(Calendar.DAY_OF_WEEK)) {
-                    case Calendar.MONDAY:
-                        today = "mondayEn";
-                        break;
-                    case Calendar.TUESDAY:
-                        today = "tuesdayEn";
-                        break;
-                    case Calendar.WEDNESDAY:
-                        today = "wednesdayEn";
-                        break;
-                    case Calendar.THURSDAY:
-                        today = "thursdayEn";
-                        break;
-                    case Calendar.FRIDAY:
-                        today = "fridayEn";
-                        break;
-                    case Calendar.SATURDAY:
-                        today = "saturdayEn";
-                        break;
-                    case Calendar.SUNDAY:
-                        today = "sundayEn";
-                        break;
-                }
-                if ((time + mQueryParams.TODAY_TIME_RANGE) / 2400.0 > 1.0) {
-                    cal.add(Calendar.DAY_OF_YEAR, 1);
-                }
-                String endDay = "";
-                switch (cal.get(Calendar.DAY_OF_WEEK)) {
-                    case Calendar.MONDAY:
-                        endDay = "mondaySt";
-                        break;
-                    case Calendar.TUESDAY:
-                        endDay = "tuesdaySt";
-                        break;
-                    case Calendar.WEDNESDAY:
-                        endDay = "wednesdaySt";
-                        break;
-                    case Calendar.THURSDAY:
-                        endDay = "thursdaySt";
-                        break;
-                    case Calendar.FRIDAY:
-                        endDay = "fridaySt";
-                        break;
-                    case Calendar.SATURDAY:
-                        endDay = "saturdaySt";
-                        break;
-                    case Calendar.SUNDAY:
-                        endDay = "sundaySt";
-                        break;
-                }
-                query.whereGreaterThanOrEqualTo(today, time);
-                if (today != endDay) {
-                    orQuery.whereLessThanOrEqualTo(endDay, (time + mQueryParams.TODAY_TIME_RANGE) % 2400);
-                    List<ParseQuery<DealModel>> qList = new ArrayList<>();
-                    qList.add(query);
-                    qList.add(orQuery);
-                    query = ParseQuery.or(qList);
-                } else {
-                    query.whereLessThanOrEqualTo(endDay, (time + mQueryParams.TODAY_TIME_RANGE) % 2400);
-                }
-                break;
-            case MONDAY:
-                query.whereGreaterThanOrEqualTo("mondayEn", 0);
-                query.whereLessThanOrEqualTo("mondaySt", 2400);
-                break;
-            case TUESDAY:
-                query.whereGreaterThanOrEqualTo("tuesdayEn",0);
-                query.whereLessThanOrEqualTo("tuesdaySt",2400);
-                break;
-            case WEDNESDAY:
-                query.whereGreaterThanOrEqualTo("wednesdayEn",0);
-                query.whereLessThanOrEqualTo("wednesdaySt",2400);
-                break;
-            case THURSDAY:
-                query.whereGreaterThanOrEqualTo("thursdayEn",0);
-                query.whereLessThanOrEqualTo("thursdaySt",2400);
-                break;
-            case FRIDAY:
-                query.whereGreaterThanOrEqualTo("fridayEn",0);
-                query.whereLessThanOrEqualTo("fridaySt",2400);
-                break;
-            case SATURDAY:
-                query.whereGreaterThanOrEqualTo("saturdayEn",0);
-                query.whereLessThanOrEqualTo("saturdaySt",2400);
-                break;
-            case SUNDAY:
-                query.whereGreaterThanOrEqualTo("sundayEn",0);
-                query.whereLessThanOrEqualTo("sundaySt",2400);
-                break;
-        }
-        currentDayFilter = AvailabilityModel.getDayOfWeek( mQueryParams.getWeekDay());
         return query;
     }
 
@@ -373,30 +276,14 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         DealModel dealModel = dealItems.get(position);
 
-        ParseFile imageFile = dealModel.getThumbnailFile();
-        if (imageFile != null) {
-            imageLoader.displayImage(imageFile.getUrl(), holder.thumbnail);
-        }
-
-        holder.deal.setText(dealModel.getTitle());
+        holder.deal.setText(dealModel.getItem());
         int rating = dealModel.getRating();
         if (rating != 0) {
             holder.rating.setText(String.valueOf(dealModel.getRating()) + "%");
         }
         holder.description.setText(dealModel.getDescription());
         holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(parseLocation)) + " mi");
-        String dealAvail = dealModel.getAvailability().getDayAvailability(currentDayFilter, true);;
-        if (AvailabilityModel.getDayOfWeek() == currentDayFilter) {
-            if (dealAvail == "") {
-                dealAvail = dealModel.getAvailability().getDayAvailability(AvailabilityModel.WeekDay.values()[(currentDayFilter.ordinal() + 1)%7], true);
-                holder.hours.setTextColor(Color.BLACK);
-            } else {
-                holder.hours.setTextColor(Color.rgb(0,170,0));
-            }
-        } else {
-            holder.hours.setTextColor(Color.BLACK);
-        }
-        holder.hours.setText(dealAvail);
+
         holder.restaurantId = dealModel.getRestaurantId();
     }
 }
