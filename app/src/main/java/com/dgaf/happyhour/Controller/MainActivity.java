@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
     private Toolbar toolbar;
     private ViewPagerFragment viewPager;
 
-
     @Override
     public boolean onSupportNavigateUp(){
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -137,8 +136,8 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
     }
 
     @Override
-    public void loadViewPager(String identifier) {
-        launchFragment(viewPager,identifier);
+    public void loadViewPager() {
+        launchFragment(viewPager,"viewPager");
         mDrawerLayout.closeDrawers();//adds animation
     }
 

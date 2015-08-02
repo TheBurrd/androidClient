@@ -135,25 +135,10 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
             }
         });
 
-
-
-
-
-
-
-
         topRated.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-
 
         // Inflate the layout for this fragment
         return v;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void update(Fragment fragment,String identifier) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(fragment,identifier);
-        }
     }
 
     public void uncheckWeekdayToggle(){
@@ -196,7 +181,6 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
     public void onClick(View view) {
 
         //get rid of all higlight selection and then re add it
-
         switch (view.getId()){
             case R.id.aboutUsLayout:
                 unSelectOtherNormalNavItems();
@@ -222,24 +206,31 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
             switch (compoundButton.getId()){
                 case R.id.monday:
                     compoundButton.setBackgroundResource(R.drawable.ic_monday_active);
+                    disableTodayToggle();
                     break;
                 case R.id.tuesday:
                     compoundButton.setBackgroundResource(R.drawable.ic_tuesday_active);
+                    disableTodayToggle();
                     break;
                 case R.id.wednesday:
                     compoundButton.setBackgroundResource(R.drawable.ic_wednesday_active);
+                    disableTodayToggle();
                     break;
                 case R.id.thursday:
                     compoundButton.setBackgroundResource(R.drawable.ic_thursday_active);
+                    disableTodayToggle();
                     break;
                 case R.id.friday:
                     compoundButton.setBackgroundResource(R.drawable.ic_friday_active);
+                    disableTodayToggle();
                     break;
                 case R.id.saturday:
                     compoundButton.setBackgroundResource(R.drawable.ic_saturday_active);
+                    disableTodayToggle();
                     break;
                 case R.id.sunday:
                     compoundButton.setBackgroundResource(R.drawable.ic_sunday_active);
+                    disableTodayToggle();
                     break;
                 case R.id.today:
                     compoundButton.setBackgroundResource(R.drawable.ic_thursday_active);
@@ -277,6 +268,11 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
         }
     }
 
+    private void disableTodayToggle(){
+        today.setChecked(false);
+        today.setBackgroundResource(R.drawable.ic_thursday);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -289,7 +285,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
      */
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Fragment fragment,String identifier);
-        void loadViewPager(String identifier);
+        void loadViewPager();
     }
 
     private void aboutUs(){
@@ -297,11 +293,11 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
     }
     private void topRated(){
         sortByRating();
-        mListener.loadViewPager("viewPager");
+        mListener.loadViewPager();
     }
     private void nearby(){
         sortByProximity();
-        mListener.loadViewPager("viewPager");
+        mListener.loadViewPager();
     }
 
     //this will unselect normal items. this doesn't include days of the week.
