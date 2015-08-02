@@ -40,6 +40,11 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
         return true;
     }
 
+    /**
+     * Sets up the Navigation Drawer and load the DealListFragment
+     * with RATING as the default Query.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-
         }
 
 
@@ -66,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
         trans.replace(R.id.drawerItems, drawerFragment);
         trans.commit();
 
-
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -78,13 +81,10 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
 
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                // invalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                //getSupportActionBar().setTitle("Options");
-                // invalidateOptionsMenu();
             }
         };
 
@@ -93,8 +93,6 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
 
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -102,17 +100,11 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
         return true;
     }
 
-    /*This is were all the action events happen*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        // Pass the event to ActionBarDrawerToggle, if it returns
-        // true, then it has handled the app icon touch event
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -155,7 +147,6 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
 
         }
     }
-
 
 }
 

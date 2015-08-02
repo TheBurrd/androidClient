@@ -1,29 +1,28 @@
 package com.dgaf.happyhour.Adapter;
-import com.dgaf.happyhour.Controller.LocationService;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
-import android.transition.Fade;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.dgaf.happyhour.Model.DealListType;
+import com.dgaf.happyhour.Controller.DealListEmptyNotifier;
+import com.dgaf.happyhour.Controller.LocationService;
+import com.dgaf.happyhour.Controller.Restaurant;
 import com.dgaf.happyhour.Model.AvailabilityModel;
+import com.dgaf.happyhour.Model.DealListType;
 import com.dgaf.happyhour.Model.DealModel;
 import com.dgaf.happyhour.Model.QueryParameters;
 import com.dgaf.happyhour.Model.RestaurantModel;
 import com.dgaf.happyhour.R;
-import com.dgaf.happyhour.Controller.RestaurantFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
@@ -42,10 +41,12 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by trentonrobison on 4/28/15.
+ * Created by adam on 4/28/15.
  */
 public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder> implements SwipeRefreshLayout.OnRefreshListener, QueryParameters.Listener, View.OnClickListener {
-    private FragmentActivity activity;
+
+    //private FragmentActivity activity; not needed we will change to context
+    private Context context;
     private RecyclerView mRecyclerView;
     private ImageLoader imageLoader;
     private List<DealModel> dealItems;
@@ -57,6 +58,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private AvailabilityModel.WeekDay currentDayFilter;
     private static final String DEAL_LIST_CACHE = "dealList";
     private static HashMap queryHashes = new HashMap<>();
+    private DealListEmptyNotifier notifier;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -84,12 +86,13 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
     }
 
-    public DealListAdapter(FragmentActivity activity, RecyclerView recyclerView, SwipeRefreshLayout swipeRefresh, DealListType dealListType) {
-        this.activity = activity;
+    public DealListAdapter(Context context, RecyclerView recyclerView, SwipeRefreshLayout swipeRefresh, DealListType dealListType, DealListEmptyNotifier notifier) {
+        this.context = context;
         this.mRecyclerView = recyclerView;
         this.imageLoader = ImageLoader.getInstance();
         this.swipeRefresh = swipeRefresh;
         this.dealItems = new ArrayList<>();
+        this.notifier = notifier;
 
         swipeRefresh.setOnRefreshListener(this);
         listType = dealListType;
@@ -104,7 +107,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         double latitude = 32.881122;
         double longitude = -117.237631;
         if (!Build.FINGERPRINT.startsWith("generic")) {
-            userLocation = new LocationService(activity);
+            userLocation = new LocationService(context);
             // Is user location available and are we not running in an emulator
             if (userLocation.canGetLocation()) {
                 latitude = userLocation.getLatitude();
@@ -144,8 +147,16 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         final DealListAdapter listAdapter = this;
         localDeals.findInBackground(new FindCallback<DealModel>() {
             public void done(List<DealModel> deals, ParseException e) {
-                Log.v("Parse info", "Deal list query returned " + String.valueOf(deals.size()));
                 if (e == null) {
+                    Log.v("Parse info", "Deal list query returned " + String.valueOf(deals.size()));
+
+                    //add place holder to empty deal
+                    if(deals.size() == 0){
+                        notifier.notifyEmpty();
+                    }else{
+                        notifier.notifyNotEmpty();
+                    }
+
                     if (mQueryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
                         Collections.sort(deals, new Comparator<DealModel>() {
                             @Override
@@ -207,6 +218,9 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                     }
                 } else {
                     Log.e("Parse error: ", e.getMessage());
+                    Toast.makeText(context, "Unable to process request: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    swipeRefresh.setRefreshing(false);    // Update refresh indicator
+
                 }
             }
         });
@@ -327,16 +341,18 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
 
     @Override
     public void onClick(View v) {
+
         int position = mRecyclerView.getChildAdapterPosition(v);
         DealModel dealModel = dealItems.get(position);
         String restaurantId = dealModel.getRestaurantId();
         String dealId = dealModel.getId();
-        Fragment restaurant = RestaurantFragment.newInstance(restaurantId, dealId);
-        restaurant.setEnterTransition(new Fade());
-        restaurant.setExitTransition(new Fade());
-        FragmentManager fragmentManager = activity.getSupportFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.replace(R.id.main_fragment, restaurant).addToBackStack(null).commit();
+
+        Intent intent = new Intent(context, Restaurant.class);
+
+        intent.putExtra("resId",restaurantId);
+        intent.putExtra("dealId",dealId);
+
+        context.startActivity(intent);
     }
 
     @Override

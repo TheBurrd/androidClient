@@ -58,10 +58,14 @@
         looking to innovate, ladies. Holla.</string>
     <string name="about_anjali"><b>Anjali, Quality Assurance</b>\nSpecial power: she can sniff out
         the bugs in the cleanest of code. </string>
-    <string name="about_ken"><b>Ken, Database Guru</b>\nKnown as the Atomic Bomb, he is the
-        secret weapon.</string>
+    <!--<string name="about_ken"><b>Ken, Database Guru</b>\nKnown as the Atomic Bomb, he is the
+        secret weapon.</string>-->
     <string name="about_brenton"><b>Brenton, Database Guru</b>\nDallas Mavericks. Dallas Mavericks.
         Dallas Mavericks. Dallas Mavericks. </string>
+    <string name="title_activity_restaurant">Restaurant</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_about_us">AboutUs</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
