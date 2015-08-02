@@ -13,13 +13,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-import com.dgaf.happyhour.Model.QueryParameters;
 import com.dgaf.happyhour.R;
 
 
-public class MainActivity extends AppCompatActivity implements DrawerFragment.OnFragmentInteractionListener, QueryParameters.Listener{
+public class MainActivity extends AppCompatActivity implements DrawerFragment.OnFragmentInteractionListener{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -34,7 +32,6 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
     private DrawerLayout mDrawerLayout;
     private Toolbar toolbar;
     private ViewPagerFragment viewPager;
-    private Toast toastFeedBack;
 
     @Override
     public boolean onSupportNavigateUp(){
@@ -126,8 +123,8 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
     }
 
     @Override
-    public void onFragmentInteraction(Fragment fragment,String identifier) {
-        launchFragment(fragment, identifier);
+    public void loadAbout() {
+        launchFragment(new AboutFragment(), "about");
         mDrawerLayout.closeDrawers();//adds animation
     }
 
@@ -150,15 +147,6 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
                     .replace(R.id.main_fragment, fragment).addToBackStack(identifier).commit();
 
         }
-    }
-
-    @Override
-    public void onUpdate() {
-        updateToastFeedBack();
-    }
-
-    private void updateToastFeedBack(){
-
     }
 }
 

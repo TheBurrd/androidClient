@@ -345,12 +345,12 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Fragment fragment,String identifier);
+        void loadAbout();
         void loadViewPager();
     }
 
     private void aboutUs(){
-        mListener.onFragmentInteraction(new AboutFragment(),"about");
+        mListener.loadAbout();
     }
     private void topRated(){
         sortByRating();
