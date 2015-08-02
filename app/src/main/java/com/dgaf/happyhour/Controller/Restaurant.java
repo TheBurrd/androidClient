@@ -39,19 +39,12 @@ public class Restaurant extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         View rootView = findViewById(android.R.id.content);//gets root view
-        //String restaurantArg = getIntent().getExtras().getString(RESTAURANT_ID);
-        //String aboutArg = getIntent().getExtras().getString(DEAL_ID);
-
-        /*if (mAdapter == null) {
-            mAdapter = new RestaurantAdapter(this, rootView, restaurantArg, aboutArg);
-        } else {
-            mAdapter.loadRestaurantDetails(restaurantArg, aboutArg);
-            mAdapter.createViewHolders(rootView);
-        }*/
+        String restaurantArg = getIntent().getExtras().getString(RESTAURANT_ID);
+        String dealArg = getIntent().getExtras().getString(DEAL_ID);
 
         ImageView phoneNumber = (ImageView) findViewById(R.id.phone);
         ImageView website = (ImageView) findViewById(R.id.website);
-        final ToggleButton thumbsUp = (ToggleButton) findViewById(R.id.up);
+        final ToggleButton thumbsUp = (ToggleButton) findViewById(R.id.upVote);
         final ToggleButton thumbsDown = (ToggleButton) findViewById(R.id.down);
 
         //load a phone number
