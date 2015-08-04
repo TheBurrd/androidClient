@@ -25,7 +25,8 @@
 
         <LinearLayout
             android:orientation="vertical" android:layout_width="match_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="fill_parent"
+            >
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -111,9 +112,9 @@
                     android:textOff=""
                     android:id="@+id/upVote"
                     android:background="@drawable/ic_thumb_up"
+                    android:checked="false"
                     android:layout_alignTop="@+id/downVote"
-                    android:layout_toStartOf="@+id/downVote"
-                    android:checked="false" />
+                    android:layout_toStartOf="@+id/distance" />
 
                 <TextView
                     android:layout_width="wrap_content"

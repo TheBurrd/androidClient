@@ -109,12 +109,12 @@ public class Restaurant extends AppCompatActivity {
 
         upVote.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean enabled) {
-                if (enabled) {
-                    upVote.setChecked(false);
-                    downVote.setBackgroundResource(R.drawable.ic_thumb_down_selected);
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked){
+                    upVote.setBackgroundResource(R.drawable.ic_thumb_up_selected);
+                    downVote.setChecked(false);
                 }else{
-                    downVote.setBackgroundResource(R.drawable.ic_thumb_down);
+                    upVote.setBackgroundResource(R.drawable.ic_thumb_up);
                 }
             }
         });
@@ -122,12 +122,13 @@ public class Restaurant extends AppCompatActivity {
 
         downVote.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean enabled) {
-                if(enabled){
-                    downVote.setChecked(false);
-                    upVote.setBackgroundResource(R.drawable.ic_thumb_up_selected);
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if (isChecked) {
+                    downVote.setBackgroundResource(R.drawable.ic_thumb_down_selected);
+                    upVote.setChecked(false);
                 }else{
-                    upVote.setBackgroundResource(R.drawable.ic_thumb_up);
+                    downVote.setBackgroundResource(R.drawable.ic_thumb_down);
                 }
             }
         });
