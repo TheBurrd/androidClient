@@ -7,7 +7,7 @@ import com.dgaf.happyhour.R;
 /**
  * Created by Adam on 8/1/2015.
  */
-public class DealIconTest {
+public class DealIcon {
 
     public static void setImageToDealCategory(ImageView imageView, DealModel deal) {
         switch (deal.getPrimaryTag().toLowerCase()) {
