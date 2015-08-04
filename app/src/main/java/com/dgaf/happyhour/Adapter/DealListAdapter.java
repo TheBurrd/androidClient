@@ -280,7 +280,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
 
 
         //DealIcon.setImageToDealCategory(holder.icon, dealModel);
-        DealIconTest.setImageToDealCategory(holder.icon, dealModel);
+        DealIconTest.setImageToDealCategory(holder.icon, dealModel);//test to see performance with smaller category images
 
         holder.restaurantId = dealModel.getRestaurantId();
     }
