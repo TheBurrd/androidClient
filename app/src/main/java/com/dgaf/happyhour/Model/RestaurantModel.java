@@ -68,4 +68,8 @@ public class RestaurantModel extends ParseObject {
     public long getOpenTime2() { return getLong("openTime2");}
 
     public long getCloseTime2() { return getLong("closeTime2");}
+
+    public String getAddressLine() {
+        return getStreetNumber() + " " + getStreetAddress() + ", " + getCity() + ", " + getState()+ ", " + getZipcode();
+    }
 }
