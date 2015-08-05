@@ -1,9 +1,10 @@
 package com.dgaf.happyhour.Adapter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,7 +41,7 @@ import java.util.List;
 public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder> implements SwipeRefreshLayout.OnRefreshListener, QueryParameters.Listener, View.OnClickListener {
 
     //private FragmentActivity activity; not needed we will change to context
-    private Context context;
+    private Activity activity;
     private RecyclerView mRecyclerView;
     private List<DealModel> dealItems;
     private ParseGeoPoint parseLocation;
@@ -50,6 +51,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private QueryParameters mQueryParams;
     private static final String DEAL_LIST_CACHE = "dealList";
     private DealListEmptyNotifier notifier;
+    private DealListAdapterUpdatedNotifier updatedNotifier;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -77,8 +79,8 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
     }
 
-    public DealListAdapter(Context context, RecyclerView recyclerView, SwipeRefreshLayout swipeRefresh, DealListType dealListType, DealListEmptyNotifier notifier) {
-        this.context = context;
+    public DealListAdapter(Activity activity, RecyclerView recyclerView, SwipeRefreshLayout swipeRefresh, DealListType dealListType, DealListEmptyNotifier notifier) {
+        this.activity = activity;
         this.mRecyclerView = recyclerView;
         this.swipeRefresh = swipeRefresh;
         this.dealItems = new ArrayList<>();
@@ -90,6 +92,11 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         mQueryParams = QueryParameters.getInstance();
         mQueryParams.addListener(this);
         onRefresh();
+
+        //get instance of drawer to notify when adapter updates
+        updatedNotifier = (DealListAdapterUpdatedNotifier) ((AppCompatActivity)activity).
+                getSupportFragmentManager().findFragmentById(R.id.drawerItems);
+
     }
 
     public ParseGeoPoint getLocation() {
@@ -97,7 +104,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         double latitude = 32.881122;
         double longitude = -117.237631;
         if (!Build.FINGERPRINT.startsWith("generic")) {
-            userLocation = new LocationService(context);
+            userLocation = new LocationService(activity);
             // Is user location available and are we not running in an emulator
             if (userLocation.canGetLocation()) {
                 latitude = userLocation.getLatitude();
@@ -149,6 +156,9 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                     }else{
                         notifier.notifyNotEmpty();
                     }
+
+                    //notify all listeners that adapter has been updated
+                    updatedNotifier.adapterUpdate();
 
                     if (mQueryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
                         Collections.sort(deals, new Comparator<DealModel>() {
@@ -211,7 +221,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                 } else {
                     //TODO remove logging
                     Log.e("Parse error: ", e.getMessage());
-                    Toast.makeText(context, "Unable to process request: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, "Unable to process request: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     swipeRefresh.setRefreshing(false);    // Update refresh indicator
                 }
             }
@@ -243,12 +253,12 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         String restaurantId = dealModel.getRestaurantId();
         String dealId = dealModel.getId();
 
-        Intent intent = new Intent(context, Restaurant.class);
+        Intent intent = new Intent(activity, Restaurant.class);
 
-        intent.putExtra("resId",restaurantId);
+        intent.putExtra("resId", restaurantId);
         intent.putExtra("dealId",dealId);
 
-        context.startActivity(intent);
+        activity.startActivity(intent);
     }
 
     @Override
@@ -319,4 +329,10 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
 
         return value + " " + content;
     }
+
+    //to alert listiners of the adapter update
+    public interface DealListAdapterUpdatedNotifier {
+        void adapterUpdate();
+    }
+
 }

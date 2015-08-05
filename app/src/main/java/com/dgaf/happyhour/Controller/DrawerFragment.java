@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.dgaf.happyhour.Adapter.DealListAdapter;
 import com.dgaf.happyhour.Model.DayOfWeekMask;
 import com.dgaf.happyhour.Model.QueryParameters;
 import com.dgaf.happyhour.R;
@@ -25,13 +26,13 @@ import com.dgaf.happyhour.R;
  * Use the {@link DrawerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DrawerFragment extends Fragment implements View.OnClickListener, ToggleButton.OnCheckedChangeListener {
+public class DrawerFragment extends Fragment implements View.OnClickListener, ToggleButton.OnCheckedChangeListener,DealListAdapter.DealListAdapterUpdatedNotifier {
 
     private View topRated,nearby,aboutUs;
     private ToggleButton monday,tuesday,wednesday,thursday,friday,saturday,sunday,today;
     private QueryParameters queryParameters;
-
     private OnFragmentInteractionListener mListener;
+    private boolean giveNavDrawerChangedFeedback;
 
     /* Lock the navigation drawer from closing when the user is
      * changing the seekbar
@@ -321,7 +322,6 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
                     compoundButton.setBackgroundResource(R.drawable.ic_today);
                     queryParameters.getDayOfWeekMask().unselectToday();
                     break;
-
             }
         }
         queryParameters.notifyAllListeners();
@@ -331,7 +331,11 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
         today.setChecked(false);
         today.setBackgroundResource(R.drawable.ic_today);
         queryParameters.getDayOfWeekMask().unselectToday();
+    }
 
+    @Override
+    public void adapterUpdate() {
+        giveNavDrawerChangedFeedback = true;
     }
 
     /**
@@ -381,12 +385,14 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
         queryParams.setQueryType(QueryParameters.QueryType.PROXIMITY);
     }
 
-    //this will be called when the drawer is closed to give the user feedback
+    //this will be called when the adapter is updated to give the user feedback
     //of what sorting they have applied
     public void giveFeedBack(){
 
-        //we dont want feedback for about us
         if(aboutUs.getBackground() != null)
+            return;
+
+        if(!giveNavDrawerChangedFeedback)
             return;
 
         QueryParameters queryParams = QueryParameters.getInstance();
@@ -403,6 +409,8 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
                 (days.isSaturdaySelected()?"Sa ":"")+
                 (days.isSundaySelected()?"Su ":"");
 
-        Toast.makeText(getActivity(),sortType + sortDays,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), sortType + sortDays, Toast.LENGTH_SHORT).show();
+
+        giveNavDrawerChangedFeedback = false;
     }
 }
