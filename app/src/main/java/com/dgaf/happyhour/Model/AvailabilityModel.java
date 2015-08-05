@@ -9,101 +9,48 @@ import java.util.Calendar;
 
 /**
  * Created by Adam on 5/12/2015.
- * Written by Sherman
  */
 public class AvailabilityModel {
-    private int sundayStart;
-    private int sundayEnd;
-    private int mondayStart;
-    private int mondayEnd;
-    private int tuesdayStart;
-    private int tuesdayEnd;
-    private int wednesdayStart;
-    private int wednesdayEnd;
-    private int thursdayStart;
-    private int thursdayEnd;
-    private int fridayStart;
-    private int fridayEnd;
-    private int saturdayStart;
-    private int saturdayEnd;
+    public DayOfWeekMask recurrenceMask1;
+    public short firstOpen1;
+    public short lastOpen1;
+    public short firstClose1;
+    public short lastClose1;
 
-    public enum WeekDay {
-        SUNDAY,
-        MONDAY,
-        TUESDAY,
-        WEDNESDAY,
-        THURSDAY,
-        FRIDAY,
-        SATURDAY
-    }
+    public DayOfWeekMask recurrenceMask2;
+    public short firstOpen2;
+    public short lastOpen2;
+    public short firstClose2;
+    public short lastClose2;
 
-    public AvailabilityModel() {
 
-    }
+    public static final short RECUR_DAYOFWEEK_ST = 47;
+    public static final int FIRST_MASK = 0x000111;
+    public static final int LAST_MASK = 0x111000;
 
-    public AvailabilityModel(JSONObject avail) {
-        try {
-            sundayStart = avail.getInt("sundaySt");
-            sundayEnd = avail.getInt("sundayEn");
-            mondayStart = avail.getInt("mondaySt");
-            mondayEnd = avail.getInt("mondayEn");
-            tuesdayStart = avail.getInt("tuesdaySt");
-            tuesdayEnd = avail.getInt("tuesdayEn");
-            wednesdayStart = avail.getInt("wednesdaySt");
-            wednesdayEnd = avail.getInt("wednesdayEn");
-            thursdayStart = avail.getInt("thursdaySt");
-            thursdayEnd = avail.getInt("thursdayEn");
-            fridayStart = avail.getInt("fridaySt");
-            fridayEnd = avail.getInt("fridayEn");
-            saturdayStart = avail.getInt("saturdaySt");
-            saturdayEnd = avail.getInt("saturdayEn");
-        } catch(JSONException e) {
-            Log.e("Parse error: ", "Invalid availability JSONObject");
-        }
-    }
 
-    public AvailabilityModel(DealModel avail) {
-        sundayStart = avail.getInt("sundaySt");
-        sundayEnd = avail.getInt("sundayEn");
-        mondayStart = avail.getInt("mondaySt");
-        mondayEnd = avail.getInt("mondayEn");
-        tuesdayStart = avail.getInt("tuesdaySt");
-        tuesdayEnd = avail.getInt("tuesdayEn");
-        wednesdayStart = avail.getInt("wednesdaySt");
-        wednesdayEnd = avail.getInt("wednesdayEn");
-        thursdayStart = avail.getInt("thursdaySt");
-        thursdayEnd = avail.getInt("thursdayEn");
-        fridayStart = avail.getInt("fridaySt");
-        fridayEnd = avail.getInt("fridayEn");
-        saturdayStart = avail.getInt("saturdaySt");
-        saturdayEnd = avail.getInt("saturdayEn");
-    }
+    public AvailabilityModel(DealModel deal) {
+        String recur1 = deal.getRecurrence1();
+        String recur2 = deal.getRecurrence2();
 
-    public static WeekDay getDayOfWeek() {
-        Calendar calendar = Calendar.getInstance();
-        return WeekDay.values()[calendar.get(Calendar.DAY_OF_WEEK)-1];
-    }
+        this.recurrenceMask1 = new DayOfWeekMask((byte)Integer.parseInt(recur1.substring(RECUR_DAYOFWEEK_ST) + "0", 2));
+        this.recurrenceMask2 = new DayOfWeekMask((byte)Integer.parseInt(recur2.substring(RECUR_DAYOFWEEK_ST) + "0", 2));
 
-    public static WeekDay getDayOfWeek(QueryParameters.WeekDay weekDay) {
-        switch (weekDay) {
-            case TODAY:
-                return getDayOfWeek();
-            case MONDAY:
-                return WeekDay.MONDAY;
-            case TUESDAY:
-                return WeekDay.TUESDAY;
-            case WEDNESDAY:
-                return WeekDay.WEDNESDAY;
-            case THURSDAY:
-                return WeekDay.THURSDAY;
-            case FRIDAY:
-                return WeekDay.FRIDAY;
-            case SATURDAY:
-                return WeekDay.SATURDAY;
-            case SUNDAY:
-                return WeekDay.SUNDAY;
-        }
-        return getDayOfWeek();
+        int openTime1 = (int)deal.getOpenTime1();
+        this.firstOpen1 = (short)(openTime1 & FIRST_MASK);
+        this.lastOpen1 = (short)((openTime1 & LAST_MASK) >> 12);
+
+        int closeTime1 = (int)deal.getCloseTime1();
+        this.firstClose1 = (short)(closeTime1 & FIRST_MASK);
+        this.lastClose1 = (short)((closeTime1 & LAST_MASK) >> 12);
+
+        int openTime2 = (int)deal.getOpenTime2();
+        this.firstOpen2 = (short)(openTime2 & FIRST_MASK);
+        this.lastOpen2 = (short)((openTime2 & LAST_MASK) >> 12);
+
+        int closeTime2 = (int)deal.getCloseTime2();
+        this.firstClose2 = (short)(closeTime2 & FIRST_MASK);
+        this.lastClose2 = (short)((closeTime2 & LAST_MASK) >> 12);
     }
 
     /** Return a string representing the availability for the input day. Takes
@@ -116,7 +63,7 @@ public class AvailabilityModel {
      *
      * Returns an empty string if there is no deal for that day
      * */
-    public String getDayAvailability(WeekDay weekday, boolean displayDay) {
+    public String getDayAvailability(byte weekday, boolean displayDay) {
         StringBuilder ret = new StringBuilder();
 
         // Mon
@@ -124,8 +71,8 @@ public class AvailabilityModel {
             ret.append(getDayShorthand(weekday));
         }
 
-        int startTime = getStartTime(weekday);
-        int endTime = getEndTime(weekday);
+        int startTime = firstOpen1;
+        int endTime = lastClose1;
 
         // If the startTime is 0 then there is no deal for that day so return an empty string
         if (startTime == 0) {
@@ -182,21 +129,6 @@ public class AvailabilityModel {
         return ret.toString();
     }
 
-    /** Get the availability for all days by getting the availability for each
-     * day consecutively */
-    public String getEntireAvailability() {
-        StringBuilder ret = new StringBuilder();
-        for (WeekDay w : WeekDay.values()) {
-            String day = getDayAvailability(w, true);
-            // If there is no deal for that day, do no append the string
-            if (day.length() > 0) {
-                ret.append(day);
-                ret.append("\n");
-            }
-        }
-        return ret.toString();
-    }
-
     /** Get either the "am" as "a" or the "pm" as "p" */
     private String getPeriod(int hour) {
         if (hour <= 11) {
@@ -210,103 +142,34 @@ public class AvailabilityModel {
         }
     }
 
-    /** Helper method to return the start time for the day */
-    private int getStartTime(WeekDay weekday) {
-        switch (weekday) {
-            case MONDAY:
-                return mondayStart;
-                //break;
-
-            case TUESDAY:
-                return tuesdayStart;
-                //break;
-
-            case WEDNESDAY:
-                return wednesdayStart;
-                //break;
-
-            case THURSDAY:
-                return thursdayStart;
-                //break;
-
-            case FRIDAY:
-                return fridayStart;
-                //break;
-
-            case SATURDAY:
-                return saturdayStart;
-                //break;
-
-            case SUNDAY:
-                return sundayStart;
-                //break;
-        }
-        return -1;
-    }
-
-    /** Helper method to return the end time for the day */
-    private int getEndTime(WeekDay weekday) {
-        switch (weekday) {
-            case MONDAY:
-                return mondayEnd;
-                //break;
-
-            case TUESDAY:
-                return tuesdayEnd;
-                //break;
-
-            case WEDNESDAY:
-                return wednesdayEnd;
-                //break;
-
-            case THURSDAY:
-                return thursdayEnd;
-                //break;
-
-            case FRIDAY:
-                return fridayEnd;
-                //break;
-
-            case SATURDAY:
-                return saturdayEnd;
-                //break;
-
-            case SUNDAY:
-                return sundayEnd;
-                //break;
-        }
-        return -1;
-    }
-
-
     /** Return a shorthand string for a given weekday */
-    private String getDayShorthand(WeekDay weekday) {
+    private String getDayShorthand(byte weekday) {
         switch (weekday) {
-            case MONDAY:
+            case DayOfWeekMask.MONDAY:
                 return "Mon ";
                 //break;
 
-            case TUESDAY:
+            case DayOfWeekMask.TUESDAY:
                 return "Tue ";
                 //break;
 
-            case WEDNESDAY:
+            case DayOfWeekMask.WEDNESDAY:
                 return "Wed ";
                 //break;
 
-            case THURSDAY:
+            case DayOfWeekMask.THURSDAY:
                 return "Thu ";
                 //break;
 
-            case FRIDAY:
+            case DayOfWeekMask.FRIDAY:
                 return "Fri ";
                 //break;
 
-            case SATURDAY:
+            case DayOfWeekMask.SATURDAY:
                 return "Sat ";
                 //break;
 
-            case SUNDAY:
+            case DayOfWeekMask.SUNDAY:
                 return "Sun ";
                 //break;
         }

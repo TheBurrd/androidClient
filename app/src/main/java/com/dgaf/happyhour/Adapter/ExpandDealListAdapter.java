@@ -92,7 +92,7 @@ public class ExpandDealListAdapter extends BaseExpandableListAdapter {
         }
 
         DealModel deal = getGroup(groupPosition);
-        header.title.setText(deal.getTitle());
+        header.title.setText(deal.getItem());
 
         return convertView;
     }
@@ -128,7 +128,7 @@ public class ExpandDealListAdapter extends BaseExpandableListAdapter {
         }
 
         DealModel deal = getChild(groupPosition, childPosition);
-        body.description.setText(deal.getDescription());
+        body.description.setText(deal.getFineprint());
 
         return  convertView;
     }

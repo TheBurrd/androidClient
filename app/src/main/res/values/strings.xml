@@ -64,7 +64,8 @@
         Dallas Mavericks. Dallas Mavericks. </string>
     <string name="title_activity_restaurant">Restaurant</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_about_us">AboutUs</string>
+
+    <string name="error_message">We couldn\'t find any deals at this time.</string>
 
 </resources>

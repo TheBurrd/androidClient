@@ -11,28 +11,17 @@ public class QueryParameters {
     public static final int TODAY_TIME_RANGE = 800;
     private static QueryParameters ourInstance = new QueryParameters();
     private QueryType mQueryType;
-    private WeekDay mWeekDay;
+    private DayOfWeekMask mDayOfWeekMask;
     private int mRadiusMi;
     private List<Listener> listeners = new ArrayList<>();
 
     public interface Listener {
-        public void onUpdate();
+        void onUpdate();
     }
 
     public enum QueryType {
         RATING,
         PROXIMITY
-    }
-
-    public enum WeekDay {
-        SUNDAY,
-        MONDAY,
-        TUESDAY,
-        WEDNESDAY,
-        THURSDAY,
-        FRIDAY,
-        SATURDAY,
-        TODAY
     }
 
     public static QueryParameters getInstance() {
@@ -42,7 +31,8 @@ public class QueryParameters {
     private QueryParameters() {
         // Default Query
         mQueryType = QueryType.RATING;
-        mWeekDay = WeekDay.TODAY;
+        mDayOfWeekMask = new DayOfWeekMask();
+        mDayOfWeekMask.selectToday();
         mRadiusMi = 5;
     }
 
@@ -68,20 +58,16 @@ public class QueryParameters {
         this.mQueryType = mQueryType;
     }
 
-    public WeekDay getWeekDay() {
-        return mWeekDay;
-    }
-
-    public void setWeekDay(WeekDay mWeekDay) {
-        this.mWeekDay = mWeekDay;
-    }
-
     public int getRadiusMi() {
         return mRadiusMi;
     }
 
-    public void setRadiusMi(int mRadiusMi) {
-        this.mRadiusMi = mRadiusMi;
+    public void setRadiusMi(int radius) {
+        this.mRadiusMi = radius;
+    }
+
+    public DayOfWeekMask getDayOfWeekMask() {
+        return mDayOfWeekMask;
     }
 
 }

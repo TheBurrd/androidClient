@@ -71,6 +71,7 @@ public class RestaurantAdapter {
         public RestaurantViewHolder(Activity activity, View rootView, RestaurantAdapter parentAdapter,ExpandDealListAdapter listAdapter) {
             this.activity = activity;
             this.parentAdapter = parentAdapter;
+            /*
             dealTitle = (TextView) rootView.findViewById(R.id.deal_title);
             dealDescription = (TextView) rootView.findViewById(R.id.deal_description);
             dealAvailability = (TextView) rootView.findViewById(R.id.current_deal_avail);
@@ -85,9 +86,10 @@ public class RestaurantAdapter {
             hoursOfOperation = (TextView) rootView.findViewById(R.id.hours_of_operation);
             address = (TextView) rootView.findViewById(R.id.address);
             dealList = (ExpandableListView) rootView.findViewById(R.id.deal_list);
+            */
             dealList.setFocusable(false);
             dealList.setAdapter(listAdapter);
-            thumbnail = (ParseImageView) rootView.findViewById(R.id.picture);
+            //thumbnail = (ParseImageView) rootView.findViewById(R.id.picture);
             thumbnail.setPlaceholder(ContextCompat.getDrawable(rootView.getContext(), R.drawable.ic_food_placeholder));
 
             map = ((MapFragment) activity.getFragmentManager().findFragmentById(R.id.map))
@@ -260,10 +262,6 @@ public class RestaurantAdapter {
 
     public void bindRestaurantViewHolder() {
         if (restaurantHolder != null && restaurant != null) {
-            ParseFile imageFile = restaurant.getThumbnailFile();
-            if (imageFile != null) {
-                imageLoader.displayImage(imageFile.getUrl(), restaurantHolder.thumbnail);
-            }
             ParseGeoPoint parsePoint = restaurant.getLocation();
             if (parsePoint != null) {
                 restaurantHolder.updateMap(new LatLng(parsePoint.getLatitude(), parsePoint.getLongitude()), restaurant.getName());
@@ -272,13 +270,10 @@ public class RestaurantAdapter {
                 restaurantHolder.updateMap(new LatLng(32.881122,-117.237631),"UCSD - Geisel Library");
             }
             restaurantHolder.restaurantName.setText(restaurant.getName());
-            restaurantHolder.restaurantDescription.setText(restaurant.getDescription());
-            restaurantHolder.dealAvailability.setText(deal.getAvailability().getDayAvailability(AvailabilityModel.getDayOfWeek(), true));
-            restaurantHolder.dealTitle.setText(deal.getTitle());
-            restaurantHolder.dealDescription.setText(deal.getDescription());
+            restaurantHolder.dealTitle.setText(deal.getItem());
+            restaurantHolder.dealDescription.setText(deal.getFineprint());
             restaurantHolder.dealRating.setText(String.valueOf(deal.getRating()) + "%");
             restaurantHolder.proximity.setText(String.format("%.1f", restaurant.getDistanceFrom(parseLocation)) + " mi");
-            restaurantHolder.hoursOfOperation.setText(restaurant.getAvailability().getEntireAvailability());
             restaurantHolder.address.setText(restaurant.getStreetNumber() + " " + restaurant.getStreetAddress() + ", " + restaurant.getCity() + ", " + restaurant.getState()+ ", " + restaurant.getZipcode());
 
         }
