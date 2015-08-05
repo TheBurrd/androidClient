@@ -1,11 +1,14 @@
 package com.dgaf.happyhour.Controller;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.dgaf.happyhour.Model.DealIcon;
@@ -23,10 +27,16 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.FunctionCallback;
 import com.parse.GetCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 
 public class Restaurant extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -143,16 +153,26 @@ public class Restaurant extends AppCompatActivity implements View.OnClickListene
         if (compoundButton == upVote) {
             if(isChecked){
                 upVote.setBackgroundResource(R.drawable.ic_thumb_up_selected);
-                downVote.setChecked(false);
+                if (downVote.isChecked()) {
+                    downVote.setChecked(false);
+                    undoDownVote();
+                }
+                upVote();
             }else{
                 upVote.setBackgroundResource(R.drawable.ic_thumb_up);
+                undoUpVote();
             }
         } else if (compoundButton == downVote) {
             if (isChecked) {
                 downVote.setBackgroundResource(R.drawable.ic_thumb_down_selected);
-                upVote.setChecked(false);
+                if (upVote.isChecked()) {
+                    upVote.setChecked(false);
+                    undoUpVote();
+                }
+                downVote();
             }else{
                 downVote.setBackgroundResource(R.drawable.ic_thumb_down);
+                undoDownVote();
             }
         }
 
@@ -222,6 +242,92 @@ public class Restaurant extends AppCompatActivity implements View.OnClickListene
         });
 
     }
+
+    public void upVote() {
+        if (dealModel != null) {
+            Map<String,String> params = new HashMap<>();
+            final Activity restaurantActivity = this;
+            params.put("objectId", dealModel.getId());
+            params.put("deviceId", getDeviceId());
+            ParseCloud.callFunctionInBackground("upVote", params, new FunctionCallback<String>() {
+                public void done(String results, ParseException e) {
+                    if (results != null) {
+                        Toast.makeText(restaurantActivity, results, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(restaurantActivity, e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+    }
+
+    public void downVote() {
+        if (dealModel != null) {
+            Map<String, String> params = new HashMap<>();
+            final Activity restaurantActivity = this;
+            params.put("objectId", dealModel.getId());
+            params.put("deviceId", getDeviceId());
+            ParseCloud.callFunctionInBackground("downVote", params, new FunctionCallback<String>() {
+                public void done(String results, ParseException e) {
+                    if (results != null) {
+                        Toast.makeText(restaurantActivity, results, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(restaurantActivity, e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+    }
+
+    public void undoUpVote() {
+        if (dealModel != null) {
+            Map<String,String> params = new HashMap<>();
+            final Activity restaurantActivity = this;
+            params.put("objectId", dealModel.getId());
+            params.put("deviceId", getDeviceId());
+            ParseCloud.callFunctionInBackground("undoUpVote", params, new FunctionCallback<String>() {
+                public void done(String results, ParseException e) {
+                    if (results != null) {
+                        Toast.makeText(restaurantActivity, results, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(restaurantActivity, e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+    }
+
+    public void undoDownVote() {
+        if (dealModel != null) {
+            Map<String,String> params = new HashMap<>();
+            final Activity restaurantActivity = this;
+            params.put("objectId", dealModel.getId());
+            params.put("deviceId", getDeviceId());
+            ParseCloud.callFunctionInBackground("undoDownVote", params, new FunctionCallback<String>() {
+                public void done(String results, ParseException e) {
+                    if (results != null){
+                        Toast.makeText(restaurantActivity, results, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(restaurantActivity, e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+    }
+
+    public String getDeviceId() {
+        final TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+
+        final String tmDevice, tmSerial, androidId;
+        tmDevice = "" + tm.getDeviceId();
+        tmSerial = "" + tm.getSimSerialNumber();
+        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        String deviceId = deviceUuid.toString();
+        return deviceId;
+    }
+
 
 
     public void onBindView() {
