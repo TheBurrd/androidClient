@@ -14,7 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dgaf.happyhour.Controller.DealListEmptyNotifier;
+import com.dgaf.happyhour.Controller.DealListAdapterNotifier;
+import com.dgaf.happyhour.Controller.DrawerFragment;
 import com.dgaf.happyhour.Controller.LocationService;
 import com.dgaf.happyhour.Controller.Restaurant;
 import com.dgaf.happyhour.Model.DealIcon;
@@ -50,8 +51,10 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private SwipeRefreshLayout swipeRefresh;
     private QueryParameters mQueryParams;
     private static final String DEAL_LIST_CACHE = "dealList";
-    private DealListEmptyNotifier notifier;
-    private DealListAdapterUpdatedNotifier updatedNotifier;
+    private DealListAdapterNotifier dealListFragment;
+    private DealListAdapterNotifier drawerFragment;
+
+
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -79,24 +82,22 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
     }
 
-    public DealListAdapter(Activity activity, RecyclerView recyclerView, SwipeRefreshLayout swipeRefresh, DealListType dealListType, DealListEmptyNotifier notifier) {
+    public DealListAdapter(Activity activity, RecyclerView recyclerView, SwipeRefreshLayout swipeRefresh, DealListType dealListType, DealListAdapterNotifier dealListFragment) {
         this.activity = activity;
         this.mRecyclerView = recyclerView;
         this.swipeRefresh = swipeRefresh;
         this.dealItems = new ArrayList<>();
-        this.notifier = notifier;
+        this.dealListFragment = dealListFragment;
 
         swipeRefresh.setOnRefreshListener(this);
         listType = dealListType;
         parseLocation = getLocation();
         mQueryParams = QueryParameters.getInstance();
         mQueryParams.addListener(this);
-        onRefresh();
 
-        //get instance of drawer to notify when adapter updates
-        updatedNotifier = (DealListAdapterUpdatedNotifier) ((AppCompatActivity)activity).
+        drawerFragment = (DrawerFragment)((AppCompatActivity)activity).
                 getSupportFragmentManager().findFragmentById(R.id.drawerItems);
-
+        onRefresh();
     }
 
     public ParseGeoPoint getLocation() {
@@ -152,13 +153,13 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
 
                     //add place holder to empty deal
                     if(deals.size() == 0){
-                        notifier.notifyEmpty();
+                        dealListFragment.notifyEmpty();
                     }else{
-                        notifier.notifyNotEmpty();
+                        dealListFragment.notifyNotEmpty();
                     }
 
                     //notify all listeners that adapter has been updated
-                    updatedNotifier.adapterUpdate();
+                    drawerFragment.adapterUpdate();
 
                     if (mQueryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
                         Collections.sort(deals, new Comparator<DealModel>() {
@@ -328,11 +329,6 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
 
         return value + " " + content;
-    }
-
-    //to alert listiners of the adapter update
-    public interface DealListAdapterUpdatedNotifier {
-        void adapterUpdate();
     }
 
 }

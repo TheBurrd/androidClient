@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.dgaf.happyhour.Adapter.DealListAdapter;
 import com.dgaf.happyhour.Model.DayOfWeekMask;
 import com.dgaf.happyhour.Model.QueryParameters;
 import com.dgaf.happyhour.R;
@@ -26,7 +25,7 @@ import com.dgaf.happyhour.R;
  * Use the {@link DrawerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DrawerFragment extends Fragment implements View.OnClickListener, ToggleButton.OnCheckedChangeListener,DealListAdapter.DealListAdapterUpdatedNotifier {
+public class DrawerFragment extends Fragment implements View.OnClickListener, ToggleButton.OnCheckedChangeListener,DealListAdapterNotifier {
 
     private View topRated,nearby,aboutUs;
     private ToggleButton monday,tuesday,wednesday,thursday,friday,saturday,sunday,today;
@@ -332,6 +331,12 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
         today.setBackgroundResource(R.drawable.ic_today);
         queryParameters.getDayOfWeekMask().unselectToday();
     }
+
+    @Override
+    public void notifyEmpty() {}
+
+    @Override
+    public void notifyNotEmpty() {}
 
     @Override
     public void adapterUpdate() {

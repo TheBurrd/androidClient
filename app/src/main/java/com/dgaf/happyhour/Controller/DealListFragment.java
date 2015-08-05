@@ -8,10 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.dgaf.happyhour.Adapter.DealListAdapter;
 import com.dgaf.happyhour.Model.DealListType;
@@ -21,7 +18,7 @@ import com.dgaf.happyhour.View.DealListDecoration;
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
 /*This is the fragment that our page view loads*/
-public class DealListFragment extends Fragment implements DealListEmptyNotifier{
+public class DealListFragment extends Fragment implements DealListAdapterNotifier {
 
     private static final String DEAL_LIST_TYPE = "listType";
     private DealListType listType;
@@ -83,5 +80,10 @@ public class DealListFragment extends Fragment implements DealListEmptyNotifier{
     @Override
     public void notifyNotEmpty() {
         errorLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void adapterUpdate() {
+
     }
 }
