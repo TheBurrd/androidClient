@@ -25,6 +25,7 @@ import com.dgaf.happyhour.Model.RestaurantModel;
 import com.dgaf.happyhour.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FunctionCallback;
@@ -76,7 +77,6 @@ public class Restaurant extends AppCompatActivity implements View.OnClickListene
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        View rootView = findViewById(android.R.id.content);//gets root view
         String restaurantArg = getIntent().getExtras().getString(RESTAURANT_ID);
         String dealArg = getIntent().getExtras().getString(DEAL_ID);
 
@@ -95,9 +95,9 @@ public class Restaurant extends AppCompatActivity implements View.OnClickListene
         address = (TextView) findViewById(R.id.address);
         //map = (GoogleMap) findViewById(R.id.map);
 
-        //map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 
-        //map.getUiSettings().setScrollGesturesEnabled(false);
+        map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+        map.getUiSettings().setScrollGesturesEnabled(false);//user cant move map around
 
         loadRestaurantDetails(restaurantArg, dealArg);
 
@@ -335,14 +335,14 @@ public class Restaurant extends AppCompatActivity implements View.OnClickListene
             setTitle(restaurantModel.getName());
 
             ParseGeoPoint parsePoint = restaurantModel.getLocation();
-/*
+
             if (parsePoint != null) {
                 updateMap(new LatLng(parsePoint.getLatitude(), parsePoint.getLongitude()), restaurantModel.getName());
             } else {
                 // Defaults to Geisel library if a restaurant hasn't loaded yet.
                 updateMap(new LatLng(32.881122, -117.237631), "UCSD - Geisel Library");
             }
-*/
+
             dealTitle.setText(dealModel.getDealTitle());
             // Comment this out till all deals in database have new availability model
             // AvailabilityModel availability = new AvailabilityModel(dealModel);
