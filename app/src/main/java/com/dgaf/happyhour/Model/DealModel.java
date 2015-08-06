@@ -95,4 +95,47 @@ public class DealModel extends ParseObject {
     public double getDistanceFrom(ParseGeoPoint location) { return location.distanceInMilesTo(getParseObject("restaurantId").getParseGeoPoint("location"));
     }
 
+    public String getDealTitle() {
+        String value;
+        double amountOff = getAmountOff();
+        double percentOff = getPercentOff();
+        double reducedPrice = getReducedPrice();
+        if (amountOff != 0) {
+            if (amountOff == (long) amountOff) {
+                value = String.format("%d", (long) amountOff);
+            } else {
+                value = String.format("%.2f", amountOff);
+            }
+            value = "$" + value + " off";
+        } else if (percentOff != 0) {
+            value = String.format("%d", (long)percentOff) + "% off";
+        } else {
+            if (reducedPrice == (long) reducedPrice) {
+                value = String.format("%d", (long) reducedPrice);
+            } else {
+                value = String.format("%.2f", reducedPrice);
+            }
+            value = "$" + value;
+        }
+
+        String content = "";
+        String item = getItem();
+        String category = getCategory();
+        if (item != null && item.length() > 0) {
+            content = item;
+        } else if (category != null &&  category.length() > 0) {
+            content = category;
+        }
+
+        return value + " " + content;
+    }
+
+    public String getRatingString() {
+        return String.valueOf(getRating()) + "%";
+    }
+
+    public String getDistanceFromString(ParseGeoPoint location) {
+        return String.format("%.1f", getDistanceFrom(location)) + " mi";
+    }
+
 }

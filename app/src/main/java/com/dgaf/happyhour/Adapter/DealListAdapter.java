@@ -269,54 +269,17 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         DealModel dealModel = dealItems.get(position);
 
-        holder.dealTitle.setText(this.getDealTitle(dealModel));
-        holder.rating.setText(String.valueOf(dealModel.getRating()) + "%");
+        holder.dealTitle.setText(dealModel.getDealTitle());
+        holder.rating.setText(dealModel.getRatingString());
         holder.restaurantName.setText(dealModel.getRestaurant());
         // Comment this out till all deals in database have new availability model
         // AvailabilityModel availability = new AvailabilityModel(dealModel);
         // holder.availability.setText(availability.getDayAvailability(DayOfWeekMask.TODAY, true));
         holder.availability.setText("Mon: 10a - 8p");
-        holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(parseLocation)) + " mi");
+        holder.distance.setText(dealModel.getDistanceFromString(parseLocation));
 
-
-        //DealIcon.setImageToDealCategory(holder.icon, dealModel);
-        DealIcon.setImageToDealCategory(holder.icon, dealModel);//test to see performance with smaller category images
+        DealIcon.setImageToDealCategory(holder.icon, dealModel);
 
         holder.restaurantId = dealModel.getRestaurantId();
-    }
-
-    public String getDealTitle(DealModel deal) {
-        String value;
-        double amountOff = deal.getAmountOff();
-        double percentOff = deal.getPercentOff();
-        double reducedPrice = deal.getReducedPrice();
-        if (amountOff != 0) {
-            if (amountOff == (long) amountOff) {
-                value = String.format("%d", (long) amountOff);
-            } else {
-                value = String.format("%.2f", amountOff);
-            }
-            value = "$" + value + " off";
-        } else if (percentOff != 0) {
-            value = String.format("%d", (long)percentOff) + "% off";
-        } else {
-            if (reducedPrice == (long) reducedPrice) {
-                value = String.format("%d", (long) reducedPrice);
-            } else {
-                value = String.format("%.2f", reducedPrice);
-            }
-            value = "$" + value;
-        }
-
-        String content = "";
-        String item = deal.getItem();
-        String category = deal.getCategory();
-        if (item != null && item.length() > 0) {
-            content = item;
-        } else if (category != null &&  category.length() > 0) {
-            content = category;
-        }
-
-        return value + " " + content;
     }
 }

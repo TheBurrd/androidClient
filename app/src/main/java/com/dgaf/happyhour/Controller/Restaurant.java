@@ -1,10 +1,14 @@
 package com.dgaf.happyhour.Controller;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,27 +16,38 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.dgaf.happyhour.Adapter.RestaurantAdapter;
+import com.dgaf.happyhour.Model.DealIcon;
 import com.dgaf.happyhour.Model.DealModel;
 import com.dgaf.happyhour.Model.RestaurantModel;
 import com.dgaf.happyhour.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.FunctionCallback;
 import com.parse.GetCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
-public class Restaurant extends AppCompatActivity {
 
-    private RestaurantAdapter mAdapter;
+public class Restaurant extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+
     private static final String RESTAURANT_ID = "resId";
     private static final String DEAL_ID = "dealId";
     private Toolbar toolbar;
     private RestaurantModel restaurantModel;
     private DealModel dealModel;
+    private ParseGeoPoint parseLocation;
 
     private TextView dealTitle;
     private TextView dealAvailability;
@@ -40,7 +55,7 @@ public class Restaurant extends AppCompatActivity {
     private TextView dealRating;
     private ToggleButton upVote;
     private ToggleButton downVote;
-    private TextView restaurantName;
+    private ImageView categoryIcon;
     private ImageView dialPhone;
     private ImageView visitWebsite;
     private TextView proximity;
@@ -62,11 +77,12 @@ public class Restaurant extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        View rootView = findViewById(android.R.id.content);//gets root view
         String restaurantArg = getIntent().getExtras().getString(RESTAURANT_ID);
         String dealArg = getIntent().getExtras().getString(DEAL_ID);
 
+        parseLocation = getLocation();
 
+        categoryIcon = (ImageView) findViewById(R.id.icon);
         dealTitle = (TextView) findViewById(R.id.deal_title);
         dealAvailability = (TextView) findViewById(R.id.deal_availability);
         dealFineprint = (TextView) findViewById(R.id.deal_fineprint);
@@ -79,59 +95,17 @@ public class Restaurant extends AppCompatActivity {
         address = (TextView) findViewById(R.id.address);
         //map = (GoogleMap) findViewById(R.id.map);
 
+
+        map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+        map.getUiSettings().setScrollGesturesEnabled(false);//user cant move map around
+
+        loadRestaurantDetails(restaurantArg, dealArg);
+
         //load a phone number
-        dialPhone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String phoneNumber = getPhoneNumber();
-                if (phoneNumber != null) {
-                    Uri number = Uri.parse("tel:" + phoneNumber);
-                    Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
-                    startActivity(callIntent);
-                }
-            }
-        });
-
-        //go to a website
-        visitWebsite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String website = getWebsite();
-                if (website != null) {
-                    if (!website.startsWith("http://") && !website.startsWith("https://"))
-                        website = "http://" + website;
-                    Uri webaddress = Uri.parse(website);
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, webaddress);
-                    startActivity(browserIntent);
-                }
-            }
-        });
-
-        upVote.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if(isChecked){
-                    upVote.setBackgroundResource(R.drawable.ic_thumb_up_selected);
-                    downVote.setChecked(false);
-                }else{
-                    upVote.setBackgroundResource(R.drawable.ic_thumb_up);
-                }
-            }
-        });
-
-
-        downVote.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-
-                if (isChecked) {
-                    downVote.setBackgroundResource(R.drawable.ic_thumb_down_selected);
-                    upVote.setChecked(false);
-                }else{
-                    downVote.setBackgroundResource(R.drawable.ic_thumb_down);
-                }
-            }
-        });
+        dialPhone.setOnClickListener(this);
+        visitWebsite.setOnClickListener(this);
+        upVote.setOnCheckedChangeListener(this);
+        downVote.setOnCheckedChangeListener(this);
 
     }
 
@@ -157,6 +131,80 @@ public class Restaurant extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onClick(View v) {
+        if (v == dialPhone && restaurantModel != null) {
+            Uri number = Uri.parse("tel:" + restaurantModel.getPhoneNumber());
+            Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
+            startActivity(callIntent);
+        } else if (v ==  visitWebsite && restaurantModel != null) {
+            String website = restaurantModel.getWebsite();
+            if (!website.startsWith("http://") && !website.startsWith("https://")) {
+                website = "http://" + website;
+            }
+            Uri webaddress = Uri.parse(website);
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, webaddress);
+            startActivity(browserIntent);
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+        if (compoundButton == upVote) {
+            if(isChecked){
+                upVote.setBackgroundResource(R.drawable.ic_thumb_up_selected);
+                if (downVote.isChecked()) {
+                    downVote.setChecked(false);
+                    undoDownVote();
+                }
+                upVote();
+            }else{
+                upVote.setBackgroundResource(R.drawable.ic_thumb_up);
+                undoUpVote();
+            }
+        } else if (compoundButton == downVote) {
+            if (isChecked) {
+                downVote.setBackgroundResource(R.drawable.ic_thumb_down_selected);
+                if (upVote.isChecked()) {
+                    upVote.setChecked(false);
+                    undoUpVote();
+                }
+                downVote();
+            }else{
+                downVote.setBackgroundResource(R.drawable.ic_thumb_down);
+                undoDownVote();
+            }
+        }
+
+    }
+
+    public void updateMap(LatLng location, String markerText)
+    {
+        map.addMarker(new MarkerOptions().position(location).title(markerText));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
+        // Zoom in, animating the camera.
+        map.animateCamera(CameraUpdateFactory.zoomIn());
+        // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+        map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+    }
+
+    public ParseGeoPoint getLocation() {
+        // Geisel Library - Default Location
+        double latitude = 32.881122;
+        double longitude = -117.237631;
+        if (!Build.FINGERPRINT.startsWith("generic")) {
+            LocationService userLocation = new LocationService(this);
+            // Is user location available and are we not running in an emulator
+            if (userLocation.canGetLocation()) {
+                latitude = userLocation.getLatitude();
+                longitude = userLocation.getLongitude();
+            } else {
+                userLocation.showSettingsAlert();
+            }
+        }
+        return new ParseGeoPoint(latitude,longitude);
+    }
+
     public void loadRestaurantDetails(String restaurantId, String dealId) {
         ParseQuery<RestaurantModel> restaurantQuery = ParseQuery.getQuery(RestaurantModel.class);
         restaurantQuery.fromLocalDatastore();
@@ -168,7 +216,7 @@ public class Restaurant extends AppCompatActivity {
                 Log.v("Parse info:", "Restaurant query returned");
                 if (e == null) {
                     restaurantModel = res;
-                    bindRestaurantView();
+                    onBindView();
                 } else {
                     //TODO remove logging
                     Log.e("Parse error: ", e.getMessage());
@@ -185,7 +233,7 @@ public class Restaurant extends AppCompatActivity {
                 Log.v("Parse info:", "Deal query returned");
                 if (e == null) {
                     dealModel = returnedDeal;
-                    bindRestaurantView();
+                    onBindView();
                 } else {
                     //TODO remove logging
                     Log.e("Parse error: ", e.getMessage());
@@ -195,41 +243,117 @@ public class Restaurant extends AppCompatActivity {
 
     }
 
-    public String getPhoneNumber() {
-        if ( restaurantModel != null) {
-            return restaurantModel.getPhoneNumber();
+    public void upVote() {
+        if (dealModel != null) {
+            Map<String,String> params = new HashMap<>();
+            final Activity restaurantActivity = this;
+            params.put("objectId", dealModel.getId());
+            params.put("deviceId", getDeviceId());
+            ParseCloud.callFunctionInBackground("upVote", params, new FunctionCallback<String>() {
+                public void done(String results, ParseException e) {
+                    if (results != null) {
+                        Toast.makeText(restaurantActivity, results, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(restaurantActivity, e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
         }
-        return null;
     }
 
-    public String getWebsite() {
-        if ( restaurantModel != null) {
-            return restaurantModel.getWebsite();
+    public void downVote() {
+        if (dealModel != null) {
+            Map<String, String> params = new HashMap<>();
+            final Activity restaurantActivity = this;
+            params.put("objectId", dealModel.getId());
+            params.put("deviceId", getDeviceId());
+            ParseCloud.callFunctionInBackground("downVote", params, new FunctionCallback<String>() {
+                public void done(String results, ParseException e) {
+                    if (results != null) {
+                        Toast.makeText(restaurantActivity, results, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(restaurantActivity, e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
         }
-        return null;
     }
 
-    public void bindRestaurantView() {
-        if ( restaurantModel != null) {
+    public void undoUpVote() {
+        if (dealModel != null) {
+            Map<String,String> params = new HashMap<>();
+            final Activity restaurantActivity = this;
+            params.put("objectId", dealModel.getId());
+            params.put("deviceId", getDeviceId());
+            ParseCloud.callFunctionInBackground("undoUpVote", params, new FunctionCallback<String>() {
+                public void done(String results, ParseException e) {
+                    if (results != null) {
+                        Toast.makeText(restaurantActivity, results, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(restaurantActivity, e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+    }
+
+    public void undoDownVote() {
+        if (dealModel != null) {
+            Map<String,String> params = new HashMap<>();
+            final Activity restaurantActivity = this;
+            params.put("objectId", dealModel.getId());
+            params.put("deviceId", getDeviceId());
+            ParseCloud.callFunctionInBackground("undoDownVote", params, new FunctionCallback<String>() {
+                public void done(String results, ParseException e) {
+                    if (results != null){
+                        Toast.makeText(restaurantActivity, results, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(restaurantActivity, e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+    }
+
+    public String getDeviceId() {
+        final TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+
+        final String tmDevice, tmSerial, androidId;
+        tmDevice = "" + tm.getDeviceId();
+        tmSerial = "" + tm.getSimSerialNumber();
+        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        String deviceId = deviceUuid.toString();
+        return deviceId;
+    }
+
+
+
+    public void onBindView() {
+        if ( restaurantModel != null && dealModel != null) {
+            setTitle(restaurantModel.getName());
+
             ParseGeoPoint parsePoint = restaurantModel.getLocation();
-            /*
+
             if (parsePoint != null) {
-                restaurantHolder.updateMap(new LatLng(parsePoint.getLatitude(), parsePoint.getLongitude()), restaurant.getName());
+                updateMap(new LatLng(parsePoint.getLatitude(), parsePoint.getLongitude()), restaurantModel.getName());
             } else {
                 // Defaults to Geisel library if a restaurant hasn't loaded yet.
-                restaurantHolder.updateMap(new LatLng(32.881122,-117.237631),"UCSD - Geisel Library");
+                updateMap(new LatLng(32.881122, -117.237631), "UCSD - Geisel Library");
             }
-            */
-            restaurantName.setText(restaurantModel.getName());
-            dealTitle.setText(dealModel.getItem());
+
+            dealTitle.setText(dealModel.getDealTitle());
             // Comment this out till all deals in database have new availability model
             // AvailabilityModel availability = new AvailabilityModel(dealModel);
             // dealAvailability.setText(availability.getDayAvailability(DayOfWeekMask.TODAY, true));
             dealAvailability.setText("Mon: 10a - 8p");
             dealFineprint.setText(dealModel.getFineprint());
-            dealRating.setText(String.valueOf(dealModel.getRating()) + "%");
-            //proximity.setText(String.format("%.1f", restaurantModel.getDistanceFrom(parseLocation)) + " mi");
-            address.setText(restaurantModel.getStreetNumber() + " " + restaurantModel.getStreetAddress() + ", " + restaurantModel.getCity() + ", " + restaurantModel.getState()+ ", " + restaurantModel.getZipcode());
+            dealRating.setText(dealModel.getRatingString());
+            proximity.setText(dealModel.getDistanceFromString(parseLocation));
+            address.setText(restaurantModel.getAddressLine());
+
+            DealIcon.setImageToDealCategory(categoryIcon, dealModel);
 
         }
     }
