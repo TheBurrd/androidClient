@@ -3,6 +3,7 @@ package com.dgaf.happyhour.Controller;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,6 +33,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
     private QueryParameters queryParameters;
     private OnFragmentInteractionListener mListener;
     private boolean giveNavDrawerChangedFeedback;
+    private String prevSortType = "null";//avoid null pointer exception
 
     /* Lock the navigation drawer from closing when the user is
      * changing the seekbar
@@ -341,6 +343,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
     @Override
     public void adapterUpdate() {
         giveNavDrawerChangedFeedback = true;
+        Log.i("DrawerFragment","Deal adapter updated");
     }
 
     /**
@@ -394,6 +397,8 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
     //of what sorting they have applied
     public void giveFeedBack(){
 
+        boolean sortTypeChanged;
+
         //about us clicked we dont want feedback
         if(aboutUs.getBackground() != null)
             return;
@@ -405,6 +410,8 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
 
         String sortType = queryParams.getQueryType().name().equals("RATING")
                 ?getString(R.string.sort_rating):getString(R.string.sort_proximity);
+
+        sortTypeChanged = !prevSortType.equals(sortType);
 
         DayOfWeekMask days = queryParams.getDayOfWeekMask();
 
@@ -433,7 +440,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
         }
 
         if(days.isThursdaySelected()){
-            sortDays = getString(R.string.sort_tuesday);
+            sortDays = getString(R.string.sort_thursday);
             amountOfDaysSelected++;
         }
 
@@ -456,9 +463,13 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
             sortDays = getString(R.string.sort_multiple);
 
 
-
-        Toast.makeText(getActivity(), sortType+".\n"+sortDays+".", Toast.LENGTH_SHORT).show();
+        if(sortTypeChanged)
+            Toast.makeText(getActivity(),sortType, Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(getActivity(),sortDays, Toast.LENGTH_SHORT).show();
 
         giveNavDrawerChangedFeedback = false;
+
+        prevSortType = sortType;
     }
 }

@@ -225,6 +225,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                     Toast.makeText(activity, "Unable to process request: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     swipeRefresh.setRefreshing(false);    // Update refresh indicator
                 }
+
             }
         });
     }
