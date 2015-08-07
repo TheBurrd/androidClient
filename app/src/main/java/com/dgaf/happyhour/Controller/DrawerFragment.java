@@ -394,6 +394,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
     //of what sorting they have applied
     public void giveFeedBack(){
 
+        //about us clicked we dont want feedback
         if(aboutUs.getBackground() != null)
             return;
 
@@ -402,19 +403,61 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
 
         QueryParameters queryParams = QueryParameters.getInstance();
 
-        String sortType = "Sorting by "+queryParams.getQueryType().name()+" for ";
+        String sortType = queryParams.getQueryType().name().equals("RATING")
+                ?getString(R.string.sort_rating):getString(R.string.sort_proximity);
 
         DayOfWeekMask days = queryParams.getDayOfWeekMask();
-        String sortDays = (days.isTodaySelected()?"Today":"")+
-                (days.isMondaySelected()?"Mo ":"")+
-                (days.isTuesdaySelected()?"Tu ":"")+
-                (days.isWednesdaySelected()?"We ":"")+
-                (days.isThursdaySelected()?"Th ":"")+
-                (days.isFridaySelected()?"Fr ":"")+
-                (days.isSaturdaySelected()?"Sa ":"")+
-                (days.isSundaySelected()?"Su ":"");
 
-        Toast.makeText(getActivity(), sortType + sortDays, Toast.LENGTH_SHORT).show();
+        String sortDays = "";
+
+        int amountOfDaysSelected = 0;
+
+        if(days.isTodaySelected()) {
+            sortDays = getString(R.string.sort_today);
+            amountOfDaysSelected++;
+        }
+
+        if(days.isMondaySelected()){
+            sortDays = getString(R.string.sort_monday);
+            amountOfDaysSelected++;
+        }
+
+        if(days.isTuesdaySelected()){
+            sortDays = getString(R.string.sort_tuesday);
+            amountOfDaysSelected++;
+        }
+
+        if(days.isWednesdaySelected()){
+            sortDays = getString(R.string.sort_wednesday);
+            amountOfDaysSelected++;
+        }
+
+        if(days.isThursdaySelected()){
+            sortDays = getString(R.string.sort_tuesday);
+            amountOfDaysSelected++;
+        }
+
+        if(days.isFridaySelected()){
+            sortDays = getString(R.string.sort_friday);
+            amountOfDaysSelected++;
+        }
+
+        if(days.isSaturdaySelected()){
+            sortDays = getString(R.string.sort_saturday);
+            amountOfDaysSelected++;
+        }
+
+        if(days.isSundaySelected()){
+            sortDays = getString(R.string.sort_sunday);
+            amountOfDaysSelected++;
+        }
+
+        if(amountOfDaysSelected > 1)
+            sortDays = getString(R.string.sort_multiple);
+
+
+
+        Toast.makeText(getActivity(), sortType+".\n"+sortDays+".", Toast.LENGTH_SHORT).show();
 
         giveNavDrawerChangedFeedback = false;
     }

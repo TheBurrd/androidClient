@@ -18,7 +18,6 @@ import com.dgaf.happyhour.Adapter.RestaurantAdapter;
 import com.dgaf.happyhour.Model.DealModel;
 import com.dgaf.happyhour.Model.RestaurantModel;
 import com.dgaf.happyhour.R;
-import com.google.android.gms.maps.GoogleMap;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -46,7 +45,6 @@ public class Restaurant extends AppCompatActivity {
     private TextView proximity;
     //private TextView hoursOfOperation;
     private TextView address;
-    private GoogleMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
