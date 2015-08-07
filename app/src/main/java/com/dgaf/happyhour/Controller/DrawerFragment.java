@@ -320,8 +320,11 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
                     queryParameters.getDayOfWeekMask().unselectSunday();
                     break;
                 case R.id.today:
-                    compoundButton.setBackgroundResource(R.drawable.ic_today);
-                    queryParameters.getDayOfWeekMask().unselectToday();
+                    //only unselect today if another day is selected
+                    if(isADaySelected()) {
+                        compoundButton.setBackgroundResource(R.drawable.ic_today);
+                        queryParameters.getDayOfWeekMask().unselectToday();
+                    }
                     break;
             }
         }
@@ -391,6 +394,15 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
     private void sortByProximity() {
         QueryParameters queryParams = QueryParameters.getInstance();
         queryParams.setQueryType(QueryParameters.QueryType.PROXIMITY);
+    }
+
+    private boolean isADaySelected(){
+        QueryParameters queryParams = QueryParameters.getInstance();
+        DayOfWeekMask days = queryParams.getDayOfWeekMask();
+
+        return (days.isMondaySelected()||days.isTuesdaySelected()||days.isWednesdaySelected()||
+                days.isThursdaySelected()||days.isFridaySelected()||days.isSaturdaySelected()||
+                days.isSundaySelected());
     }
 
     //this will be called when the adapter is updated to give the user feedback
