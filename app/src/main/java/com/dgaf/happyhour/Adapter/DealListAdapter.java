@@ -19,11 +19,10 @@ import com.dgaf.happyhour.Controller.Restaurant;
 import com.dgaf.happyhour.Model.DealIcon;
 import com.dgaf.happyhour.Model.DealListType;
 import com.dgaf.happyhour.Model.DealModel;
-import com.dgaf.happyhour.Model.QueryParameters;
-import com.dgaf.happyhour.Model.RestaurantModel;
+import com.dgaf.happyhour.Model.ModelUpdater;
+import com.dgaf.happyhour.Model.Queries.QueryParameters;
 import com.dgaf.happyhour.R;
 import com.parse.DeleteCallback;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
@@ -37,9 +36,8 @@ import java.util.List;
 /**
  * Created by adam on 4/28/15.
  */
-public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder> implements SwipeRefreshLayout.OnRefreshListener, QueryParameters.Listener, View.OnClickListener {
+public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder> implements SwipeRefreshLayout.OnRefreshListener, QueryParameters.Listener, View.OnClickListener, ModelUpdater<DealModel> {
 
-    //private FragmentActivity activity; not needed we will change to context
     private Context context;
     private RecyclerView mRecyclerView;
     private List<DealModel> dealItems;
@@ -109,114 +107,85 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         return new ParseGeoPoint(latitude,longitude);
     }
 
-    public void loadDeals() {
-        // Setup the database Query
-        ParseQuery<RestaurantModel> localRestaurants = ParseQuery.getQuery(RestaurantModel.class);
-        localRestaurants.whereWithinMiles("location", parseLocation, mQueryParams.getRadiusMi());
-        ParseQuery<DealModel> localDeals = ParseQuery.getQuery(DealModel.class);
-        ParseQuery<DealModel> orLocalDeals = ParseQuery.getQuery(DealModel.class);
-        localDeals.whereMatchesQuery("restaurantId", localRestaurants);
-        orLocalDeals.whereMatchesQuery("restaurantId", localRestaurants);
-        //TODO remove hardcoded tag search
-        switch(listType) {
-            case DRINK:
-                localDeals.whereEqualTo("tags","drink");
-                orLocalDeals.whereEqualTo("tags","drink");
-                break;
-            case FOOD:
-                localDeals.whereEqualTo("tags","food");
-                orLocalDeals.whereEqualTo("tags","food");
-                break;
-            case FEATURED:
-                localDeals.whereEqualTo("tags","featured");
-                orLocalDeals.whereEqualTo("tags","featured");
-                break;
-        }
-        localDeals = applyDayOfWeekForQuery(localDeals, orLocalDeals);
-        localDeals.include("restaurantId");
-        //TODO remove logging
-        Log.v("Parse info", "Deal list query started" );
-        final DealListAdapter listAdapter = this;
-        localDeals.findInBackground(new FindCallback<DealModel>() {
-            public void done(List<DealModel> deals, ParseException e) {
-                if (e == null) {
-                    //TODO remove logging
-                    Log.v("Parse info", "Deal list query returned " + String.valueOf(deals.size()));
+    @Override
+    public void onDataModelUpdate(List<DealModel> deals, Exception e) {
+        if (e == null) {
+            //TODO remove logging
+            Log.v("Parse info", "Deal list query returned " + String.valueOf(deals.size()));
 
-                    //add place holder to empty deal
-                    if(deals.size() == 0){
-                        notifier.notifyEmpty();
-                    }else{
-                        notifier.notifyNotEmpty();
-                    }
-
-                    if (mQueryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
-                        Collections.sort(deals, new Comparator<DealModel>() {
-                            @Override
-                            public int compare(DealModel lhs, DealModel rhs) {
-                                double diff = lhs.getDistanceFrom(parseLocation) - rhs.getDistanceFrom(parseLocation);
-                                if (diff < 0 && diff > -1.0) {
-                                    diff = -1.0;
-                                } else if (diff > 0 && diff < 1.0) {
-                                    diff = 1.0;
-                                }
-                                if (diff == 0) {
-                                    diff = rhs.getRating() - lhs.getRating();
-                                }
-                                return (int) (diff);
-                            }
-                        });
-                    } else if (mQueryParams.getQueryType() == QueryParameters.QueryType.RATING){
-                        Collections.sort(deals, new Comparator<DealModel>() {
-                            @Override
-                            public int compare(DealModel lhs, DealModel rhs) {
-                                double diff = (double)(rhs.getRating() - lhs.getRating());
-                                if (diff == 0) {
-                                    diff = lhs.getDistanceFrom(parseLocation) - rhs.getDistanceFrom(parseLocation);
-                                    if (diff < 0 && diff > -1.0) {
-                                        diff = -1.0;
-                                    } else if (diff > 0 && diff < 1.0) {
-                                        diff = 1.0;
-                                    }
-                                }
-                                return (int) (diff);
-                            }
-                        });
-                    }
-                    // Release any objects previously pinned for this query.
-                    ParseObject.unpinAllInBackground(DEAL_LIST_CACHE, dealItems, new DeleteCallback() {
-                        public void done(ParseException e) {
-                            if (e != null) {
-                                //TODO remove logging
-                                Log.e("Parse error: ", e.getMessage());
-                                return;
-                            }
-                            // Update refresh indicator
-                            swipeRefresh.setRefreshing(false);
-                            // Add the latest results for this query to the cache.
-                            ParseObject.pinAllInBackground(DEAL_LIST_CACHE, dealItems);
-                        }
-                    });
-                    List<DealModel> prevDealItems = dealItems;
-                    dealItems = deals;
-                    if (prevDealItems.size() == 0) {
-                        listAdapter.notifyItemRangeInserted(0, dealItems.size());
-                    } else if (prevDealItems.size() > dealItems.size()) {
-                        listAdapter.notifyItemRangeChanged(0, dealItems.size());
-                        listAdapter.notifyItemRangeRemoved(dealItems.size(), prevDealItems.size());
-                    } else {
-                        listAdapter.notifyItemRangeChanged(0, prevDealItems.size());
-                        listAdapter.notifyItemRangeInserted(prevDealItems.size(), dealItems.size());
-                    }
-                } else {
-                    //TODO remove logging
-                    Log.e("Parse error: ", e.getMessage());
-                    Toast.makeText(context, "Unable to process request: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    swipeRefresh.setRefreshing(false);    // Update refresh indicator
-                }
+            //add place holder to empty deal
+            if(deals.size() == 0){
+                notifier.notifyEmpty();
+            }else{
+                notifier.notifyNotEmpty();
             }
-        });
+
+            if (mQueryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
+                Collections.sort(deals, new Comparator<DealModel>() {
+                    @Override
+                    public int compare(DealModel lhs, DealModel rhs) {
+                        double diff = lhs.getDistanceFrom(parseLocation) - rhs.getDistanceFrom(parseLocation);
+                        if (diff < 0 && diff > -1.0) {
+                            diff = -1.0;
+                        } else if (diff > 0 && diff < 1.0) {
+                            diff = 1.0;
+                        }
+                        if (diff == 0) {
+                            diff = rhs.getRating() - lhs.getRating();
+                        }
+                        return (int) (diff);
+                    }
+                });
+            } else if (mQueryParams.getQueryType() == QueryParameters.QueryType.RATING){
+                Collections.sort(deals, new Comparator<DealModel>() {
+                    @Override
+                    public int compare(DealModel lhs, DealModel rhs) {
+                        double diff = (double)(rhs.getRating() - lhs.getRating());
+                        if (diff == 0) {
+                            diff = lhs.getDistanceFrom(parseLocation) - rhs.getDistanceFrom(parseLocation);
+                            if (diff < 0 && diff > -1.0) {
+                                diff = -1.0;
+                            } else if (diff > 0 && diff < 1.0) {
+                                diff = 1.0;
+                            }
+                        }
+                        return (int) (diff);
+                    }
+                });
+            }
+            // Release any objects previously pinned for this query.
+            ParseObject.unpinAllInBackground(DEAL_LIST_CACHE, dealItems, new DeleteCallback() {
+                public void done(ParseException e) {
+                    if (e != null) {
+                        //TODO remove logging
+                        Log.e("Parse error: ", e.getMessage());
+                        return;
+                    }
+                    // Update refresh indicator
+                    swipeRefresh.setRefreshing(false);
+                    // Add the latest results for this query to the cache.
+                    ParseObject.pinAllInBackground(DEAL_LIST_CACHE, dealItems);
+                }
+            });
+            List<DealModel> prevDealItems = dealItems;
+            dealItems = deals;
+            if (prevDealItems.size() == 0) {
+                notifyItemRangeInserted(0, dealItems.size());
+            } else if (prevDealItems.size() > dealItems.size()) {
+                notifyItemRangeChanged(0, dealItems.size());
+                notifyItemRangeRemoved(dealItems.size(), prevDealItems.size());
+            } else {
+                notifyItemRangeChanged(0, prevDealItems.size());
+                notifyItemRangeInserted(prevDealItems.size(), dealItems.size());
+            }
+        } else {
+            //TODO remove logging
+            Log.e("Parse error: ", e.getMessage());
+            Toast.makeText(context, "Unable to process request: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            swipeRefresh.setRefreshing(false);    // Update refresh indicator
+        }
     }
+
 
     public ParseQuery<DealModel> applyDayOfWeekForQuery(ParseQuery<DealModel> query, ParseQuery<DealModel> orQuery) {
         //TODO implement query based on new availability model

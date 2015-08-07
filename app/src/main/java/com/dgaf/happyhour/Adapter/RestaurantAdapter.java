@@ -15,7 +15,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.dgaf.happyhour.Controller.LocationService;
-import com.dgaf.happyhour.Model.AvailabilityModel;
 import com.dgaf.happyhour.Model.DealModel;
 import com.dgaf.happyhour.Model.RestaurantModel;
 import com.dgaf.happyhour.R;
@@ -27,7 +26,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.GetCallback;
 import com.parse.ParseException;
-import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseImageView;
 import com.parse.ParseQuery;

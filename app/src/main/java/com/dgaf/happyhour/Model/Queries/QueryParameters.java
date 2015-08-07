@@ -1,4 +1,8 @@
-package com.dgaf.happyhour.Model;
+package com.dgaf.happyhour.Model.Queries;
+
+import com.dgaf.happyhour.Model.DayOfWeekMask;
+import com.parse.Parse;
+import com.parse.ParseGeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,5 +73,10 @@ public class QueryParameters {
     public DayOfWeekMask getDayOfWeekMask() {
         return mDayOfWeekMask;
     }
+
+    public ParseGeoPoint getLocation() {
+        return new ParseGeoPoint();
+    }
+
 
 }
