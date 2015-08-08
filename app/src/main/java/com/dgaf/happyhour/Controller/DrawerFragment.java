@@ -34,6 +34,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
     private OnFragmentInteractionListener mListener;
     private boolean giveNavDrawerChangedFeedback;
     private String prevSortType = "null";//avoid null pointer exception
+    private String prevDays = "null";
 
     /* Lock the navigation drawer from closing when the user is
      * changing the seekbar
@@ -417,73 +418,89 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
         if(aboutUs.getBackground() != null)
             return;
 
+        //the adapter hasn't updated
         if(!giveNavDrawerChangedFeedback)
             return;
 
         QueryParameters queryParams = QueryParameters.getInstance();
 
+        //get the current sort type
         String sortType = queryParams.getQueryType().name().equals("RATING")
                 ?getString(R.string.sort_rating):getString(R.string.sort_proximity);
 
+        //check to see if the sort type changed
         sortTypeChanged = !prevSortType.equals(sortType);
 
         DayOfWeekMask days = queryParams.getDayOfWeekMask();
 
-        String sortDays = "";
+        String sortDays = " ";
+        String currentDays = " ";
 
         int amountOfDaysSelected = 0;
 
         if(days.isTodaySelected()) {
             sortDays = getString(R.string.sort_today);
+            currentDays+="To";
             amountOfDaysSelected++;
         }
 
         if(days.isMondaySelected()){
             sortDays = getString(R.string.sort_monday);
+            currentDays+="Mo";
             amountOfDaysSelected++;
         }
 
         if(days.isTuesdaySelected()){
             sortDays = getString(R.string.sort_tuesday);
+            currentDays+="Tu";
             amountOfDaysSelected++;
         }
 
         if(days.isWednesdaySelected()){
             sortDays = getString(R.string.sort_wednesday);
+            currentDays+="We";
             amountOfDaysSelected++;
         }
 
         if(days.isThursdaySelected()){
             sortDays = getString(R.string.sort_thursday);
+            currentDays+="Th";
             amountOfDaysSelected++;
         }
 
         if(days.isFridaySelected()){
             sortDays = getString(R.string.sort_friday);
+            currentDays+="Fr";
             amountOfDaysSelected++;
         }
 
         if(days.isSaturdaySelected()){
             sortDays = getString(R.string.sort_saturday);
+            currentDays+="Sa";
             amountOfDaysSelected++;
         }
 
         if(days.isSundaySelected()){
             sortDays = getString(R.string.sort_sunday);
+            currentDays+="Su";
             amountOfDaysSelected++;
         }
 
         if(amountOfDaysSelected > 1)
             sortDays = getString(R.string.sort_multiple);
 
-
-        if(sortTypeChanged)
+        //if the sort type changed or the sort type hasn't changed but days hasn't changed either
+        if(sortTypeChanged || (!sortTypeChanged && prevDays.equals(currentDays)))
             Toast.makeText(getActivity(),sortType, Toast.LENGTH_SHORT).show();
+
+        //the sort type didn't change but the days did change
         else
             Toast.makeText(getActivity(),sortDays, Toast.LENGTH_SHORT).show();
 
         giveNavDrawerChangedFeedback = false;
 
-        prevSortType = sortType;
+        prevSortType = sortType;//get the last sort type
+        prevDays = currentDays;//get the last days sort type
+
     }
 }
