@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dgaf.happyhour.Model.DealListType;
-import com.dgaf.happyhour.Model.QueryParameters;
+import com.dgaf.happyhour.Model.Queries.QueryParameters;
 import com.dgaf.happyhour.R;
 
 import java.util.Locale;

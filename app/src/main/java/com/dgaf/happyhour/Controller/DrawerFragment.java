@@ -14,7 +14,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.dgaf.happyhour.Model.DayOfWeekMask;
-import com.dgaf.happyhour.Model.QueryParameters;
+import com.dgaf.happyhour.Model.Queries.QueryParameters;
 import com.dgaf.happyhour.R;
 
 /**
