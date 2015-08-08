@@ -2,7 +2,6 @@ package com.dgaf.happyhour.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,10 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dgaf.happyhour.Controller.DealListEmptyNotifier;
-import com.dgaf.happyhour.Controller.LocationService;
 import com.dgaf.happyhour.Controller.Restaurant;
 import com.dgaf.happyhour.Model.DealIcon;
-import com.dgaf.happyhour.Model.DealListType;
 import com.dgaf.happyhour.Model.DealModel;
 import com.dgaf.happyhour.Model.ModelUpdater;
 import com.dgaf.happyhour.Model.Queries.QueryParameters;
@@ -26,7 +23,6 @@ import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,16 +32,13 @@ import java.util.List;
 /**
  * Created by adam on 4/28/15.
  */
-public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder> implements SwipeRefreshLayout.OnRefreshListener, QueryParameters.Listener, View.OnClickListener, ModelUpdater<DealModel> {
+public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder> implements View.OnClickListener, ModelUpdater<DealModel> {
 
     private Context context;
     private RecyclerView mRecyclerView;
     private List<DealModel> dealItems;
-    private ParseGeoPoint parseLocation;
-    private DealListType listType;
-    private LocationService userLocation;
     private SwipeRefreshLayout swipeRefresh;
-    private QueryParameters mQueryParams;
+    private QueryParameters queryParams;
     private static final String DEAL_LIST_CACHE = "dealList";
     private DealListEmptyNotifier notifier;
 
@@ -59,7 +52,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         public ImageView icon;
         public String restaurantId;
 
-        public ViewHolder(View itemView, DealListType listType) {
+        public ViewHolder(View itemView) {
             super(itemView);
             dealTitle = (TextView) itemView.findViewById(R.id.deal_title);
             restaurantName = (TextView) itemView.findViewById(R.id.restaurant_name);
@@ -67,44 +60,17 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
             rating = (TextView) itemView.findViewById(R.id.deal_rating);
             availability = (TextView) itemView.findViewById(R.id.deal_availability);
             icon = (ImageView) itemView.findViewById(R.id.deal_icon);
-            if (listType == DealListType.FOOD) {
-                icon.setImageResource(R.drawable.ic_food_placeholder);
-            } else {
-                icon.setImageResource(R.drawable.ic_drinks_placeholder);
-            }
+            icon.setImageResource(R.drawable.ic_drinks_placeholder);
         }
     }
 
-    public DealListAdapter(Context context, RecyclerView recyclerView, SwipeRefreshLayout swipeRefresh, DealListType dealListType, DealListEmptyNotifier notifier) {
+    public DealListAdapter(Context context, RecyclerView recyclerView, SwipeRefreshLayout swipeRefresh, DealListEmptyNotifier notifier, QueryParameters queryParameters) {
         this.context = context;
         this.mRecyclerView = recyclerView;
         this.swipeRefresh = swipeRefresh;
         this.dealItems = new ArrayList<>();
         this.notifier = notifier;
-
-        swipeRefresh.setOnRefreshListener(this);
-        listType = dealListType;
-        parseLocation = getLocation();
-        mQueryParams = QueryParameters.getInstance();
-        mQueryParams.addListener(this);
-        onRefresh();
-    }
-
-    public ParseGeoPoint getLocation() {
-        // Geisel Library - Default Location
-        double latitude = 32.881122;
-        double longitude = -117.237631;
-        if (!Build.FINGERPRINT.startsWith("generic")) {
-            userLocation = new LocationService(context);
-            // Is user location available and are we not running in an emulator
-            if (userLocation.canGetLocation()) {
-                latitude = userLocation.getLatitude();
-                longitude = userLocation.getLongitude();
-            } else {
-                userLocation.showSettingsAlert();
-            }
-        }
-        return new ParseGeoPoint(latitude,longitude);
+        this.queryParams = queryParameters;
     }
 
     @Override
@@ -119,12 +85,12 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
             }else{
                 notifier.notifyNotEmpty();
             }
-
-            if (mQueryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
+            final ParseGeoPoint location = queryParams.getLocation(context);
+            if (queryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
                 Collections.sort(deals, new Comparator<DealModel>() {
                     @Override
                     public int compare(DealModel lhs, DealModel rhs) {
-                        double diff = lhs.getDistanceFrom(parseLocation) - rhs.getDistanceFrom(parseLocation);
+                        double diff = lhs.getDistanceFrom(location) - rhs.getDistanceFrom(location);
                         if (diff < 0 && diff > -1.0) {
                             diff = -1.0;
                         } else if (diff > 0 && diff < 1.0) {
@@ -136,13 +102,13 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                         return (int) (diff);
                     }
                 });
-            } else if (mQueryParams.getQueryType() == QueryParameters.QueryType.RATING){
+            } else if (queryParams.getQueryType() == QueryParameters.QueryType.RATING){
                 Collections.sort(deals, new Comparator<DealModel>() {
                     @Override
                     public int compare(DealModel lhs, DealModel rhs) {
                         double diff = (double)(rhs.getRating() - lhs.getRating());
                         if (diff == 0) {
-                            diff = lhs.getDistanceFrom(parseLocation) - rhs.getDistanceFrom(parseLocation);
+                            diff = lhs.getDistanceFrom(location) - rhs.getDistanceFrom(location);
                             if (diff < 0 && diff > -1.0) {
                                 diff = -1.0;
                             } else if (diff > 0 && diff < 1.0) {
@@ -186,24 +152,6 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
     }
 
-
-    public ParseQuery<DealModel> applyDayOfWeekForQuery(ParseQuery<DealModel> query, ParseQuery<DealModel> orQuery) {
-        //TODO implement query based on new availability model
-        return query;
-    }
-
-    @Override
-    public void onUpdate() {
-        mQueryParams = QueryParameters.getInstance();
-        onRefresh();
-    }
-
-    @Override
-    public void onRefresh() {
-        parseLocation = getLocation();
-        loadDeals();
-    }
-
     @Override
     public void onClick(View v) {
 
@@ -225,7 +173,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.deal_list_item, parent, false);
         v.setOnClickListener(this);
-        ViewHolder vh = new ViewHolder(v, listType);
+        ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
@@ -245,7 +193,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         // AvailabilityModel availability = new AvailabilityModel(dealModel);
         // holder.availability.setText(availability.getDayAvailability(DayOfWeekMask.TODAY, true));
         holder.availability.setText("Mon: 10a - 8p");
-        holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(parseLocation)) + " mi");
+        holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(queryParams.getLocation(context))) + " mi");
 
 
         //DealIcon.setImageToDealCategory(holder.icon, dealModel);

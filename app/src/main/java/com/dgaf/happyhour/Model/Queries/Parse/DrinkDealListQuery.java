@@ -1,5 +1,6 @@
 package com.dgaf.happyhour.Model.Queries.Parse;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.dgaf.happyhour.Model.DealModel;
@@ -17,10 +18,10 @@ import java.util.List;
  * Created by Adam on 8/6/2015.
  */
 public class DrinkDealListQuery implements Query<DealModel> {
-    public void fetch(QueryParameters params,final ModelUpdater<DealModel> modelUpdater) {
+    public void fetch(Context context, QueryParameters params,final ModelUpdater<DealModel> modelUpdater) {
         // Setup the database Query
         ParseQuery<RestaurantModel> localRestaurants = ParseQuery.getQuery(RestaurantModel.class);
-        localRestaurants.whereWithinMiles("location", params.getLocation(), params.getRadiusMi());
+        localRestaurants.whereWithinMiles("location", params.getLocation(context), params.getRadiusMi());
 
         ParseQuery<DealModel> localDeals = ParseQuery.getQuery(DealModel.class);
         ParseQuery<DealModel> orLocalDeals = ParseQuery.getQuery(DealModel.class);
