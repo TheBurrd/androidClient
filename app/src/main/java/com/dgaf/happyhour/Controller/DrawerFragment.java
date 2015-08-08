@@ -409,6 +409,8 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
     //of what sorting they have applied
     public void giveFeedBack(){
 
+        Log.i("DrawerFragment","giveFeedbackCalled");
+
         boolean sortTypeChanged;
 
         //about us clicked we dont want feedback

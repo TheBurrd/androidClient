@@ -158,9 +158,6 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                         dealListFragment.notifyNotEmpty();
                     }
 
-                    //notify all listeners that adapter has been updated
-                    drawerFragment.adapterUpdate();
-
                     if (mQueryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
                         Collections.sort(deals, new Comparator<DealModel>() {
                             @Override
@@ -245,6 +242,10 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     public void onRefresh() {
         parseLocation = getLocation();
         loadDeals();
+
+        //notify all listeners that adapter has been updated
+        drawerFragment.adapterUpdate();
+
     }
 
     @Override
