@@ -23,16 +23,29 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
+        <!-- Splash screen -->
+
         <activity
-            android:name=".Controller.MainActivity"
+            android:name=".Controller.SplashScreen"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:uiOptions="splitActionBarWhenNarrow" >
+            android:noHistory="true" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <!-- MainActivity -->
+
+        <activity
+            android:name=".Controller.MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
 
         <meta-data
