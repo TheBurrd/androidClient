@@ -25,6 +25,12 @@
         <item name="android:textColor">#ff34</item>
     </style>
 
+<<<<<<< HEAD
+    <!--<style name="Theme.Splash" parent="android:Theme">
+        <item name="android:windowBackground">@drawable/burrd_splashscreen</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>-->
+=======
     <style name="MediumFont" parent="@android:style/TextAppearance.Medium">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -43,5 +49,6 @@
         <item name="android:textColor">#df000000</item>
     </style>
 
+>>>>>>> 010c0e57bc5c35bfb70731b4b3eb6feae45b09fa
 
 </resources>
