@@ -1,9 +1,9 @@
 package com.dgaf.happyhour.Adapter;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -21,7 +21,7 @@ import com.dgaf.happyhour.Model.RestaurantModel;
 import com.dgaf.happyhour.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -37,7 +37,8 @@ import com.parse.ParseQuery;
  * Created by Adam on 5/24/2015.
  */
 public class RestaurantAdapter {
-    private Fragment fragment;
+    //private Fragment fragment;
+    private Activity activity;
     private ImageLoader imageLoader;
     private RestaurantModel restaurant;
     private DealModel deal;
@@ -63,12 +64,14 @@ public class RestaurantAdapter {
         public ParseImageView thumbnail;
         public GoogleMap map;
 
-        public Fragment fragment;
+        //public Fragment fragment;
+        public Activity activity;
         public RestaurantAdapter parentAdapter;
 
-        public RestaurantViewHolder(Fragment fragment, View rootView, RestaurantAdapter parentAdapter,ExpandDealListAdapter listAdapter) {
-            this.fragment = fragment;
+        public RestaurantViewHolder(Activity activity, View rootView, RestaurantAdapter parentAdapter,ExpandDealListAdapter listAdapter) {
+            this.activity = activity;
             this.parentAdapter = parentAdapter;
+            /*
             dealTitle = (TextView) rootView.findViewById(R.id.deal_title);
             dealDescription = (TextView) rootView.findViewById(R.id.deal_description);
             dealAvailability = (TextView) rootView.findViewById(R.id.current_deal_avail);
@@ -83,12 +86,15 @@ public class RestaurantAdapter {
             hoursOfOperation = (TextView) rootView.findViewById(R.id.hours_of_operation);
             address = (TextView) rootView.findViewById(R.id.address);
             dealList = (ExpandableListView) rootView.findViewById(R.id.deal_list);
+            */
             dealList.setFocusable(false);
             dealList.setAdapter(listAdapter);
-            thumbnail = (ParseImageView) rootView.findViewById(R.id.picture);
+            //thumbnail = (ParseImageView) rootView.findViewById(R.id.picture);
             thumbnail.setPlaceholder(ContextCompat.getDrawable(rootView.getContext(), R.drawable.ic_food_placeholder));
-            map = ((SupportMapFragment) fragment.getChildFragmentManager().findFragmentById(R.id.map))
+
+            map = ((MapFragment) activity.getFragmentManager().findFragmentById(R.id.map))
                     .getMap();
+
             map.getUiSettings().setScrollGesturesEnabled(false);
 
             upVote.setOnClickListener(this);
@@ -115,7 +121,7 @@ public class RestaurantAdapter {
                 if (phoneNumber != null) {
                     Uri number = Uri.parse("tel:" + parentAdapter.getPhoneNumber());
                     Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
-                    fragment.startActivity(callIntent);
+                    activity.startActivity(callIntent);
                 }
             } else if (v ==  visitWebsite) {
                 String website = parentAdapter.getWebsite();
@@ -124,7 +130,7 @@ public class RestaurantAdapter {
                         website = "http://" + website;
                     Uri webaddress = Uri.parse(website);
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, webaddress);
-                    fragment.startActivity(browserIntent);
+                    activity.startActivity(browserIntent);
                 }
             } else if (v == upVote) {
                 //Set the button's appearance
@@ -175,10 +181,10 @@ public class RestaurantAdapter {
         }
     }
 
-    public RestaurantAdapter(Fragment fragment,View fragmentView, String restaurantId, String dealId) {
-        this.fragment = fragment;
+    public RestaurantAdapter(Activity activity,View fragmentView, String restaurantId, String dealId) {
+        this.activity = activity;
         this.imageLoader = ImageLoader.getInstance();
-        this.expandDealListAdapter = new ExpandDealListAdapter(fragment.getActivity(), restaurantId);
+        this.expandDealListAdapter = new ExpandDealListAdapter(activity, restaurantId);
         this.restaurant = new RestaurantModel();
         this.deal = new DealModel();
         parseLocation = getLocation();
@@ -191,7 +197,7 @@ public class RestaurantAdapter {
         double latitude = 32.881122;
         double longitude = -117.237631;
         if (!Build.FINGERPRINT.startsWith("generic")) {
-            LocationService userLocation = new LocationService(fragment.getActivity());
+            LocationService userLocation = new LocationService(activity);
             // Is user location available and are we not running in an emulator
             if (userLocation.canGetLocation()) {
                 latitude = userLocation.getLatitude();
@@ -250,16 +256,12 @@ public class RestaurantAdapter {
     }
 
     public void createViewHolders(View fragmentView) {
-        restaurantHolder = new RestaurantViewHolder(fragment, fragmentView, this, expandDealListAdapter);
+        restaurantHolder = new RestaurantViewHolder(activity, fragmentView, this, expandDealListAdapter);
         bindRestaurantViewHolder();
     }
 
     public void bindRestaurantViewHolder() {
         if (restaurantHolder != null && restaurant != null) {
-            ParseFile imageFile = restaurant.getThumbnailFile();
-            if (imageFile != null) {
-                imageLoader.displayImage(imageFile.getUrl(), restaurantHolder.thumbnail);
-            }
             ParseGeoPoint parsePoint = restaurant.getLocation();
             if (parsePoint != null) {
                 restaurantHolder.updateMap(new LatLng(parsePoint.getLatitude(), parsePoint.getLongitude()), restaurant.getName());
@@ -268,13 +270,10 @@ public class RestaurantAdapter {
                 restaurantHolder.updateMap(new LatLng(32.881122,-117.237631),"UCSD - Geisel Library");
             }
             restaurantHolder.restaurantName.setText(restaurant.getName());
-            restaurantHolder.restaurantDescription.setText(restaurant.getDescription());
-            restaurantHolder.dealAvailability.setText(deal.getAvailability().getDayAvailability(AvailabilityModel.getDayOfWeek(), true));
-            restaurantHolder.dealTitle.setText(deal.getTitle());
-            restaurantHolder.dealDescription.setText(deal.getDescription());
+            restaurantHolder.dealTitle.setText(deal.getItem());
+            restaurantHolder.dealDescription.setText(deal.getFineprint());
             restaurantHolder.dealRating.setText(String.valueOf(deal.getRating()) + "%");
             restaurantHolder.proximity.setText(String.format("%.1f", restaurant.getDistanceFrom(parseLocation)) + " mi");
-            restaurantHolder.hoursOfOperation.setText(restaurant.getAvailability().getEntireAvailability());
             restaurantHolder.address.setText(restaurant.getStreetNumber() + " " + restaurant.getStreetAddress() + ", " + restaurant.getCity() + ", " + restaurant.getState()+ ", " + restaurant.getZipcode());
 
         }

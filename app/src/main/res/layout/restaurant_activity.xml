@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <android.support.v7.widget.Toolbar
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style ="@style/Toolbar.TitleTextStyle"
+        app:theme="@style/ActionBarThemeOverlay"
+        app:popupTheme="@style/ActionBarPopupThemeOverlay"/>
+
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView2"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/dealItem"
+        android:fillViewport="false">
+
+        <LinearLayout
+            android:orientation="vertical" android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            >
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0.22"
+                android:id="@+id/neighborhoodPicture">
+
+                <ImageView
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="81dp"
+                    android:layout_height="81dp"
+                    android:src="@drawable/ic_drinks_placeholder"
+                    android:id="@+id/icon" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <TextView
+                    style="@style/LargeFont"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:text="$3 Fish Tacos"
+                    android:id="@+id/deal_title"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    style="@style/MediumFont"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:text="3PM - 9PM"
+                    android:id="@+id/deal_availability"
+                    android:layout_below="@+id/deal_title"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:text="Fine Print\nUp to 5 tacos can be purchased."
+                    android:id="@+id/deal_fineprint"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/deal_availability"
+                    android:layout_alignEnd="@+id/deal_title" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="0.2 mi"
+                    android:id="@+id/distance"
+                    android:layout_above="@+id/deal_fineprint"
+                    android:layout_alignEnd="@+id/downVote" />
+
+                <ToggleButton
+                    android:layout_marginRight="10dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:textOn=""
+                    android:textOff=""
+                    android:id="@+id/downVote"
+                    android:background="@drawable/ic_thumb_down"
+                    android:layout_alignTop="@+id/deal_fineprint"
+                    android:layout_alignParentEnd="true"
+                    android:checked="false" />
+
+
+                <ToggleButton
+                    android:layout_marginRight="5dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:textOn=""
+                    android:textOff=""
+                    android:id="@+id/upVote"
+                    android:background="@drawable/ic_thumb_up"
+                    android:checked="false"
+                    android:layout_alignTop="@+id/downVote"
+                    android:layout_toStartOf="@+id/distance" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="98%"
+                    android:id="@+id/rating"
+                    android:layout_marginRight="6dp"
+                    android:layout_alignBottom="@+id/deal_title"
+                    android:layout_alignEnd="@+id/distance" />
+
+                <TextView
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Tuesday 10AM - 9PM"
+                    android:id="@+id/hours"
+                    android:layout_below="@+id/deal_fineprint"
+                    android:layout_alignParentStart="true" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_marginLeft="7dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_down_arrow"
+                    android:id="@+id/down"
+                    android:layout_alignTop="@+id/hours"
+                    android:layout_toEndOf="@+id/hours" />
+
+                <TextView
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="132 south rios avenue, Solana Beach"
+                    android:id="@+id/address"
+                    android:layout_below="@+id/down"
+                    android:layout_alignParentStart="true" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/website"
+                    android:src="@drawable/ic_restaurant_website"
+                    android:layout_alignTop="@+id/down"
+                    android:layout_alignStart="@+id/upVote" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/phone"
+                    android:src="@drawable/ic_phone_number"
+                    android:layout_alignTop="@+id/website"
+                    android:layout_alignStart="@+id/rating" />
+
+
+            </RelativeLayout>
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.MapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="180dp" />
+
+            <TextView
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="More Deals"
+                android:id="@+id/moreDeals"
+                android:layout_gravity="left"
+            />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:background="#000000" />
+
+
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/listView" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

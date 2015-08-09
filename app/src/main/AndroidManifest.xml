@@ -1,15 +1,21 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.dgaf.happyhour">
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.dgaf.happyhour" >
+
     <uses-sdk android:minSdkVersion="19" />
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.dgaf.happyhour.permission.MAPS_RECEIVE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" >
     </uses-feature>
+
 
     <application
         android:name="Burrd"
@@ -20,12 +26,19 @@
         <!-- Splash screen -->
 
         <activity
+<<<<<<< HEAD
             android:name=".Controller.SplashScreen"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:noHistory="true" >
 
 
+=======
+            android:name=".Controller.MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:uiOptions="splitActionBarWhenNarrow" >
+>>>>>>> 010c0e57bc5c35bfb70731b4b3eb6feae45b09fa
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,8 +56,16 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBFvb1usir6K5XTk5hTAbP7xvt8lxOYH_Q"/>
+            android:value="AIzaSyBFvb1usir6K5XTk5hTAbP7xvt8lxOYH_Q" />
 
+        <activity
+            android:name=".Controller.Restaurant"
+            android:label="@string/title_activity_restaurant"
+            android:parentActivityName="com.dgaf.happyhour.Controller.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.dgaf.happyhour.Controller.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

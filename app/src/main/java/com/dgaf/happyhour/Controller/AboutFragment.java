@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -63,6 +65,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         aboutText = (TextView) rootView.findViewById(R.id.aboutText);
         aboutText.setOnClickListener(this);
 
+
         return rootView;
     }
 
@@ -91,6 +94,20 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
         }
         
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    //disable the search icon
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        if (menu != null) {
+            menu.findItem(R.id.action_settings).setVisible(false);
+        }
     }
 
 }
