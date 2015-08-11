@@ -68,4 +68,17 @@
 
     <string name="error_message">We couldn\'t find any deals at this time.</string>
 
+    <string name="sort_rating">Sorted by rating</string>
+    <string name="sort_proximity">Sorted by proximity</string>
+    <string name="sort_monday">Showing Monday\'s deals</string>
+    <string name="sort_tuesday">Showing Tuesday\'s deals</string>
+    <string name="sort_wednesday">Showing Wednesday\'s deals</string>
+    <string name="sort_thursday">Showing Thursday\'s deals</string>
+    <string name="sort_friday">Showing Friday\'s deals</string>
+    <string name="sort_saturday">Showing Saturday\'s deals</string>
+    <string name="sort_sunday">Showing Sunday\'s deals</string>
+    <string name="sort_today">Showing Today\'s deals</string>
+    <string name="sort_multiple">Showing multiple days of the week</string>
+
+
 </resources>
