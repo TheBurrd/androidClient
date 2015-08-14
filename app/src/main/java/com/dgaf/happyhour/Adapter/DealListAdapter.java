@@ -73,6 +73,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         this.queryParams = queryParameters;
     }
 
+    //TODO This method is still coupled to Parse and needs refactoring
     @Override
     public void onDataModelUpdate(List<DealModel> deals, Exception e) {
         if (e == null) {
