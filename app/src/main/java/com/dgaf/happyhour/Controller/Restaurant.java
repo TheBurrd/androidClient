@@ -35,7 +35,9 @@ import com.parse.GetCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -205,7 +207,7 @@ public class Restaurant extends AppCompatActivity implements View.OnClickListene
         return new ParseGeoPoint(latitude,longitude);
     }
 
-    public void loadRestaurantDetails(String restaurantId, String dealId) {
+    public void loadRestaurantDetails(String restaurantId,final String dealId) {
         ParseQuery<RestaurantModel> restaurantQuery = ParseQuery.getQuery(RestaurantModel.class);
         restaurantQuery.fromLocalDatastore();
         //TODO remove logging
@@ -240,9 +242,10 @@ public class Restaurant extends AppCompatActivity implements View.OnClickListene
                 }
             }
         });
-        ParseQuery<UserModel> userQuery = ParseQuery.getQuery(UserModel.class);
-        userQuery.getInBackground(Device.getDeviceId(this), new GetCallback<UserModel>() {
-            public void done(UserModel returnedUser, ParseException e) {
+        ParseQuery<ParseUser> userQuery = ParseUser.getQuery();
+        userQuery.whereEqualTo("deviceId",Device.getDeviceId(this));
+        userQuery.getFirstInBackground( new GetCallback<ParseUser>() {
+            public void done(ParseUser returnedUser, ParseException e) {
                 //TODO remove logging
                 Log.v("Parse info:", "User query returned");
                 if (e == null) {
@@ -252,12 +255,12 @@ public class Restaurant extends AppCompatActivity implements View.OnClickListene
                         downVote.setChecked(true);
                     }
                         onBindView();
-                    } else {
+                } else {
                         //TODO remove logging
                         Log.e("Parse error: ", e.getMessage());
-                    }
                 }
-            });
+            }
+        });
     }
 
     public void upVote() {
