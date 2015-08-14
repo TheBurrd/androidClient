@@ -19,9 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.dgaf.happyhour.Device;
 import com.dgaf.happyhour.Model.DealIcon;
 import com.dgaf.happyhour.Model.DealModel;
 import com.dgaf.happyhour.Model.RestaurantModel;
+import com.dgaf.happyhour.Model.UserModel;
 import com.dgaf.happyhour.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -93,8 +95,6 @@ public class Restaurant extends AppCompatActivity implements View.OnClickListene
         upVote = (ToggleButton) findViewById(R.id.upVote);
         downVote = (ToggleButton) findViewById(R.id.downVote);
         address = (TextView) findViewById(R.id.address);
-        //map = (GoogleMap) findViewById(R.id.map);
-
 
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
         map.getUiSettings().setScrollGesturesEnabled(false);//user cant move map around
@@ -240,7 +240,24 @@ public class Restaurant extends AppCompatActivity implements View.OnClickListene
                 }
             }
         });
-
+        ParseQuery<UserModel> userQuery = ParseQuery.getQuery(UserModel.class);
+        userQuery.getInBackground(Device.getDeviceId(this), new GetCallback<UserModel>() {
+            public void done(UserModel returnedUser, ParseException e) {
+                //TODO remove logging
+                Log.v("Parse info:", "User query returned");
+                if (e == null) {
+                    if (returnedUser.isDealUpVoted(dealId)) {
+                        upVote.setChecked(true);
+                    } else if (returnedUser.isDealDownVoted(dealId)) {
+                        downVote.setChecked(true);
+                    }
+                        onBindView();
+                    } else {
+                        //TODO remove logging
+                        Log.e("Parse error: ", e.getMessage());
+                    }
+                }
+            });
     }
 
     public void upVote() {
@@ -248,7 +265,7 @@ public class Restaurant extends AppCompatActivity implements View.OnClickListene
             Map<String,String> params = new HashMap<>();
             final Activity restaurantActivity = this;
             params.put("objectId", dealModel.getId());
-            params.put("deviceId", getDeviceId());
+            params.put("deviceId", Device.getDeviceId(this));
             ParseCloud.callFunctionInBackground("upVote", params, new FunctionCallback<String>() {
                 public void done(String results, ParseException e) {
                     if (results != null) {
@@ -266,7 +283,7 @@ public class Restaurant extends AppCompatActivity implements View.OnClickListene
             Map<String, String> params = new HashMap<>();
             final Activity restaurantActivity = this;
             params.put("objectId", dealModel.getId());
-            params.put("deviceId", getDeviceId());
+            params.put("deviceId", Device.getDeviceId(this));
             ParseCloud.callFunctionInBackground("downVote", params, new FunctionCallback<String>() {
                 public void done(String results, ParseException e) {
                     if (results != null) {
@@ -284,7 +301,7 @@ public class Restaurant extends AppCompatActivity implements View.OnClickListene
             Map<String,String> params = new HashMap<>();
             final Activity restaurantActivity = this;
             params.put("objectId", dealModel.getId());
-            params.put("deviceId", getDeviceId());
+            params.put("deviceId", Device.getDeviceId(this));
             ParseCloud.callFunctionInBackground("undoUpVote", params, new FunctionCallback<String>() {
                 public void done(String results, ParseException e) {
                     if (results != null) {
@@ -302,7 +319,7 @@ public class Restaurant extends AppCompatActivity implements View.OnClickListene
             Map<String,String> params = new HashMap<>();
             final Activity restaurantActivity = this;
             params.put("objectId", dealModel.getId());
-            params.put("deviceId", getDeviceId());
+            params.put("deviceId", Device.getDeviceId(this));
             ParseCloud.callFunctionInBackground("undoDownVote", params, new FunctionCallback<String>() {
                 public void done(String results, ParseException e) {
                     if (results != null){
@@ -314,21 +331,6 @@ public class Restaurant extends AppCompatActivity implements View.OnClickListene
             });
         }
     }
-
-    public String getDeviceId() {
-        final TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-
-        final String tmDevice, tmSerial, androidId;
-        tmDevice = "" + tm.getDeviceId();
-        tmSerial = "" + tm.getSimSerialNumber();
-        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-
-        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
-        String deviceId = deviceUuid.toString();
-        return deviceId;
-    }
-
-
 
     public void onBindView() {
         if ( restaurantModel != null && dealModel != null) {
