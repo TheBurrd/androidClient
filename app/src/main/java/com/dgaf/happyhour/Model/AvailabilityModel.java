@@ -1,12 +1,5 @@
 package com.dgaf.happyhour.Model;
 
-import android.util.Log;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Calendar;
-
 /**
  * Created by Adam on 5/12/2015.
  */

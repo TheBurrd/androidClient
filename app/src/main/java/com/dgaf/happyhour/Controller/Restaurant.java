@@ -22,6 +22,7 @@ import android.widget.ToggleButton;
 import com.dgaf.happyhour.Device;
 import com.dgaf.happyhour.Model.DealIcon;
 import com.dgaf.happyhour.Model.DealModel;
+import com.dgaf.happyhour.Model.ModelUpdater;
 import com.dgaf.happyhour.Model.RestaurantModel;
 import com.dgaf.happyhour.Model.UserModel;
 import com.dgaf.happyhour.R;
@@ -40,11 +41,12 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 
-public class Restaurant extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class Restaurant extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, ModelUpdater<DealModel>, ModelUpdater<RestaurantModel> {
 
     private static final String RESTAURANT_ID = "resId";
     private static final String DEAL_ID = "dealId";
@@ -205,6 +207,18 @@ public class Restaurant extends AppCompatActivity implements View.OnClickListene
             }
         }
         return new ParseGeoPoint(latitude,longitude);
+    }
+
+    @Override
+    public void onDataModelUpdate(List<DealModel> deals, Exception e) {
+        if (e == null) {
+            //TODO remove logging
+
+        } else {
+            //TODO remove logging
+            Log.e("Parse error: ", e.getMessage());
+            Toast.makeText(context, "Unable to process request: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     public void loadRestaurantDetails(String restaurantId,final String dealId) {
