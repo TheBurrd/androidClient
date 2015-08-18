@@ -16,6 +16,8 @@ import android.widget.Toast;
 import com.dgaf.happyhour.Controller.DealListEmptyNotifier;
 import com.dgaf.happyhour.Controller.LocationService;
 import com.dgaf.happyhour.Controller.Restaurant;
+import com.dgaf.happyhour.Model.AvailabilityModel;
+import com.dgaf.happyhour.Model.DayOfWeekMask;
 import com.dgaf.happyhour.Model.DealIcon;
 import com.dgaf.happyhour.Model.DealListType;
 import com.dgaf.happyhour.Model.DealModel;
@@ -273,9 +275,15 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         holder.rating.setText(dealModel.getRatingString());
         holder.restaurantName.setText(dealModel.getRestaurant());
         // Comment this out till all deals in database have new availability model
-        // AvailabilityModel availability = new AvailabilityModel(dealModel);
-        // holder.availability.setText(availability.getDayAvailability(DayOfWeekMask.TODAY, true));
-        holder.availability.setText("Mon: 10a - 8p");
+        AvailabilityModel availability1 = new AvailabilityModel(dealModel,1);
+        AvailabilityModel availability2 = new AvailabilityModel(dealModel,2);
+        String availText1 = availability1.getDayAvailability(mQueryParams.getDayOfWeekMask().getMask(), true);
+        String availText2 = availability2.getDayAvailability(mQueryParams.getDayOfWeekMask().getMask(), true);
+        if (availText1.length() != 0) {
+            holder.availability.setText(availText1);
+        } else {
+            holder.availability.setText(availText2);
+        }
         holder.distance.setText(dealModel.getDistanceFromString(parseLocation));
 
         DealIcon.setImageToDealCategory(holder.icon, dealModel);

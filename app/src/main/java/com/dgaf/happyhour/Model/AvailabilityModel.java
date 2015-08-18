@@ -11,46 +11,29 @@ import java.util.Calendar;
  * Created by Adam on 5/12/2015.
  */
 public class AvailabilityModel {
-    public DayOfWeekMask recurrenceMask1;
-    public short firstOpen1;
-    public short lastOpen1;
-    public short firstClose1;
-    public short lastClose1;
+    public DayOfWeekMask recurrenceMask;
+    public int firstOpen;
+    public int lastOpen;
+    public int firstClose;
+    public int lastClose;
 
-    public DayOfWeekMask recurrenceMask2;
-    public short firstOpen2;
-    public short lastOpen2;
-    public short firstClose2;
-    public short lastClose2;
+    public static final short RECUR_DAYOFWEEK_START = 48;
 
+    public AvailabilityModel(DealModel deal, int index) {
+        String recur = deal.getRecurrence(index);
 
-    public static final short RECUR_DAYOFWEEK_ST = 47;
-    public static final int FIRST_MASK = 0x000111;
-    public static final int LAST_MASK = 0x111000;
+        if (recur == null) {
+            this.recurrenceMask = new DayOfWeekMask((byte)0);
+        } else {
+            this.recurrenceMask = new DayOfWeekMask((byte)Integer.parseInt(recur.substring(RECUR_DAYOFWEEK_START) + "0", 2));
+        }
 
+        this.firstOpen = deal.getFirstOpenTime(index);
+        this.lastOpen = deal.getLastOpenTime(index);
 
-    public AvailabilityModel(DealModel deal) {
-        String recur1 = deal.getRecurrence1();
-        String recur2 = deal.getRecurrence2();
+        this.firstClose = deal.getFirstCloseTime(index);
+        this.lastClose = deal.getLastCloseTime(index);
 
-        this.recurrenceMask1 = new DayOfWeekMask((byte)Integer.parseInt(recur1.substring(RECUR_DAYOFWEEK_ST) + "0", 2));
-        this.recurrenceMask2 = new DayOfWeekMask((byte)Integer.parseInt(recur2.substring(RECUR_DAYOFWEEK_ST) + "0", 2));
-
-        int openTime1 = (int)deal.getOpenTime1();
-        this.firstOpen1 = (short)(openTime1 & FIRST_MASK);
-        this.lastOpen1 = (short)((openTime1 & LAST_MASK) >> 12);
-
-        int closeTime1 = (int)deal.getCloseTime1();
-        this.firstClose1 = (short)(closeTime1 & FIRST_MASK);
-        this.lastClose1 = (short)((closeTime1 & LAST_MASK) >> 12);
-
-        int openTime2 = (int)deal.getOpenTime2();
-        this.firstOpen2 = (short)(openTime2 & FIRST_MASK);
-        this.lastOpen2 = (short)((openTime2 & LAST_MASK) >> 12);
-
-        int closeTime2 = (int)deal.getCloseTime2();
-        this.firstClose2 = (short)(closeTime2 & FIRST_MASK);
-        this.lastClose2 = (short)((closeTime2 & LAST_MASK) >> 12);
     }
 
     /** Return a string representing the availability for the input day. Takes
@@ -63,6 +46,7 @@ public class AvailabilityModel {
      *
      * Returns an empty string if there is no deal for that day
      * */
+    // TODO display split open times
     public String getDayAvailability(byte weekday, boolean displayDay) {
         StringBuilder ret = new StringBuilder();
 
@@ -71,11 +55,11 @@ public class AvailabilityModel {
             ret.append(getDayShorthand(weekday));
         }
 
-        int startTime = firstOpen1;
-        int endTime = lastClose1;
+        int startTime = firstOpen;
+        int endTime = lastClose;
 
-        // If the startTime is 0 then there is no deal for that day so return an empty string
-        if (startTime == 0) {
+        // If weekday does not occur in recurrence, return no deal for day
+        if (!recurrenceMask.isDaySelected(weekday)) {
             return "";
         }
 
@@ -93,7 +77,9 @@ public class AvailabilityModel {
             startHour -= 12;
         }
 
-        if (endHour > 12) {
+        if (endHour > 24) {
+            endHour -= 24;
+        } else if (endHour > 12) {
             endHour -= 12;
         }
 
@@ -137,8 +123,11 @@ public class AvailabilityModel {
         else if (hour <= 23) {
             return "p";
         }
-        else {
+        else if (hour <= 35){
             return "a";
+        }
+        else {
+            return "p";
         }
     }
 

@@ -248,6 +248,7 @@ public class Restaurant extends AppCompatActivity implements View.OnClickListene
             public void done(ParseUser returnedUser, ParseException e) {
                 //TODO remove logging
                 Log.v("Parse info:", "User query returned");
+                /*
                 if (e == null) {
                     if (returnedUser.isDealUpVoted(dealId)) {
                         upVote.setChecked(true);
@@ -259,6 +260,7 @@ public class Restaurant extends AppCompatActivity implements View.OnClickListene
                         //TODO remove logging
                         Log.e("Parse error: ", e.getMessage());
                 }
+                */
             }
         });
     }

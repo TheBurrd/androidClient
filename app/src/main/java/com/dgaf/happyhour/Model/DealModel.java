@@ -78,17 +78,15 @@ public class DealModel extends ParseObject {
 
     public String getRestaurant() { return getParseObject("restaurantId").getString("name");}
 
-    public String getRecurrence1() { return getString("recurrence1");}
+    public String getRecurrence(int index) { return getString("recurrence" + index);}
 
-    public long getOpenTime1() { return getLong("openTime1");}
+    public int getFirstOpenTime(int index) { return getInt("firstOpenTime" + index);}
 
-    public long getCloseTime1() { return getLong("closeTime1"); }
+    public int getLastOpenTime(int index) { return getInt("lastOpenTime" + index);}
 
-    public String getRecurrence2() { return getString("recurrence2");}
+    public int getFirstCloseTime(int index) { return getInt("firstCloseTime" + index); }
 
-    public long getOpenTime2() { return getLong("openTime2");}
-
-    public long getCloseTime2() { return getLong("closeTime2");}
+    public int getLastCloseTime(int index) { return getInt("lastCloseTime" + index); }
 
     public String getRestaurantId() { return getParseObject("restaurantId").getObjectId();}
 

@@ -30,11 +30,11 @@ public class DayOfWeekMask {
         return (byte)(128 >> (calendar.get(Calendar.DAY_OF_WEEK) - 1));
     }
 
-    public byte getDayOfWeekMask() {
+    public byte getMask() {
         return mDayOfWeekMask;
     }
 
-    public void setDayOfWeekMask(byte dayOfWeekMask) {
+    public void setMask(byte dayOfWeekMask) {
         this.mDayOfWeekMask = dayOfWeekMask;
     }
 
