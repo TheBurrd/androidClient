@@ -43,10 +43,9 @@ import com.parse.ParseUser;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 
-public class Restaurant extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, ModelUpdater<DealModel>, ModelUpdater<RestaurantModel> {
+public class Restaurant extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, ModelUpdater<DealModel> {
 
     private static final String RESTAURANT_ID = "resId";
     private static final String DEAL_ID = "dealId";
@@ -217,7 +216,7 @@ public class Restaurant extends AppCompatActivity implements View.OnClickListene
         } else {
             //TODO remove logging
             Log.e("Parse error: ", e.getMessage());
-            Toast.makeText(context, "Unable to process request: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Unable to process request: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 

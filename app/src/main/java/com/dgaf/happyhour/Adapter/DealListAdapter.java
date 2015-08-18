@@ -1,8 +1,10 @@
 package com.dgaf.happyhour.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dgaf.happyhour.Controller.DealListEmptyNotifier;
+
+import com.dgaf.happyhour.Controller.DealListAdapterNotifier;
 import com.dgaf.happyhour.Controller.Restaurant;
 import com.dgaf.happyhour.Model.AvailabilityModel;
 import com.dgaf.happyhour.Model.DayOfWeekMask;
@@ -42,8 +45,8 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private SwipeRefreshLayout swipeRefresh;
     private QueryParameters queryParams;
     private static final String DEAL_LIST_CACHE = "dealList";
-    private DealListEmptyNotifier notifier;
-
+    private DealListAdapterNotifier dealListFragment;
+    private DealListAdapterNotifier drawerFragment;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView dealTitle;
@@ -66,13 +69,13 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
     }
 
-    public DealListAdapter(Context context, RecyclerView recyclerView, SwipeRefreshLayout swipeRefresh, DealListEmptyNotifier notifier, QueryParameters queryParameters) {
+    public DealListAdapter(Context context, RecyclerView recyclerView, SwipeRefreshLayout swipeRefresh, DealListAdapterNotifier dealListFragment, QueryParameters queryParameters) {
         this.context = context;
         this.mRecyclerView = recyclerView;
         this.swipeRefresh = swipeRefresh;
         this.dealItems = new ArrayList<>();
-        this.notifier = notifier;
         this.queryParams = queryParameters;
+        this.dealListFragment = dealListFragment;
     }
 
     //TODO This method is still coupled to Parse and needs refactoring
@@ -84,9 +87,9 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
 
             //add place holder to empty deal
             if(deals.size() == 0){
-                notifier.notifyEmpty();
+                dealListFragment.notifyEmpty();
             }else{
-                notifier.notifyNotEmpty();
+                dealListFragment.notifyNotEmpty();
             }
             final ParseGeoPoint location = queryParams.getLocation(context);
             if (queryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
@@ -165,7 +168,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
 
         Intent intent = new Intent(context, Restaurant.class);
 
-        intent.putExtra("resId",restaurantId);
+        intent.putExtra("resId", restaurantId);
         intent.putExtra("dealId", dealId);
 
         context.startActivity(intent);
@@ -208,4 +211,5 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
 
         holder.restaurantId = dealModel.getRestaurantId();
     }
+
 }

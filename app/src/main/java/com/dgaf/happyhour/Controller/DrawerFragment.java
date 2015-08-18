@@ -3,6 +3,7 @@ package com.dgaf.happyhour.Controller;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,13 +26,15 @@ import com.dgaf.happyhour.R;
  * Use the {@link DrawerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DrawerFragment extends Fragment implements View.OnClickListener, ToggleButton.OnCheckedChangeListener {
+public class DrawerFragment extends Fragment implements View.OnClickListener, ToggleButton.OnCheckedChangeListener,DealListAdapterNotifier {
 
     private View topRated,nearby,aboutUs;
     private ToggleButton monday,tuesday,wednesday,thursday,friday,saturday,sunday,today;
     private QueryParameters queryParameters;
-
     private OnFragmentInteractionListener mListener;
+    private boolean giveNavDrawerChangedFeedback;
+    private String prevSortType = "null";//avoid null pointer exception
+    private String prevDays = "null";
 
     /* Lock the navigation drawer from closing when the user is
      * changing the seekbar
@@ -318,10 +321,12 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
                     queryParameters.getDayOfWeekMask().unselectSunday();
                     break;
                 case R.id.today:
-                    compoundButton.setBackgroundResource(R.drawable.ic_today);
-                    queryParameters.getDayOfWeekMask().unselectToday();
+                    //only unselect today if another day is selected
+                    if(isADaySelected()) {
+                        compoundButton.setBackgroundResource(R.drawable.ic_today);
+                        queryParameters.getDayOfWeekMask().unselectToday();
+                    }
                     break;
-
             }
         }
         queryParameters.notifyAllListeners();
@@ -331,7 +336,18 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
         today.setChecked(false);
         today.setBackgroundResource(R.drawable.ic_today);
         queryParameters.getDayOfWeekMask().unselectToday();
+    }
 
+    @Override
+    public void notifyEmpty() {}
+
+    @Override
+    public void notifyNotEmpty() {}
+
+    @Override
+    public void adapterUpdate() {
+        giveNavDrawerChangedFeedback = true;
+        Log.i("DrawerFragment","Deal adapter updated");
     }
 
     /**
@@ -381,28 +397,110 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
         queryParams.setQueryType(QueryParameters.QueryType.PROXIMITY);
     }
 
-    //this will be called when the drawer is closed to give the user feedback
+    private boolean isADaySelected(){
+        QueryParameters queryParams = QueryParameters.getInstance();
+        DayOfWeekMask days = queryParams.getDayOfWeekMask();
+
+        return (days.isMondaySelected()||days.isTuesdaySelected()||days.isWednesdaySelected()||
+                days.isThursdaySelected()||days.isFridaySelected()||days.isSaturdaySelected()||
+                days.isSundaySelected());
+    }
+
+    //this will be called when the adapter is updated to give the user feedback
     //of what sorting they have applied
     public void giveFeedBack(){
 
-        //we dont want feedback for about us
+        Log.i("DrawerFragment","giveFeedbackCalled");
+
+        boolean sortTypeChanged;
+
+        //about us clicked we dont want feedback
         if(aboutUs.getBackground() != null)
+            return;
+
+        //the adapter hasn't updated
+        if(!giveNavDrawerChangedFeedback)
             return;
 
         QueryParameters queryParams = QueryParameters.getInstance();
 
-        String sortType = "Sorting by "+queryParams.getQueryType().name()+" for ";
+        //get the current sort type
+        String sortType = queryParams.getQueryType().name().equals("RATING")
+                ?getString(R.string.sort_rating):getString(R.string.sort_proximity);
+
+        //check to see if the sort type changed
+        sortTypeChanged = !prevSortType.equals(sortType);
 
         DayOfWeekMask days = queryParams.getDayOfWeekMask();
-        String sortDays = (days.isTodaySelected()?"Today":"")+
-                (days.isMondaySelected()?"Mo ":"")+
-                (days.isTuesdaySelected()?"Tu ":"")+
-                (days.isWednesdaySelected()?"We ":"")+
-                (days.isThursdaySelected()?"Th ":"")+
-                (days.isFridaySelected()?"Fr ":"")+
-                (days.isSaturdaySelected()?"Sa ":"")+
-                (days.isSundaySelected()?"Su ":"");
 
-        Toast.makeText(getActivity(),sortType + sortDays,Toast.LENGTH_SHORT).show();
+        String sortDays = " ";
+        String currentDays = " ";
+
+        int amountOfDaysSelected = 0;
+
+        if(days.isTodaySelected()) {
+            sortDays = getString(R.string.sort_today);
+            currentDays+="To";
+            amountOfDaysSelected++;
+        }
+
+        if(days.isMondaySelected()){
+            sortDays = getString(R.string.sort_monday);
+            currentDays+="Mo";
+            amountOfDaysSelected++;
+        }
+
+        if(days.isTuesdaySelected()){
+            sortDays = getString(R.string.sort_tuesday);
+            currentDays+="Tu";
+            amountOfDaysSelected++;
+        }
+
+        if(days.isWednesdaySelected()){
+            sortDays = getString(R.string.sort_wednesday);
+            currentDays+="We";
+            amountOfDaysSelected++;
+        }
+
+        if(days.isThursdaySelected()){
+            sortDays = getString(R.string.sort_thursday);
+            currentDays+="Th";
+            amountOfDaysSelected++;
+        }
+
+        if(days.isFridaySelected()){
+            sortDays = getString(R.string.sort_friday);
+            currentDays+="Fr";
+            amountOfDaysSelected++;
+        }
+
+        if(days.isSaturdaySelected()){
+            sortDays = getString(R.string.sort_saturday);
+            currentDays+="Sa";
+            amountOfDaysSelected++;
+        }
+
+        if(days.isSundaySelected()){
+            sortDays = getString(R.string.sort_sunday);
+            currentDays+="Su";
+            amountOfDaysSelected++;
+        }
+
+        if(amountOfDaysSelected > 1)
+            sortDays = getString(R.string.sort_multiple);
+
+        //if the sort type changed or the sort type hasn't changed but days hasn't changed either
+        if(sortTypeChanged || (!sortTypeChanged && prevDays.equals(currentDays)))
+            Toast.makeText(getActivity(),sortType, Toast.LENGTH_SHORT).show();
+
+        //the sort type didn't change but the days did change
+        else
+            Toast.makeText(getActivity(),sortDays, Toast.LENGTH_SHORT).show();
+
+        giveNavDrawerChangedFeedback = false;
+
+        prevSortType = sortType;//get the last sort type
+        prevDays = currentDays;//get the last days sort type
+
     }
 }
