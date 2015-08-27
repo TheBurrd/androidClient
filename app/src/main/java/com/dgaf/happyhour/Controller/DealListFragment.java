@@ -76,13 +76,13 @@ public class DealListFragment extends Fragment implements DealListAdapterNotifie
 
         switch (listType) {
             case DRINK:
-                mQuery = new DrinkDealListQuery();
+                mQuery = new DrinkDealListQuery(mQueryParams);
                 break;
             case FOOD:
-                mQuery = new FoodDealListQuery();
+                mQuery = new FoodDealListQuery(mQueryParams);
                 break;
             case FEATURED:
-                mQuery = new FeaturedDealListQuery();
+                mQuery = new FeaturedDealListQuery(mQueryParams);
                 break;
         }
         mAdapter = new DealListAdapter(getActivity(), mRecyclerView, mSwipeRefresh, this, mQueryParams);
@@ -104,7 +104,7 @@ public class DealListFragment extends Fragment implements DealListAdapterNotifie
 
     @Override
     public void onRefresh() {
-        mQuery.fetch(getActivity(), mQueryParams, mAdapter);
+        mQuery.fetch(getActivity(), mAdapter);
     }
 
     @Override

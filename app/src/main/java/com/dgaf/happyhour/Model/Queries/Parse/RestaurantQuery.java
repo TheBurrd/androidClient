@@ -24,7 +24,7 @@ public class RestaurantQuery  implements Query<RestaurantModel> {
     public RestaurantQuery(String restaurantId) {
         this.restaurantId = restaurantId;
     }
-    public void fetch(Context context, QueryParameters params, final ModelUpdater<RestaurantModel> modelUpdater) {
+    public void fetch(Context context, final ModelUpdater<RestaurantModel> modelUpdater) {
         ParseQuery<RestaurantModel> restaurantQuery = ParseQuery.getQuery(RestaurantModel.class);
         restaurantQuery.fromLocalDatastore();
         Log.v("Parse info:", "Started restaurant query");

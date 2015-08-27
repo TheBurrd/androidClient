@@ -46,7 +46,6 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private QueryParameters queryParams;
     private static final String DEAL_LIST_CACHE = "dealList";
     private DealListAdapterNotifier dealListFragment;
-    private DealListAdapterNotifier drawerFragment;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView dealTitle;
@@ -91,6 +90,8 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
             }else{
                 dealListFragment.notifyNotEmpty();
             }
+
+            // Sort objects by rating or proximity
             final ParseGeoPoint location = queryParams.getLocation(context);
             if (queryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
                 Collections.sort(deals, new Comparator<DealModel>() {
@@ -139,6 +140,8 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
                     ParseObject.pinAllInBackground(DEAL_LIST_CACHE, dealItems);
                 }
             });
+
+            // Update items and notify UI of changes
             List<DealModel> prevDealItems = dealItems;
             dealItems = deals;
             if (prevDealItems.size() == 0) {

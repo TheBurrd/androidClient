@@ -12,5 +12,5 @@ import com.dgaf.happyhour.Model.ModelUpdater;
  * a ModelUpdater callback is passed to execute when the result returns.
  */
 public interface Query<T> {
-    void fetch(Context context, QueryParameters params,final ModelUpdater<T> modelUpdater);
+    void fetch(Context context, final ModelUpdater<T> modelUpdater);
 }

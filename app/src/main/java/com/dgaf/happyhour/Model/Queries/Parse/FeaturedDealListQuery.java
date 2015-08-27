@@ -18,10 +18,14 @@ import java.util.List;
  * Created by Adam on 8/6/2015.
  */
 public class FeaturedDealListQuery implements Query<DealModel> {
-    public void fetch(Context context, QueryParameters params,final ModelUpdater<DealModel> modelUpdater) {
+    QueryParameters mParams;
+    public FeaturedDealListQuery(QueryParameters params) {
+        mParams = params;
+    }
+    public void fetch(Context context, final ModelUpdater<DealModel> modelUpdater) {
         // Setup the database Query
         ParseQuery<RestaurantModel> localRestaurants = ParseQuery.getQuery(RestaurantModel.class);
-        localRestaurants.whereWithinMiles("location", params.getLocation(context), params.getRadiusMi());
+        localRestaurants.whereWithinMiles("location", mParams.getLocation(context), mParams.getRadiusMi());
 
         ParseQuery<DealModel> localDeals = ParseQuery.getQuery(DealModel.class);
         ParseQuery<DealModel> orLocalDeals = ParseQuery.getQuery(DealModel.class);

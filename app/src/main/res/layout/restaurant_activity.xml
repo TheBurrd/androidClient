@@ -183,32 +183,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="180dp" />
 
-            <TextView
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="More Deals"
-                android:id="@+id/moreDeals"
-                android:layout_gravity="left"
-            />
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginLeft="15dp"
-                android:background="#000000" />
-
-
-
-            <ListView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/listView" />
-
-
         </LinearLayout>
 
     </ScrollView>

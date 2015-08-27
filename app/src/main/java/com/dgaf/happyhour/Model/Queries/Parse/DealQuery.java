@@ -22,7 +22,7 @@ public class DealQuery implements Query<DealModel> {
     public DealQuery(String dealId) {
         this.dealId = dealId;
     }
-    public void fetch(Context context, QueryParameters params, final ModelUpdater<DealModel> modelUpdater) {
+    public void fetch(Context context, final ModelUpdater<DealModel> modelUpdater) {
         ParseQuery<DealModel> restaurantQuery = ParseQuery.getQuery(DealModel.class);
         restaurantQuery.fromLocalDatastore();
         Log.v("Parse info:", "Started deal query");

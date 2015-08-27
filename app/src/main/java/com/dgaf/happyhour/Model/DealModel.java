@@ -9,7 +9,7 @@ import com.parse.ParseObject;
  * Created by trentonrobison on 5/9/15.
  */
 @ParseClassName("deals")
-public class DealModel extends ParseObject {
+public class DealModel extends ParseObject implements AvailabilityModel.Provider {
 
 
     public String getId() {
@@ -78,14 +78,19 @@ public class DealModel extends ParseObject {
 
     public String getRestaurant() { return getParseObject("restaurantId").getString("name");}
 
+    @Override
     public String getRecurrence(int index) { return getString("recurrence" + index);}
 
+    @Override
     public int getFirstOpenTime(int index) { return getInt("firstOpenTime" + index);}
 
+    @Override
     public int getLastOpenTime(int index) { return getInt("lastOpenTime" + index);}
 
+    @Override
     public int getFirstCloseTime(int index) { return getInt("firstCloseTime" + index); }
 
+    @Override
     public int getLastCloseTime(int index) { return getInt("lastCloseTime" + index); }
 
     public String getRestaurantId() { return getParseObject("restaurantId").getObjectId();}

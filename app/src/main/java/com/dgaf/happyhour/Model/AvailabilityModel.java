@@ -10,10 +10,22 @@ public class AvailabilityModel {
     public int firstClose;
     public int lastClose;
 
+    public interface Provider {
+        String getRecurrence(int index);
+
+        int getFirstOpenTime(int index);
+
+        int getLastOpenTime(int index);
+
+        int getFirstCloseTime(int index);
+
+        int getLastCloseTime(int index);
+    }
+
     public static final short RECUR_DAYOFWEEK_START = 48;
 
-    public AvailabilityModel(DealModel deal, int index) {
-        String recur = deal.getRecurrence(index);
+    public AvailabilityModel(Provider prov, int index) {
+        String recur = prov.getRecurrence(index);
 
         if (recur == null) {
             this.recurrenceMask = new DayOfWeekMask((byte)0);
@@ -21,11 +33,11 @@ public class AvailabilityModel {
             this.recurrenceMask = new DayOfWeekMask((byte)Integer.parseInt(recur.substring(RECUR_DAYOFWEEK_START) + "0", 2));
         }
 
-        this.firstOpen = deal.getFirstOpenTime(index);
-        this.lastOpen = deal.getLastOpenTime(index);
+        this.firstOpen = prov.getFirstOpenTime(index);
+        this.lastOpen = prov.getLastOpenTime(index);
 
-        this.firstClose = deal.getFirstCloseTime(index);
-        this.lastClose = deal.getLastCloseTime(index);
+        this.firstClose = prov.getFirstCloseTime(index);
+        this.lastClose = prov.getLastCloseTime(index);
 
     }
 

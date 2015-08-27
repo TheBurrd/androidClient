@@ -8,6 +8,7 @@ import com.dgaf.happyhour.Model.ModelUpdater;
 import com.dgaf.happyhour.Model.Queries.Query;
 import com.dgaf.happyhour.Model.Queries.QueryParameters;
 import com.dgaf.happyhour.Model.RestaurantModel;
+import com.google.android.gms.drive.internal.QueryRequest;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -18,10 +19,14 @@ import java.util.List;
  * Created by Adam on 8/6/2015.
  */
 public class FoodDealListQuery implements Query<DealModel> {
-    public void fetch(Context context, QueryParameters params,final ModelUpdater<DealModel> modelUpdater) {
+    QueryParameters mParams;
+    public FoodDealListQuery(QueryParameters params) {
+        mParams = params;
+    }
+    public void fetch(Context context, final ModelUpdater<DealModel> modelUpdater) {
         // Setup the database Query
         ParseQuery<RestaurantModel> localRestaurants = ParseQuery.getQuery(RestaurantModel.class);
-        localRestaurants.whereWithinMiles("location", params.getLocation(context), params.getRadiusMi());
+        localRestaurants.whereWithinMiles("location", mParams.getLocation(context), mParams.getRadiusMi());
 
         ParseQuery<DealModel> localDeals = ParseQuery.getQuery(DealModel.class);
         ParseQuery<DealModel> orLocalDeals = ParseQuery.getQuery(DealModel.class);
