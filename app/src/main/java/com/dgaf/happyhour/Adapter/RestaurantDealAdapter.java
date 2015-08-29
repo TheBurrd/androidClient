@@ -1,32 +1,23 @@
 package com.dgaf.happyhour.Adapter;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.util.Log;
-import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.dgaf.happyhour.Controller.LocationService;
 import com.dgaf.happyhour.Device;
+import com.dgaf.happyhour.Model.AvailabilityModel;
 import com.dgaf.happyhour.Model.DealIcon;
 import com.dgaf.happyhour.Model.DealModel;
 import com.dgaf.happyhour.Model.ModelUpdater;
-import com.dgaf.happyhour.Model.RestaurantModel;
+import com.dgaf.happyhour.Model.Queries.QueryParameters;
 import com.dgaf.happyhour.R;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
-import com.parse.ParseGeoPoint;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +29,7 @@ import java.util.Map;
 public class RestaurantDealAdapter implements ModelUpdater<DealModel> {
     private Activity activity;
     private DealModel dealModel;
+    private QueryParameters queryParams;
     private RestaurantDealViewHolder dealHolder;
 
     public static class RestaurantDealViewHolder implements CompoundButton.OnCheckedChangeListener {
@@ -99,8 +91,9 @@ public class RestaurantDealAdapter implements ModelUpdater<DealModel> {
         }
     }
 
-    public RestaurantDealAdapter(Activity activity) {
+    public RestaurantDealAdapter(Activity activity, QueryParameters queryParams) {
         this.activity = activity;
+        this.queryParams = queryParams;
         createViewHolders();
     }
 
@@ -201,10 +194,15 @@ public class RestaurantDealAdapter implements ModelUpdater<DealModel> {
         if (dealHolder != null && dealModel != null) {
 
             dealHolder.dealTitle.setText(dealModel.getDealTitle());
-            // Comment this out till all deals in database have new availability model
-            // AvailabilityModel availability = new AvailabilityModel(dealModel);
-            // dealAvailability.setText(availability.getDayAvailability(DayOfWeekMask.TODAY, true));
-            dealHolder.dealAvailability.setText("Mon: 10a - 8p");
+            AvailabilityModel availability1 = new AvailabilityModel(dealModel,1);
+            AvailabilityModel availability2 = new AvailabilityModel(dealModel,2);
+            String availText1 = availability1.getDayAvailability(queryParams.getDayOfWeekMask().getMask(), true);
+            String availText2 = availability2.getDayAvailability(queryParams.getDayOfWeekMask().getMask(), true);
+            if (availText1.length() != 0) {
+                dealHolder.dealAvailability.setText(availText1);
+            } else {
+                dealHolder.dealAvailability.setText(availText2);
+            }
             dealHolder.dealFineprint.setText(dealModel.getFineprint());
             dealHolder.dealRating.setText(dealModel.getRatingString());
 

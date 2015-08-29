@@ -54,6 +54,7 @@ public class Restaurant extends AppCompatActivity {
     private RestaurantDealAdapter dealAdapter;
     private RestaurantQuery mRestaurantQuery;
     private DealQuery mDealQuery;
+    private QueryParameters mQueryParams;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +77,10 @@ public class Restaurant extends AppCompatActivity {
         restaurantAdapter = new RestaurantAdapter(this);
         mRestaurantQuery.fetch(this, restaurantAdapter);
 
+        mQueryParams = QueryParameters.getInstance();
+
         mDealQuery = new DealQuery(dealArg);
-        dealAdapter = new RestaurantDealAdapter(this);
+        dealAdapter = new RestaurantDealAdapter(this, mQueryParams);
         mDealQuery.fetch(this, dealAdapter);
     }
 

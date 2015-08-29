@@ -135,7 +135,8 @@
                     android:text="Tuesday 10AM - 9PM"
                     android:id="@+id/hours"
                     android:layout_below="@+id/deal_fineprint"
-                    android:layout_alignParentStart="true" />
+                    android:layout_alignParentStart="true"
+                    android:visibility="invisible"/>
 
                 <ImageView
                     android:layout_width="20dp"
@@ -144,7 +145,8 @@
                     android:src="@drawable/ic_down_arrow"
                     android:id="@+id/down"
                     android:layout_alignTop="@+id/hours"
-                    android:layout_toEndOf="@+id/hours" />
+                    android:layout_toEndOf="@+id/hours"
+                    android:visibility="invisible"/>
 
                 <TextView
                     android:layout_marginTop="15dp"
