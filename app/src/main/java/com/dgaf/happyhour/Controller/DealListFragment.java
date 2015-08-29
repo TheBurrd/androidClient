@@ -12,9 +12,7 @@ import android.widget.RelativeLayout;
 
 import com.dgaf.happyhour.Adapter.DealListAdapter;
 import com.dgaf.happyhour.Model.DealListType;
-import com.dgaf.happyhour.Model.Queries.Parse.DrinkDealListQuery;
-import com.dgaf.happyhour.Model.Queries.Parse.FeaturedDealListQuery;
-import com.dgaf.happyhour.Model.Queries.Parse.FoodDealListQuery;
+import com.dgaf.happyhour.Model.Queries.Parse.DealListQuery;
 import com.dgaf.happyhour.Model.Queries.Query;
 import com.dgaf.happyhour.Model.Queries.QueryParameters;
 import com.dgaf.happyhour.R;
@@ -73,18 +71,7 @@ public class DealListFragment extends Fragment implements DealListAdapterNotifie
 
         Bundle args = this.getArguments();
         listType = DealListType.values()[args.getInt(DEAL_LIST_TYPE)];
-
-        switch (listType) {
-            case DRINK:
-                mQuery = new DrinkDealListQuery(mQueryParams);
-                break;
-            case FOOD:
-                mQuery = new FoodDealListQuery(mQueryParams);
-                break;
-            case FEATURED:
-                mQuery = new FeaturedDealListQuery(mQueryParams);
-                break;
-        }
+        mQuery = new DealListQuery(mQueryParams, listType);
         mAdapter = new DealListAdapter(getActivity(), mRecyclerView, mSwipeRefresh, this, mQueryParams);
 
         mRecyclerView.setAdapter(mAdapter);

@@ -26,11 +26,15 @@ public class AvailabilityModel {
 
     public AvailabilityModel(Provider prov, int index) {
         String recur = prov.getRecurrence(index);
-
         if (recur == null) {
             this.recurrenceMask = new DayOfWeekMask((byte)0);
+
         } else {
             this.recurrenceMask = new DayOfWeekMask((byte)Integer.parseInt(recur.substring(RECUR_DAYOFWEEK_START) + "0", 2));
+            byte today = DayOfWeekMask.getCurrentDayOfWeekAsMask();
+            if (this.recurrenceMask.isDaySelected(today)) {
+                this.recurrenceMask.selectToday();
+            }
         }
 
         this.firstOpen = prov.getFirstOpenTime(index);
@@ -54,10 +58,16 @@ public class AvailabilityModel {
     // TODO display split open times
     public String getDayAvailability(byte weekday, boolean displayDay) {
         StringBuilder ret = new StringBuilder();
+        DayOfWeekMask mask = new DayOfWeekMask(weekday);
+
+        if (mask.isTodaySelected()) {
+            byte today = DayOfWeekMask.getCurrentDayOfWeekAsMask();
+            mask.selectDay(today);
+        }
 
         // Mon
         if (displayDay) {
-            ret.append(getDayShorthand(weekday));
+            ret.append(getDayShorthand(mask));
         }
 
         int startTime = firstOpen;
@@ -137,38 +147,32 @@ public class AvailabilityModel {
     }
 
     /** Return a shorthand string for a given weekday */
-    private String getDayShorthand(byte weekday) {
-        switch (weekday) {
-            case DayOfWeekMask.MONDAY:
-                return "Mon ";
-                //break;
-
-            case DayOfWeekMask.TUESDAY:
-                return "Tue ";
-                //break;
-
-            case DayOfWeekMask.WEDNESDAY:
-                return "Wed ";
-                //break;
-
-            case DayOfWeekMask.THURSDAY:
-                return "Thu ";
-                //break;
-
-            case DayOfWeekMask.FRIDAY:
-                return "Fri ";
-                //break;
-
-            case DayOfWeekMask.SATURDAY:
-                return "Sat ";
-                //break;
-
-            case DayOfWeekMask.SUNDAY:
-                return "Sun ";
-                //break;
+    private String getDayShorthand(DayOfWeekMask mask) {
+        String dayShort = "";
+        if (mask.isSundaySelected()) {
+            dayShort += "Sun,";
         }
-
-        return null;
+        if (mask.isMondaySelected()) {
+            dayShort += "Mon,";
+        }
+        if (mask.isTuesdaySelected()) {
+            dayShort += "Tue,";
+        }
+        if (mask.isWednesdaySelected()) {
+            dayShort += "Wed,";
+        }
+        if (mask.isThursdaySelected()) {
+            dayShort += "Thu,";
+        }
+        if (mask.isFridaySelected()) {
+            dayShort += "Fri,";
+        }
+        if (mask.isSaturdaySelected()) {
+            dayShort += "Sat,";
+        }
+        if (dayShort.length() > 0) {
+            dayShort = dayShort.substring(0, dayShort.length() - 1) + " ";
+        }
+        return dayShort;
     }
-
 }

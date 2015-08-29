@@ -10,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dgaf.happyhour.Controller.LocationService;
-import com.dgaf.happyhour.Model.DealModel;
 import com.dgaf.happyhour.Model.ModelUpdater;
 import com.dgaf.happyhour.Model.RestaurantModel;
 import com.dgaf.happyhour.R;

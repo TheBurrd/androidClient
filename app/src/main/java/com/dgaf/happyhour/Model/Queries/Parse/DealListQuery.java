@@ -3,25 +3,29 @@ package com.dgaf.happyhour.Model.Queries.Parse;
 import android.content.Context;
 import android.util.Log;
 
+import com.dgaf.happyhour.Model.DayOfWeekMask;
+import com.dgaf.happyhour.Model.DealListType;
 import com.dgaf.happyhour.Model.DealModel;
 import com.dgaf.happyhour.Model.ModelUpdater;
 import com.dgaf.happyhour.Model.Queries.Query;
 import com.dgaf.happyhour.Model.Queries.QueryParameters;
 import com.dgaf.happyhour.Model.RestaurantModel;
-import com.google.android.gms.drive.internal.QueryRequest;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
  * Created by Adam on 8/6/2015.
  */
-public class FoodDealListQuery implements Query<DealModel> {
+public class DealListQuery implements Query<DealModel> {
     QueryParameters mParams;
-    public FoodDealListQuery(QueryParameters params) {
+    DealListType mListType;
+    public DealListQuery(QueryParameters params, DealListType listType) {
         mParams = params;
+        mListType = listType;
     }
     public void fetch(Context context, final ModelUpdater<DealModel> modelUpdater) {
         // Setup the database Query
@@ -32,10 +36,15 @@ public class FoodDealListQuery implements Query<DealModel> {
         ParseQuery<DealModel> orLocalDeals = ParseQuery.getQuery(DealModel.class);
         localDeals.whereMatchesQuery("restaurantId", localRestaurants);
         orLocalDeals.whereMatchesQuery("restaurantId", localRestaurants);
-        localDeals.whereEqualTo("tags", "food");
-        orLocalDeals.whereEqualTo("tags", "food");
+        localDeals.whereEqualTo("tags", mListType.toString().toLowerCase());
+        orLocalDeals.whereEqualTo("tags", mListType.toString().toLowerCase());
 
         //localDeals = applyDayOfWeekForQuery(localDeals, orLocalDeals);
+        // All deals with
+        localDeals.whereMatches("recurrence1", getQueryRegexFromDayOfWeekMask(mParams.getDayOfWeekMask()));
+
+        Calendar cal = Calendar.getInstance();
+        int now = cal.get(Calendar.HOUR_OF_DAY)*100 + cal.get(Calendar.MINUTE);
 
 
         localDeals.include("restaurantId");
@@ -49,4 +58,22 @@ public class FoodDealListQuery implements Query<DealModel> {
             }
         });
     }
+
+    private String getQueryRegexFromDayOfWeekMask(DayOfWeekMask dayOfWeekMask) {
+        String dayOfWeekRegex = "^.{48}";
+        String dayOfWeekByte = Integer.toBinaryString(dayOfWeekMask.getMask());
+        for (int i = 0; i < dayOfWeekByte.length() - 1; i++) {
+            if (dayOfWeekByte.charAt(i) == '1') {
+                char[] anyDay = ".......|".toCharArray();
+                anyDay[i] = '1';
+                dayOfWeekRegex += String.valueOf(anyDay);
+            }
+        }
+        if (dayOfWeekMask.isTodaySelected()) {
+            dayOfWeekRegex += Integer.toBinaryString(DayOfWeekMask.getCurrentDayOfWeekAsMask()).replace('0','.') + "|";
+        }
+        return dayOfWeekRegex.substring(0, dayOfWeekRegex.length() - 1);
+    }
+
+
 }
