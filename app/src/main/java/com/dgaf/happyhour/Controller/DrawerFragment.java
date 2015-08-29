@@ -329,7 +329,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
                     break;
             }
         }
-        queryParameters.notifyAllListeners();
+        //queryParameters.notifyAllListeners();
     }
 
     private void disableTodayToggle() {
