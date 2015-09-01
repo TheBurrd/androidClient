@@ -3,7 +3,6 @@ package com.dgaf.happyhour.Controller;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,8 +18,6 @@ import com.dgaf.happyhour.Model.DayOfWeekMask;
 import com.dgaf.happyhour.Model.Queries.QueryParameters;
 import com.dgaf.happyhour.R;
 
-import static android.support.v4.media.MediaDescriptionCompatApi21.Builder.setTitle;
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -29,7 +26,7 @@ import static android.support.v4.media.MediaDescriptionCompatApi21.Builder.setTi
  * Use the {@link DrawerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DrawerFragment extends Fragment implements View.OnClickListener, ToggleButton.OnCheckedChangeListener,DealListAdapterNotifier {
+public class DrawerFragment extends Fragment implements View.OnClickListener, ToggleButton.OnCheckedChangeListener, DealListAdapterNotifier {
 
     private View topRated,nearby,aboutUs;
     private ToggleButton monday,tuesday,wednesday,thursday,friday,saturday,sunday,today;
