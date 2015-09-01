@@ -1,4 +1,12 @@
-package com.dgaf.happyhour.Model;
+package com.dgaf.happyhour.Model.Queries;
+
+import android.content.Context;
+import android.os.Build;
+
+import com.dgaf.happyhour.Controller.LocationService;
+import com.dgaf.happyhour.Model.DayOfWeekMask;
+import com.parse.Parse;
+import com.parse.ParseGeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,5 +77,24 @@ public class QueryParameters {
     public DayOfWeekMask getDayOfWeekMask() {
         return mDayOfWeekMask;
     }
+
+    public ParseGeoPoint getLocation(Context context) {
+        // Geisel Library - Default Location
+        double latitude = 32.881122;
+        double longitude = -117.237631;
+        LocationService userLocation;
+        if (!Build.FINGERPRINT.startsWith("generic")) {
+            userLocation = new LocationService(context);
+            // Is user location available and are we not running in an emulator
+            if (userLocation.canGetLocation()) {
+                latitude = userLocation.getLatitude();
+                longitude = userLocation.getLongitude();
+            } else {
+                userLocation.showSettingsAlert();
+            }
+        }
+        return new ParseGeoPoint(latitude,longitude);
+    }
+
 
 }

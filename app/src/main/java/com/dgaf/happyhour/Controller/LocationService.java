@@ -8,9 +8,13 @@ package com.dgaf.happyhour.Controller;
         import android.location.Location;
         import android.location.LocationListener;
         import android.location.LocationManager;
+        import android.os.Build;
         import android.os.Bundle;
         import android.os.IBinder;
         import android.provider.Settings;
+
+        import com.google.android.gms.maps.model.LatLng;
+        import com.parse.ParseGeoPoint;
 
 public class LocationService extends Service implements LocationListener{
 
@@ -33,6 +37,23 @@ public class LocationService extends Service implements LocationListener{
     public LocationService(Context context) {
         this.context = context;
         getLocation();
+    }
+
+    public static LatLng pollDeviceLocation(Context context) {
+        // Geisel Library - Default Location
+        double latitude = 32.881122;
+        double longitude = -117.237631;
+        if (!Build.FINGERPRINT.startsWith("generic")) {
+            LocationService userLocation = new LocationService(context);
+            // Is user location available and are we not running in an emulator
+            if (userLocation.canGetLocation()) {
+                latitude = userLocation.getLatitude();
+                longitude = userLocation.getLongitude();
+            } else {
+                userLocation.showSettingsAlert();
+            }
+        }
+        return new LatLng(latitude,longitude);
     }
 
     public Location getLocation() {

@@ -16,7 +16,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.dgaf.happyhour.Model.DayOfWeekMask;
-import com.dgaf.happyhour.Model.QueryParameters;
+import com.dgaf.happyhour.Model.Queries.QueryParameters;
 import com.dgaf.happyhour.R;
 
 import static android.support.v4.media.MediaDescriptionCompatApi21.Builder.setTitle;
@@ -339,7 +339,6 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
                     break;
             }
         }
-        queryParameters.notifyAllListeners();
     }
 
     private void setTitle(String s) {
