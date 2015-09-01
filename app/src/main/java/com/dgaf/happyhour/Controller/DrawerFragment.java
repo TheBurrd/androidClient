@@ -26,7 +26,7 @@ import com.dgaf.happyhour.R;
  * Use the {@link DrawerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DrawerFragment extends Fragment implements View.OnClickListener, ToggleButton.OnCheckedChangeListener,DealListAdapterNotifier {
+public class DrawerFragment extends Fragment implements View.OnClickListener, ToggleButton.OnCheckedChangeListener, DealListAdapterNotifier {
 
     private View topRated,nearby,aboutUs;
     private ToggleButton monday,tuesday,wednesday,thursday,friday,saturday,sunday,today;
@@ -56,7 +56,6 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
                     v.getParent().requestDisallowInterceptTouchEvent(false);
                     break;
             }
-
             // Handle seekbar touch events.
             v.onTouchEvent(event);
             return true;
@@ -252,41 +251,49 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
                 case R.id.monday:
                     compoundButton.setBackgroundResource(R.drawable.ic_monday_active);
                     disableTodayToggle();
+                    getActivity().setTitle("Monday's Deal");
                     queryParameters.getDayOfWeekMask().selectMonday();
                     break;
                 case R.id.tuesday:
                     compoundButton.setBackgroundResource(R.drawable.ic_tuesday_active);
                     disableTodayToggle();
+                    getActivity().setTitle("Tuesday's Deal");
                     queryParameters.getDayOfWeekMask().selectTuesday();
                     break;
                 case R.id.wednesday:
                     compoundButton.setBackgroundResource(R.drawable.ic_wednesday_active);
                     disableTodayToggle();
+                    getActivity().setTitle("Wednesday's Deal");
                     queryParameters.getDayOfWeekMask().selectWednesday();
                     break;
                 case R.id.thursday:
                     compoundButton.setBackgroundResource(R.drawable.ic_thursday_active);
                     disableTodayToggle();
+                    getActivity().setTitle("Thursday's Deal");
                     queryParameters.getDayOfWeekMask().selectThursday();
                     break;
                 case R.id.friday:
                     compoundButton.setBackgroundResource(R.drawable.ic_friday_active);
                     disableTodayToggle();
+                    getActivity().setTitle("Friday's Deal");
                     queryParameters.getDayOfWeekMask().selectFriday();
                     break;
                 case R.id.saturday:
                     compoundButton.setBackgroundResource(R.drawable.ic_saturday_active);
                     disableTodayToggle();
+                    getActivity().setTitle("Saturday's Deal");
                     queryParameters.getDayOfWeekMask().selectSaturday();
                     break;
                 case R.id.sunday:
                     compoundButton.setBackgroundResource(R.drawable.ic_sunday_active);
                     disableTodayToggle();
+                    getActivity().setTitle("Sunday's Deal");
                     queryParameters.getDayOfWeekMask().selectSunday();
                     break;
                 case R.id.today:
                     compoundButton.setBackgroundResource(R.drawable.ic_today_active);
                     uncheckWeekdayToggle();
+                    getActivity().setTitle("Today's Deal");
                     queryParameters.getDayOfWeekMask().selectToday();
                     break;
             }
@@ -329,6 +336,9 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
                     break;
             }
         }
+    }
+
+    private void setTitle(String s) {
     }
 
     private void disableTodayToggle() {
@@ -439,12 +449,14 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
 
         if(days.isTodaySelected()) {
             sortDays = getString(R.string.sort_today);
+
             currentDays+="To";
             amountOfDaysSelected++;
         }
 
         if(days.isMondaySelected()){
             sortDays = getString(R.string.sort_monday);
+            setTitle("Monday's Deals");
             currentDays+="Mo";
             amountOfDaysSelected++;
         }
