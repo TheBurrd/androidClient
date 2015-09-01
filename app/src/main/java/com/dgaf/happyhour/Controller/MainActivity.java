@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.dgaf.happyhour.Model.QueryParameters;
 import com.dgaf.happyhour.R;
 
 
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 ((DrawerFragment)getSupportFragmentManager().findFragmentById(R.id.drawerItems)).giveFeedBack();
+                QueryParameters.getInstance().notifyAllListeners();
             }
 
             public void onDrawerOpened(View drawerView) {
