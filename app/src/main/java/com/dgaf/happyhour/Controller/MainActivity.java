@@ -14,7 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.dgaf.happyhour.Model.QueryParameters;
+import com.dgaf.happyhour.Model.Queries.QueryParameters;
 import com.dgaf.happyhour.R;
 
 
