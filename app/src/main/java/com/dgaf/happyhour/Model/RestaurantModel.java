@@ -8,7 +8,7 @@ import com.parse.ParseObject;
  * Created by Adam on 5/12/2015.
  */
 @ParseClassName("restaurants")
-public class RestaurantModel extends ParseObject {
+public class RestaurantModel extends ParseObject implements AvailabilityModel.Provider {
 
     public String getId() {
         return getObjectId();
@@ -57,15 +57,26 @@ public class RestaurantModel extends ParseObject {
         return location.distanceInMilesTo(restaurant);
     }
 
-    public String getRecurrence1() { return getString("recurrence1");}
+    public String getDistanceFromString(ParseGeoPoint location) {
+        return String.format("%.1f", getDistanceFrom(location)) + " mi";
+    }
 
-    public long getOpenTime1() { return getLong("openTime1");}
+    @Override
+    public String getRecurrence(int index) { return getString("recurrence" + index);}
 
-    public long getCloseTime1() { return getLong("closeTime1"); }
+    @Override
+    public int getFirstOpenTime(int index) { return getInt("firstOpenTime" + index);}
 
-    public String getRecurrence2() { return getString("recurrence2");}
+    @Override
+    public int getLastOpenTime(int index) { return getInt("lastOpenTime" + index);}
 
-    public long getOpenTime2() { return getLong("openTime2");}
+    @Override
+    public int getFirstCloseTime(int index) { return getInt("firstCloseTime" + index); }
 
-    public long getCloseTime2() { return getLong("closeTime2");}
+    @Override
+    public int getLastCloseTime(int index) { return getInt("lastCloseTime" + index); }
+
+    public String getAddressLine() {
+        return getStreetNumber() + " " + getStreetAddress() + ", " + getCity() + ", " + getState()+ ", " + getZipcode();
+    }
 }

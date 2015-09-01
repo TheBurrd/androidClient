@@ -1,56 +1,48 @@
 package com.dgaf.happyhour.Model;
 
-import android.util.Log;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Calendar;
-
 /**
  * Created by Adam on 5/12/2015.
  */
 public class AvailabilityModel {
-    public DayOfWeekMask recurrenceMask1;
-    public short firstOpen1;
-    public short lastOpen1;
-    public short firstClose1;
-    public short lastClose1;
+    public DayOfWeekMask recurrenceMask;
+    public int firstOpen;
+    public int lastOpen;
+    public int firstClose;
+    public int lastClose;
 
-    public DayOfWeekMask recurrenceMask2;
-    public short firstOpen2;
-    public short lastOpen2;
-    public short firstClose2;
-    public short lastClose2;
+    public interface Provider {
+        String getRecurrence(int index);
 
+        int getFirstOpenTime(int index);
 
-    public static final short RECUR_DAYOFWEEK_ST = 47;
-    public static final int FIRST_MASK = 0x000111;
-    public static final int LAST_MASK = 0x111000;
+        int getLastOpenTime(int index);
 
+        int getFirstCloseTime(int index);
 
-    public AvailabilityModel(DealModel deal) {
-        String recur1 = deal.getRecurrence1();
-        String recur2 = deal.getRecurrence2();
+        int getLastCloseTime(int index);
+    }
 
-        this.recurrenceMask1 = new DayOfWeekMask((byte)Integer.parseInt(recur1.substring(RECUR_DAYOFWEEK_ST) + "0", 2));
-        this.recurrenceMask2 = new DayOfWeekMask((byte)Integer.parseInt(recur2.substring(RECUR_DAYOFWEEK_ST) + "0", 2));
+    public static final short RECUR_DAYOFWEEK_START = 48;
 
-        int openTime1 = (int)deal.getOpenTime1();
-        this.firstOpen1 = (short)(openTime1 & FIRST_MASK);
-        this.lastOpen1 = (short)((openTime1 & LAST_MASK) >> 12);
+    public AvailabilityModel(Provider prov, int index) {
+        String recur = prov.getRecurrence(index);
+        if (recur == null) {
+            this.recurrenceMask = new DayOfWeekMask((byte)0);
 
-        int closeTime1 = (int)deal.getCloseTime1();
-        this.firstClose1 = (short)(closeTime1 & FIRST_MASK);
-        this.lastClose1 = (short)((closeTime1 & LAST_MASK) >> 12);
+        } else {
+            this.recurrenceMask = new DayOfWeekMask((byte)Integer.parseInt(recur.substring(RECUR_DAYOFWEEK_START) + "0", 2));
+            byte today = DayOfWeekMask.getCurrentDayOfWeekAsMask();
+            if (this.recurrenceMask.isDaySelected(today)) {
+                this.recurrenceMask.selectToday();
+            }
+        }
 
-        int openTime2 = (int)deal.getOpenTime2();
-        this.firstOpen2 = (short)(openTime2 & FIRST_MASK);
-        this.lastOpen2 = (short)((openTime2 & LAST_MASK) >> 12);
+        this.firstOpen = prov.getFirstOpenTime(index);
+        this.lastOpen = prov.getLastOpenTime(index);
 
-        int closeTime2 = (int)deal.getCloseTime2();
-        this.firstClose2 = (short)(closeTime2 & FIRST_MASK);
-        this.lastClose2 = (short)((closeTime2 & LAST_MASK) >> 12);
+        this.firstClose = prov.getFirstCloseTime(index);
+        this.lastClose = prov.getLastCloseTime(index);
+
     }
 
     /** Return a string representing the availability for the input day. Takes
@@ -63,19 +55,26 @@ public class AvailabilityModel {
      *
      * Returns an empty string if there is no deal for that day
      * */
+    // TODO display split open times
     public String getDayAvailability(byte weekday, boolean displayDay) {
         StringBuilder ret = new StringBuilder();
+        DayOfWeekMask mask = new DayOfWeekMask(weekday);
+
+        if (mask.isTodaySelected()) {
+            byte today = DayOfWeekMask.getCurrentDayOfWeekAsMask();
+            mask.selectDay(today);
+        }
 
         // Mon
         if (displayDay) {
-            ret.append(getDayShorthand(weekday));
+            ret.append(getDayShorthand(mask));
         }
 
-        int startTime = firstOpen1;
-        int endTime = lastClose1;
+        int startTime = firstOpen;
+        int endTime = lastClose;
 
-        // If the startTime is 0 then there is no deal for that day so return an empty string
-        if (startTime == 0) {
+        // If weekday does not occur in recurrence, return no deal for day
+        if (!recurrenceMask.isDaySelected(weekday)) {
             return "";
         }
 
@@ -93,7 +92,9 @@ public class AvailabilityModel {
             startHour -= 12;
         }
 
-        if (endHour > 12) {
+        if (endHour > 24) {
+            endHour -= 24;
+        } else if (endHour > 12) {
             endHour -= 12;
         }
 
@@ -137,44 +138,41 @@ public class AvailabilityModel {
         else if (hour <= 23) {
             return "p";
         }
-        else {
+        else if (hour <= 35){
             return "a";
+        }
+        else {
+            return "p";
         }
     }
 
     /** Return a shorthand string for a given weekday */
-    private String getDayShorthand(byte weekday) {
-        switch (weekday) {
-            case DayOfWeekMask.MONDAY:
-                return "Mon ";
-                //break;
-
-            case DayOfWeekMask.TUESDAY:
-                return "Tue ";
-                //break;
-
-            case DayOfWeekMask.WEDNESDAY:
-                return "Wed ";
-                //break;
-
-            case DayOfWeekMask.THURSDAY:
-                return "Thu ";
-                //break;
-
-            case DayOfWeekMask.FRIDAY:
-                return "Fri ";
-                //break;
-
-            case DayOfWeekMask.SATURDAY:
-                return "Sat ";
-                //break;
-
-            case DayOfWeekMask.SUNDAY:
-                return "Sun ";
-                //break;
+    private String getDayShorthand(DayOfWeekMask mask) {
+        String dayShort = "";
+        if (mask.isSundaySelected()) {
+            dayShort += "Sun,";
         }
-
-        return null;
+        if (mask.isMondaySelected()) {
+            dayShort += "Mon,";
+        }
+        if (mask.isTuesdaySelected()) {
+            dayShort += "Tue,";
+        }
+        if (mask.isWednesdaySelected()) {
+            dayShort += "Wed,";
+        }
+        if (mask.isThursdaySelected()) {
+            dayShort += "Thu,";
+        }
+        if (mask.isFridaySelected()) {
+            dayShort += "Fri,";
+        }
+        if (mask.isSaturdaySelected()) {
+            dayShort += "Sat,";
+        }
+        if (dayShort.length() > 0) {
+            dayShort = dayShort.substring(0, dayShort.length() - 1) + " ";
+        }
+        return dayShort;
     }
-
 }

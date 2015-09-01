@@ -1,5 +1,7 @@
 package com.dgaf.happyhour.Model;
 
+import android.util.Log;
+
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -9,7 +11,7 @@ import com.parse.ParseObject;
  * Created by trentonrobison on 5/9/15.
  */
 @ParseClassName("deals")
-public class DealModel extends ParseObject {
+public class DealModel extends ParseObject implements AvailabilityModel.Provider {
 
 
     public String getId() {
@@ -78,21 +80,69 @@ public class DealModel extends ParseObject {
 
     public String getRestaurant() { return getParseObject("restaurantId").getString("name");}
 
-    public String getRecurrence1() { return getString("recurrence1");}
+    @Override
+    public String getRecurrence(int index) { return getString("recurrence" + index);}
 
-    public long getOpenTime1() { return getLong("openTime1");}
+    @Override
+    public int getFirstOpenTime(int index) { return getInt("firstOpenTime" + index);}
 
-    public long getCloseTime1() { return getLong("closeTime1"); }
+    @Override
+    public int getLastOpenTime(int index) { return getInt("lastOpenTime" + index);}
 
-    public String getRecurrence2() { return getString("recurrence2");}
+    @Override
+    public int getFirstCloseTime(int index) { return getInt("firstCloseTime" + index); }
 
-    public long getOpenTime2() { return getLong("openTime2");}
-
-    public long getCloseTime2() { return getLong("closeTime2");}
+    @Override
+    public int getLastCloseTime(int index) { return getInt("lastCloseTime" + index); }
 
     public String getRestaurantId() { return getParseObject("restaurantId").getObjectId();}
 
     public double getDistanceFrom(ParseGeoPoint location) { return location.distanceInMilesTo(getParseObject("restaurantId").getParseGeoPoint("location"));
+    }
+
+    public String getDealTitle() {
+        String value;
+        double amountOff = getAmountOff();
+        double percentOff = getPercentOff();
+        double reducedPrice = getReducedPrice();
+        if (amountOff != 0) {
+            if (amountOff == (long) amountOff) {
+                value = String.format("%d", (long) amountOff);
+            } else {
+                value = String.format("%.2f", amountOff);
+            }
+            value = "$" + value + " off";
+        } else if (percentOff != 0) {
+            value = String.format("%d", (long)percentOff) + "% off";
+        } else {
+            if (reducedPrice == (long) reducedPrice) {
+                value = String.format("%d", (long) reducedPrice);
+            } else {
+                value = String.format("%.2f", reducedPrice);
+            }
+            value = "$" + value;
+        }
+
+        String content = "";
+        String item = getItem();
+        String category = getCategory();
+        if (item != null && item.length() > 0) {
+            content = item;
+        } else if (category != null &&  category.length() > 0) {
+            content = category;
+        } else {
+            Log.e("Deal Parsing", "Malformed Deal");
+        }
+
+        return value + " " + content;
+    }
+
+    public String getRatingString() {
+        return String.valueOf(getRating()) + "%";
+    }
+
+    public String getDistanceFromString(ParseGeoPoint location) {
+        return String.format("%.1f", getDistanceFrom(location)) + " mi";
     }
 
 }
