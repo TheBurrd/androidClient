@@ -60,9 +60,11 @@ public class DealListQuery implements Query<DealModel> {
     }
 
     private String getQueryRegexFromDayOfWeekMask(DayOfWeekMask dayOfWeekMask) {
+        // Regex that skips the first 48 characters of a string
         String dayOfWeekRegex = "^.{48}";
-        String dayOfWeekByte = Integer.toBinaryString(dayOfWeekMask.getMask());
+        String dayOfWeekByte = Integer.toBinaryString(dayOfWeekMask.getMask() & 0xFF);
         for (int i = 0; i < dayOfWeekByte.length() - 1; i++) {
+            // Append to the regex a search for the particular day of the week
             if (dayOfWeekByte.charAt(i) == '1') {
                 char[] anyDay = ".......|".toCharArray();
                 anyDay[i] = '1';
@@ -70,10 +72,10 @@ public class DealListQuery implements Query<DealModel> {
             }
         }
         if (dayOfWeekMask.isTodaySelected()) {
+            // Select todays day of the week if the filter is set
             dayOfWeekRegex += Integer.toBinaryString(DayOfWeekMask.getCurrentDayOfWeekAsMask()).replace('0','.') + "|";
         }
         return dayOfWeekRegex.substring(0, dayOfWeekRegex.length() - 1);
     }
-
 
 }

@@ -1,7 +1,6 @@
 package com.dgaf.happyhour;
 import com.dgaf.happyhour.Model.DealModel;
 import com.dgaf.happyhour.Model.RestaurantModel;
-import com.dgaf.happyhour.Model.UserModel;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -23,7 +22,6 @@ public class Burrd extends Application {
         // Setup Model objects
         ParseObject.registerSubclass(DealModel.class);
         ParseObject.registerSubclass(RestaurantModel.class);
-        ParseObject.registerSubclass(UserModel.class);
         // Production Database
         //Parse.initialize(this, "2TR1bOpjpFL8Wm7a7TXcbuoFCyJRB0VdSOXnf8tB", "hY2oFPc3k8RJLsZIsadM1Me0JS1ndnwRwim104WK");
         // Setup Parse db connection

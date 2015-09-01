@@ -1,5 +1,7 @@
 package com.dgaf.happyhour.Model;
 
+import android.util.Log;
+
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -128,6 +130,8 @@ public class DealModel extends ParseObject implements AvailabilityModel.Provider
             content = item;
         } else if (category != null &&  category.length() > 0) {
             content = category;
+        } else {
+            Log.e("Deal Parsing", "Malformed Deal");
         }
 
         return value + " " + content;

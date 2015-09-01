@@ -81,7 +81,6 @@ public class DealListFragment extends Fragment implements DealListAdapterNotifie
         mRecyclerView.addItemDecoration(new DealListDecoration(getActivity()));
 
         onRefresh();
-
     }
 
     @Override
