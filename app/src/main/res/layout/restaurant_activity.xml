@@ -163,19 +163,21 @@
 
                 <ImageView
                     android:layout_width="40dp"
+                    android:layout_marginRight="5dp"
                     android:layout_height="40dp"
                     android:id="@+id/website"
                     android:src="@drawable/ic_restaurant_website"
-                    android:layout_alignTop="@+id/phone"
-                    android:layout_alignStart="@+id/upVote" />
+                    android:layout_alignBottom="@+id/address"
+                    android:layout_toStartOf="@+id/distance" />
 
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:layout_marginRight="10dp"
                     android:id="@+id/phone"
                     android:src="@drawable/ic_phone_number"
                     android:layout_alignBottom="@+id/address"
-                    android:layout_alignStart="@+id/rating" />
+                    android:layout_alignParentEnd="true" />
 
 
             </RelativeLayout>
