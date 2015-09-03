@@ -1,7 +1,6 @@
 package com.dgaf.happyhour.Adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -14,11 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.dgaf.happyhour.Controller.DealListAdapterNotifier;
+import com.dgaf.happyhour.Controller.DrawerFragment;
 import com.dgaf.happyhour.Controller.Restaurant;
 import com.dgaf.happyhour.Model.AvailabilityModel;
-import com.dgaf.happyhour.Model.DayOfWeekMask;
 import com.dgaf.happyhour.Model.DealIcon;
 import com.dgaf.happyhour.Model.DealModel;
 import com.dgaf.happyhour.Model.ModelUpdater;
@@ -39,13 +37,15 @@ import java.util.List;
  */
 public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHolder> implements View.OnClickListener, ModelUpdater<DealModel> {
 
-    private Context context;
+    private Activity activity;
     private RecyclerView mRecyclerView;
     private List<DealModel> dealItems;
     private SwipeRefreshLayout swipeRefresh;
     private QueryParameters queryParams;
     private static final String DEAL_LIST_CACHE = "dealList";
     private DealListAdapterNotifier dealListFragment;
+    private DealListAdapterNotifier drawerFragment;
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView dealTitle;
@@ -68,13 +68,16 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         }
     }
 
-    public DealListAdapter(Context context, RecyclerView recyclerView, SwipeRefreshLayout swipeRefresh, DealListAdapterNotifier dealListFragment, QueryParameters queryParameters) {
-        this.context = context;
+    public DealListAdapter(Activity activity, RecyclerView recyclerView, SwipeRefreshLayout swipeRefresh, DealListAdapterNotifier dealListFragment, QueryParameters queryParameters) {
+        this.activity = activity;
         this.mRecyclerView = recyclerView;
         this.swipeRefresh = swipeRefresh;
         this.dealItems = new ArrayList<>();
         this.queryParams = queryParameters;
         this.dealListFragment = dealListFragment;
+
+        drawerFragment = (DrawerFragment)((AppCompatActivity)activity).
+                getSupportFragmentManager().findFragmentById(R.id.drawerItems);
     }
 
     //TODO This method is still coupled to Parse and needs refactoring
@@ -92,7 +95,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
             }
 
             // Sort objects by rating or proximity
-            final ParseGeoPoint location = queryParams.getLocation(context);
+            final ParseGeoPoint location = queryParams.getLocation(activity);
             if (queryParams.getQueryType() == QueryParameters.QueryType.PROXIMITY) {
                 Collections.sort(deals, new Comparator<DealModel>() {
                     @Override
@@ -156,9 +159,11 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         } else {
             //TODO remove logging
             Log.e("Parse error: ", e.getMessage());
-            Toast.makeText(context, "Unable to process request: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, "Unable to process request: " + e.getMessage(), Toast.LENGTH_LONG).show();
             swipeRefresh.setRefreshing(false);    // Update refresh indicator
         }
+
+        drawerFragment.adapterUpdate();
     }
 
     @Override
@@ -169,12 +174,12 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         String restaurantId = dealModel.getRestaurantId();
         String dealId = dealModel.getId();
 
-        Intent intent = new Intent(context, Restaurant.class);
+        Intent intent = new Intent(activity, Restaurant.class);
 
         intent.putExtra("resId", restaurantId);
         intent.putExtra("dealId", dealId);
 
-        context.startActivity(intent);
+        activity.startActivity(intent);
     }
 
     @Override
@@ -208,7 +213,7 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         } else {
             holder.availability.setText(availText2);
         }
-        holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(queryParams.getLocation(context))) + " mi");
+        holder.distance.setText(String.format("%.1f", dealModel.getDistanceFrom(queryParams.getLocation(activity))) + " mi");
 
         DealIcon.setImageToDealCategory(holder.icon, dealModel);
 

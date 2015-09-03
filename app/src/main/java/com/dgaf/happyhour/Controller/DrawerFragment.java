@@ -472,60 +472,32 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
         String sortDays = " ";
         String currentDays = " ";
 
-        int amountOfDaysSelected = 0;
-
         if(days.isTodaySelected()) {
             sortDays = getString(R.string.sort_today);
-
             currentDays+="To";
-            amountOfDaysSelected++;
-        }
-
-        if(days.isMondaySelected()){
+        }else if(days.isMondaySelected()){
             sortDays = getString(R.string.sort_monday);
             setTitle("Monday's Deals");
             currentDays+="Mo";
-            amountOfDaysSelected++;
-        }
-
-        if(days.isTuesdaySelected()){
+        }else if(days.isTuesdaySelected()){
             sortDays = getString(R.string.sort_tuesday);
             currentDays+="Tu";
-            amountOfDaysSelected++;
-        }
-
-        if(days.isWednesdaySelected()){
+        }else if(days.isWednesdaySelected()){
             sortDays = getString(R.string.sort_wednesday);
             currentDays+="We";
-            amountOfDaysSelected++;
-        }
-
-        if(days.isThursdaySelected()){
+        }else if(days.isThursdaySelected()){
             sortDays = getString(R.string.sort_thursday);
             currentDays+="Th";
-            amountOfDaysSelected++;
-        }
-
-        if(days.isFridaySelected()){
+        }else if(days.isFridaySelected()){
             sortDays = getString(R.string.sort_friday);
             currentDays+="Fr";
-            amountOfDaysSelected++;
-        }
-
-        if(days.isSaturdaySelected()){
+        }else if(days.isSaturdaySelected()){
             sortDays = getString(R.string.sort_saturday);
             currentDays+="Sa";
-            amountOfDaysSelected++;
-        }
-
-        if(days.isSundaySelected()){
+        }else if(days.isSundaySelected()){
             sortDays = getString(R.string.sort_sunday);
             currentDays+="Su";
-            amountOfDaysSelected++;
         }
-
-        if(amountOfDaysSelected > 1)
-            sortDays = getString(R.string.sort_multiple);
 
         //if the sort type changed or the sort type hasn't changed but days hasn't changed either
         if(sortTypeChanged || (!sortTypeChanged && prevDays.equals(currentDays)))
