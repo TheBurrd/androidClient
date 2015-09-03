@@ -75,12 +75,12 @@
                     android:layout_width="wrap_content"
                     android:layout_marginTop="15dp"
                     android:layout_marginLeft="15dp"
-                    android:text="Fine Print\nUp to 5 tacos can be purchased."
                     android:id="@+id/deal_fineprint"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/deal_availability"
-                    android:layout_alignEnd="@+id/deal_title" />
+                    android:layout_alignEnd="@+id/deal_title"
+                    android:text="Fine Print\nUp to 5 tacos can be purchased." />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -158,23 +158,26 @@
                     android:text="132 south rios avenue, Solana Beach"
                     android:id="@+id/address"
                     android:layout_below="@+id/down"
-                    android:layout_alignParentStart="true" />
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@+id/website" />
 
                 <ImageView
                     android:layout_width="40dp"
+                    android:layout_marginRight="5dp"
                     android:layout_height="40dp"
                     android:id="@+id/website"
                     android:src="@drawable/ic_restaurant_website"
-                    android:layout_alignTop="@+id/down"
-                    android:layout_alignStart="@+id/upVote" />
+                    android:layout_alignBottom="@+id/address"
+                    android:layout_toStartOf="@+id/distance" />
 
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:layout_marginRight="10dp"
                     android:id="@+id/phone"
                     android:src="@drawable/ic_phone_number"
-                    android:layout_alignTop="@+id/website"
-                    android:layout_alignStart="@+id/rating" />
+                    android:layout_alignBottom="@+id/address"
+                    android:layout_alignParentEnd="true" />
 
 
             </RelativeLayout>
