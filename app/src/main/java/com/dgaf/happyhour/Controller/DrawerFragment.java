@@ -173,31 +173,6 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
         return v;
     }
 
-    public void uncheckWeekdayToggle(){
-        monday.setBackgroundResource(R.drawable.ic_monday);
-        tuesday.setBackgroundResource(R.drawable.ic_tuesday);
-        wednesday.setBackgroundResource(R.drawable.ic_wednesday);
-        thursday.setBackgroundResource(R.drawable.ic_thursday);
-        friday.setBackgroundResource(R.drawable.ic_friday);
-        saturday.setBackgroundResource(R.drawable.ic_saturday);
-        sunday.setBackgroundResource(R.drawable.ic_sunday);
-
-        monday.setChecked(false);
-        tuesday.setChecked(false);
-        wednesday.setChecked(false);
-        thursday.setChecked(false);
-        friday.setChecked(false);
-        saturday.setChecked(false);
-        sunday.setChecked(false);
-
-        queryParameters.getDayOfWeekMask().unselectMonday();
-        queryParameters.getDayOfWeekMask().unselectTuesday();
-        queryParameters.getDayOfWeekMask().unselectWednesday();
-        queryParameters.getDayOfWeekMask().unselectThursday();
-        queryParameters.getDayOfWeekMask().unselectFriday();
-        queryParameters.getDayOfWeekMask().unselectSaturday();
-        queryParameters.getDayOfWeekMask().unselectSunday();
-    }
 
     @Override
     public void onAttach(Activity activity) {
