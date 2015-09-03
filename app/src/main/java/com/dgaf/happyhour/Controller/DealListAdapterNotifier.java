@@ -6,5 +6,4 @@ package com.dgaf.happyhour.Controller;
 public interface DealListAdapterNotifier {
     void notifyEmpty();
     void notifyNotEmpty();
-    void adapterUpdate();
 }

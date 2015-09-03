@@ -3,7 +3,6 @@ package com.dgaf.happyhour.Adapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dgaf.happyhour.Controller.DealListAdapterNotifier;
-import com.dgaf.happyhour.Controller.DrawerFragment;
 import com.dgaf.happyhour.Controller.Restaurant;
 import com.dgaf.happyhour.Model.AvailabilityModel;
 import com.dgaf.happyhour.Model.DealIcon;
@@ -44,7 +42,6 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
     private QueryParameters queryParams;
     private static final String DEAL_LIST_CACHE = "dealList";
     private DealListAdapterNotifier dealListFragment;
-    private DealListAdapterNotifier drawerFragment;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -75,9 +72,6 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         this.dealItems = new ArrayList<>();
         this.queryParams = queryParameters;
         this.dealListFragment = dealListFragment;
-
-        drawerFragment = (DrawerFragment)((AppCompatActivity)activity).
-                getSupportFragmentManager().findFragmentById(R.id.drawerItems);
     }
 
     //TODO This method is still coupled to Parse and needs refactoring
@@ -162,8 +156,6 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
             Toast.makeText(activity, "Unable to process request: " + e.getMessage(), Toast.LENGTH_LONG).show();
             swipeRefresh.setRefreshing(false);    // Update refresh indicator
         }
-
-        drawerFragment.adapterUpdate();
     }
 
     @Override
