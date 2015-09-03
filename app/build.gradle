@@ -30,4 +30,5 @@ dependencies {
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'jp.wasabeef:recyclerview-animators:1.2.0@aar'
+    compile 'com.android.support:design:23.0.0'
 }

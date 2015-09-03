@@ -1,6 +1,7 @@
 package com.dgaf.happyhour.Controller;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -19,6 +20,7 @@ import java.util.Locale;
 public class ViewPagerFragment extends Fragment {
 
     private SectionsPagerAdapter mPagerAdapter;
+    private ViewPager vp;
 
     public static ViewPagerFragment newInstance() {
         ViewPagerFragment fragment = new ViewPagerFragment();
@@ -29,7 +31,7 @@ public class ViewPagerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View result = inflater.inflate(R.layout.view_pager,container,false);
-        ViewPager vp = (ViewPager) result.findViewById(R.id.pager);
+        vp = (ViewPager) result.findViewById(R.id.pager);
 
         // We only have 3 tabs. Setting this limit to 3 prevents the fragments from being recreated
         // constantly at the expense of a little bit more memory usage.
@@ -39,9 +41,31 @@ public class ViewPagerFragment extends Fragment {
         vp.setAdapter(mPagerAdapter);
         vp.setCurrentItem(1);
 
+        //setup the tabs and all other tab stuff happens right here
+        TabLayout tabLayout = (TabLayout) result.findViewById(R.id.tabLayout);
+        tabLayout.addTab(tabLayout.newTab().setText("Food"));
+        tabLayout.addTab(tabLayout.newTab().setText("Drinks"));
+        tabLayout.addTab(tabLayout.newTab().setText("Featured"));
+
+        //link the tabs with the viewpager
+        tabLayout.setupWithViewPager(vp);
+
+        //Also want the tabs to be clickable
+        tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(vp) {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                super.onTabSelected(tab);
+
+                vp.setCurrentItem(tab.getPosition());
+
+            }
+
+        });
+
 
         return result;
     }
+
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         private ViewPagerFragment viewPagerFragment;
