@@ -14,6 +14,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -32,26 +33,15 @@ public class DealListQuery implements Query<DealModel> {
         ParseQuery<RestaurantModel> localRestaurants = ParseQuery.getQuery(RestaurantModel.class);
         localRestaurants.whereWithinMiles("location", mParams.getLocation(context), mParams.getRadiusMi());
 
-        ParseQuery<DealModel> localDeals = ParseQuery.getQuery(DealModel.class);
-        ParseQuery<DealModel> orLocalDeals = ParseQuery.getQuery(DealModel.class);
-        localDeals.whereMatchesQuery("restaurantId", localRestaurants);
-        orLocalDeals.whereMatchesQuery("restaurantId", localRestaurants);
-        localDeals.whereEqualTo("tags", mListType.toString().toLowerCase());
-        orLocalDeals.whereEqualTo("tags", mListType.toString().toLowerCase());
+        ParseQuery<DealModel> query = ParseQuery.getQuery(DealModel.class);
+        query.whereMatchesQuery("restaurantId", localRestaurants);
+        query.whereEqualTo("tags", mListType.toString().toLowerCase());
+        query.include("restaurantId");
 
-        //localDeals = applyDayOfWeekForQuery(localDeals, orLocalDeals);
-        // All deals with
-        localDeals.whereMatches("recurrence1", getQueryRegexFromDayOfWeekMask(mParams.getDayOfWeekMask()));
-
-        Calendar cal = Calendar.getInstance();
-        int now = cal.get(Calendar.HOUR_OF_DAY)*100 + cal.get(Calendar.MINUTE);
-
-
-        localDeals.include("restaurantId");
         //TODO remove logging
         Log.v("Parse info", "Deal list query started");
 
-        localDeals.findInBackground(new FindCallback<DealModel>() {
+        query.findInBackground(new FindCallback<DealModel>() {
             @Override
             public void done(List<DealModel> list, ParseException e) {
                 modelUpdater.onDataModelUpdate(list, e);
@@ -75,7 +65,7 @@ public class DealListQuery implements Query<DealModel> {
             // Select todays day of the week if the filter is set
             dayOfWeekRegex += Integer.toBinaryString(DayOfWeekMask.getCurrentDayOfWeekAsMask()).replace('0','.') + "|";
         }
-        return dayOfWeekRegex.substring(0, dayOfWeekRegex.length() - 1);
+        return dayOfWeekRegex.substring(0, dayOfWeekRegex.length() - 1) + "$";
     }
 
 }
