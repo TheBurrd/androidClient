@@ -107,4 +107,5 @@ public class DealListFragment extends Fragment implements DealListAdapterNotifie
     public void adapterUpdate() {
 
     }
+
 }

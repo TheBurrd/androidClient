@@ -215,7 +215,6 @@
                     android:background="@drawable/ic_today"
                     android:textOff=""
                     android:textOn=""
-                    android:text=""
                     android:checked="false"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
