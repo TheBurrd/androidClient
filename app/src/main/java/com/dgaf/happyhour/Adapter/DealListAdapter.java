@@ -30,6 +30,7 @@ import com.parse.ParseObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -86,6 +87,18 @@ public class DealListAdapter extends RecyclerView.Adapter<DealListAdapter.ViewHo
         if (e == null) {
             //TODO remove logging
             Log.v("Parse info", "Deal list query returned " + String.valueOf(deals.size()));
+
+            // Remove deals that aren't available today
+            for (Iterator<DealModel> iter = deals.listIterator(); iter.hasNext(); ) {
+                DealModel deal = iter.next();
+                AvailabilityModel availability1 = new AvailabilityModel(deal,1);
+                AvailabilityModel availability2 = new AvailabilityModel(deal,2);
+
+                byte paramMask = queryParams.getDayOfWeekMask().getMask();
+                if (!availability1.recurrenceMask.isDaySelected(paramMask) && !availability2.recurrenceMask.isDaySelected(paramMask)) {
+                    iter.remove();
+                }
+            }
 
             //add place holder to empty deal
             if(deals.size() == 0){
