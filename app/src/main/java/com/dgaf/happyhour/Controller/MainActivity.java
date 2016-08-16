@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements DrawerFragment.On
         };
 
         viewPager = ViewPagerFragment.newInstance();
+
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
     }
