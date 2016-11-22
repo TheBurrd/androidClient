@@ -3,7 +3,6 @@ package com.dgaf.happyhour.Controller;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,13 +25,12 @@ import com.dgaf.happyhour.R;
  * Use the {@link DrawerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DrawerFragment extends Fragment implements View.OnClickListener, ToggleButton.OnCheckedChangeListener, DealListAdapterNotifier {
+public class DrawerFragment extends Fragment implements View.OnClickListener, ToggleButton.OnCheckedChangeListener {
 
     private View topRated,nearby,aboutUs;
     private ToggleButton monday,tuesday,wednesday,thursday,friday,saturday,sunday,today;
     private QueryParameters queryParameters;
     private OnFragmentInteractionListener mListener;
-    private boolean giveNavDrawerChangedFeedback;
     private String prevSortType = "null";//avoid null pointer exception
     private String prevDays = "null";
 
@@ -77,6 +75,7 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
         super.onCreate(savedInstanceState);
 
         queryParameters = QueryParameters.getInstance();
+
     }
 
     @Override
@@ -381,19 +380,6 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
 
     }
 
-    @Override
-    public void notifyEmpty() {
-    }
-
-    @Override
-    public void notifyNotEmpty() {}
-
-    @Override
-    public void adapterUpdate() {
-        giveNavDrawerChangedFeedback = true;
-        Log.i("DrawerFragment","Deal adapter updated");
-    }
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -422,7 +408,6 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
         mListener.loadViewPager();
     }
 
-
     //this will unselect normal items. this doesn't include days of the week.
     private void unSelectOtherNormalNavItems(){
         topRated.setBackground(null);
@@ -446,16 +431,10 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
     //of what sorting they have applied
     public void giveFeedBack(){
 
-        Log.i("DrawerFragment","giveFeedbackCalled");
-
         boolean sortTypeChanged;
 
         //about us clicked we dont want feedback
         if(aboutUs.getBackground() != null)
-            return;
-
-        //the adapter hasn't updated
-        if(!giveNavDrawerChangedFeedback)
             return;
 
         QueryParameters queryParams = QueryParameters.getInstance();
@@ -499,6 +478,12 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
             currentDays+="Su";
         }
 
+
+        //only show a toast message if the user changed something in
+        //the drawer
+        if(prevSortType.equals(sortType) && prevDays.equals(currentDays))
+            return;
+
         //if the sort type changed or the sort type hasn't changed but days hasn't changed either
         if(sortTypeChanged || (!sortTypeChanged && prevDays.equals(currentDays)))
             Toast.makeText(getActivity(),sortType, Toast.LENGTH_SHORT).show();
@@ -507,10 +492,8 @@ public class DrawerFragment extends Fragment implements View.OnClickListener, To
         else
             Toast.makeText(getActivity(),sortDays, Toast.LENGTH_SHORT).show();
 
-        giveNavDrawerChangedFeedback = false;
-
         prevSortType = sortType;//get the last sort type
         prevDays = currentDays;//get the last days sort type
-
     }
+
 }

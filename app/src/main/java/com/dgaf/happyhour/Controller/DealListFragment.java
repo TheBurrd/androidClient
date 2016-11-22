@@ -33,7 +33,8 @@ public class DealListFragment extends Fragment implements DealListAdapterNotifie
     private LinearLayoutManager mLayoutManager;
     private RelativeLayout errorLayout;
 
-        //section ID acts like ID for the query search as well
+
+    //section ID acts like ID for the query search as well
     public static DealListFragment newInstance(DealListType listType) {
         DealListFragment fragment = new DealListFragment();
         fragment.mQueryParams = QueryParameters.getInstance();
@@ -49,8 +50,6 @@ public class DealListFragment extends Fragment implements DealListAdapterNotifie
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.deal_list, container, false);
-
-
 
         mSwipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefresh.setColorSchemeResources(R.color.colorWine, R.color.colorPrimaryDark, R.color.colorPrimary);
@@ -103,9 +102,5 @@ public class DealListFragment extends Fragment implements DealListAdapterNotifie
         errorLayout.setVisibility(View.GONE);
     }
 
-    @Override
-    public void adapterUpdate() {
-
-    }
 
 }
